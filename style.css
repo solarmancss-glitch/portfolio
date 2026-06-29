@@ -1,0 +1,330 @@
+/* =====================================
+   SOLARMAN Portfolio v1
+===================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    color:#333;
+    background:#f5f7fa;
+    line-height:1.6;
+}
+
+/* ---------- Container ---------- */
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* ---------- Header ---------- */
+
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    background:#ffffff;
+    box-shadow:0 2px 15px rgba(0,0,0,.08);
+    z-index:999;
+}
+
+.nav{
+    height:75px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo img{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
+
+.logo h2{
+    color:#0057B8;
+    font-size:28px;
+}
+
+nav{
+    display:flex;
+    gap:30px;
+}
+
+nav a{
+    text-decoration:none;
+    color:#333;
+    font-weight:500;
+    transition:.3s;
+}
+
+nav a:hover{
+    color:#F7931E;
+}
+
+/* ---------- Hero ---------- */
+
+.hero{
+    position:relative;
+    height:100vh;
+    background:url("images/hero.jpg") center center/cover no-repeat;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.60);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    color:white;
+    width:90%;
+    max-width:850px;
+}
+
+.hero h1{
+    font-size:60px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+/* ---------- Button ---------- */
+
+.btn{
+    display:inline-block;
+    margin-top:25px;
+    background:#F7931E;
+    color:white;
+    text-decoration:none;
+    padding:15px 35px;
+    border-radius:40px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:#0057B8;
+    transform:translateY(-3px);
+}
+
+/* ---------- Sections ---------- */
+
+section{
+    padding:90px 0;
+}
+
+section h2{
+    text-align:center;
+    color:#0057B8;
+    font-size:38px;
+    margin-bottom:25px;
+}
+
+section p{
+    text-align:center;
+    max-width:900px;
+    margin:auto;
+}
+
+/* ---------- Services ---------- */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+    margin-top:40px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:35px 25px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card i{
+    font-size:45px;
+    color:#F7931E;
+    margin-bottom:20px;
+}
+
+.card h3{
+    margin-bottom:10px;
+}
+
+/* ---------- Projects ---------- */
+
+.projects{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+    margin-top:40px;
+}
+
+.project{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.project:hover{
+    transform:translateY(-8px);
+}
+
+.project img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.project h3{
+    padding:20px;
+    text-align:center;
+}
+
+/* ---------- Contact ---------- */
+
+#contact{
+    background:#0057B8;
+    color:white;
+}
+
+#contact h2{
+    color:white;
+}
+
+#contact p{
+    margin-bottom:30px;
+}
+
+#contact .btn{
+    background:white;
+    color:#0057B8;
+}
+
+#contact .btn:hover{
+    background:#F7931E;
+    color:white;
+}
+
+/* ---------- Footer ---------- */
+
+footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media(max-width:992px){
+
+.cards{
+grid-template-columns:repeat(2,1fr);
+}
+
+.projects{
+grid-template-columns:repeat(2,1fr);
+}
+
+.hero h1{
+font-size:46px;
+}
+
+}
+
+@media(max-width:768px){
+
+.nav{
+flex-direction:column;
+height:auto;
+padding:20px 0;
+}
+
+nav{
+margin-top:15px;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+}
+
+.cards{
+grid-template-columns:1fr;
+}
+
+.projects{
+grid-template-columns:1fr;
+}
+
+.hero h1{
+font-size:34px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+section{
+padding:70px 0;
+}
+
+.logo h2{
+font-size:22px;
+}
+
+}
+/* ===== Scroll Animation ===== */
+
+.hidden{
+    opacity:0;
+    transform:translateY(40px);
+    transition:all .8s ease;
+}
+
+.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* ===== Active Navigation ===== */
+
+nav a.active{
+    color:#F7931E;
+    font-weight:600;
+}
