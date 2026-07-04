@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* (same styles as before – copy from your existing file or the previous version) */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Poppins', sans-serif;
@@ -51,6 +51,7 @@
         }
         #statusBar.success { color: #28a745; background: #e6f9ed; }
         #statusBar.error { color: #dc3545; background: #fde8e8; }
+        #statusBar.warning { color: #856404; background: #fff3cd; }
         #statusBar i { margin-right: 4px; }
 
         .controls {
@@ -162,7 +163,6 @@
             .btn-generate { width: 100%; }
         }
 
-        /* ========== PRINT STYLES ========== */
         @media print {
             .no-print, .controls, #statusBar, .actions, .btn-generate,
             .header .tag { display: none !important; }
@@ -172,39 +172,12 @@
             .header h1 { font-size: 1.4rem !important; color: #0057B8 !important; }
             .header h1 span { color: #F7931E !important; }
             .header .print-date { font-size: 0.8rem !important; color: #555 !important; font-weight: 400 !important; display: inline !important; }
-
-            .print-system-details {
-                display: block !important;
-                background: #f8f9fc !important;
-                padding: 6px 12px !important;
-                border-radius: 6px !important;
-                margin-bottom: 10px !important;
-                font-size: 0.8rem !important;
-                border: 1px solid #e9ecef !important;
-            }
-            .print-system-details .detail-row {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 8px 20px !important;
-                justify-content: flex-start !important;
-                align-items: center !important;
-            }
-            .print-system-details .detail-item {
-                display: inline-flex !important;
-                align-items: center !important;
-                gap: 4px !important;
-                white-space: nowrap !important;
-            }
-            .print-system-details .detail-item strong {
-                color: #1e2a3a !important;
-                font-weight: 600 !important;
-                font-size: 0.7rem !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0.3px !important;
-            }
+            .print-system-details { display: block !important; background: #f8f9fc !important; padding: 6px 12px !important; border-radius: 6px !important; margin-bottom: 10px !important; font-size: 0.8rem !important; border: 1px solid #e9ecef !important; }
+            .print-system-details .detail-row { display: flex !important; flex-wrap: wrap !important; gap: 8px 20px !important; justify-content: flex-start !important; align-items: center !important; }
+            .print-system-details .detail-item { display: inline-flex !important; align-items: center !important; gap: 4px !important; white-space: nowrap !important; }
+            .print-system-details .detail-item strong { color: #1e2a3a !important; font-weight: 600 !important; font-size: 0.7rem !important; text-transform: uppercase !important; letter-spacing: 0.3px !important; }
             .print-system-details .detail-item span { color: #333 !important; font-weight: 500 !important; }
             .print-system-details .sep { color: #ccc !important; }
-
             .results { margin-top: 8px !important; overflow: visible !important; }
             .results table { font-size: 0.75rem !important; border-collapse: collapse !important; width: 100% !important; }
             .results th { background: #1e2a3a !important; color: white !important; padding: 5px 8px !important; font-size: 0.7rem !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -228,10 +201,8 @@
         <span class="print-date" style="display:none;">Date: <span id="printDate"></span></span>
     </div>
 
-    <!-- Status Bar (auto-load only) -->
     <div id="statusBar"><i class="fas fa-spinner fa-pulse"></i> Loading inventory…</div>
 
-    <!-- Print-only system details -->
     <div class="print-system-details" id="printDetails">
         <div class="detail-row">
             <span class="detail-item"><strong>System:</strong> <span id="printType">-</span></span>
@@ -244,7 +215,6 @@
         </div>
     </div>
 
-    <!-- Controls -->
     <div class="controls no-print" id="configControls">
         <div class="field">
             <label>System Type</label>
@@ -284,7 +254,6 @@
         </div>
     </div>
 
-    <!-- Results -->
     <div id="resultsArea" class="hidden">
         <div class="total-display">Estimated Total: <span id="quoteTotal">0</span> PKR</div>
         <div class="results">
@@ -315,6 +284,28 @@
     const statusBar = document.getElementById('statusBar');
     const generateBtn = document.getElementById('generateBtn');
 
+    // ========== DEFAULT SAMPLE INVENTORY (fallback) ==========
+    const DEFAULT_INVENTORY = [
+        {"Category":"Solar Panel","Name":"Arm 585W N-Type","Purchase":26000,"Sale":26300,"Qty":50,"Watt":585,"Technology":"mono"},
+        {"Category":"Solar Panel","Name":"Canadian 585W N-Type","Purchase":27450,"Sale":27500,"Qty":44,"Watt":585,"Technology":"mono"},
+        {"Category":"Solar Panel","Name":"Jinko 580W N-Type","Purchase":26250,"Sale":26300,"Qty":50,"Watt":580,"Technology":"mono"},
+        {"Category":"Inverter","Name":"Solis 6kW Hybrid","Purchase":209000,"Sale":220000,"Qty":1,"Watt":6000,"Technology":"hybrid"},
+        {"Category":"Inverter","Name":"Knox 6.5kW Hybrid","Purchase":161000,"Sale":175000,"Qty":1,"Watt":6500,"Technology":"hybrid"},
+        {"Category":"Inverter","Name":"Daytime 8kW","Purchase":22000,"Sale":26000,"Qty":-1,"Watt":8000,"Technology":"daytime"},
+        {"Category":"Battery","Name":"Dyness 5kW 48V Lithium","Purchase":265000,"Sale":270000,"Qty":1,"Watt":5000,"Technology":"48v"},
+        {"Category":"Battery","Name":"Knox 3.0 24V Lithium","Purchase":128000,"Sale":132000,"Qty":1,"Watt":3000,"Technology":"24v"},
+        {"Category":"Solar Structure","Name":"L2 Structure (14 Gauge)","Purchase":3000,"Sale":4000,"Qty":-3,"Watt":0,"Technology":""},
+        {"Category":"Solar Structure","Name":"L3 Structure (14 Gauge)","Purchase":5100,"Sale":6000,"Qty":-2,"Watt":0,"Technology":""},
+        {"Category":"Distribution Box","Name":"Distribution Box Daytime","Purchase":4000,"Sale":8000,"Qty":5,"Watt":0,"Technology":"daytime"},
+        {"Category":"Distribution Box","Name":"Distribution Box Hybrid 4-5 kW","Purchase":8500,"Sale":12500,"Qty":3,"Watt":0,"Technology":"hybrid"},
+        {"Category":"Wires and Cables","Name":"6mm DC Cable (per yard)","Purchase":250,"Sale":320,"Qty":120,"Watt":0,"Technology":""},
+        {"Category":"Wires and Cables","Name":"10mm DC Cable (per yard)","Purchase":320,"Sale":400,"Qty":150,"Watt":0,"Technology":""},
+        {"Category":"Installation","Name":"Installation Labor DAYTIME","Purchase":1000,"Sale":1000,"Qty":-6,"Watt":0,"Technology":"daytime"},
+        {"Category":"Installation","Name":"Installation Labor HYBRID","Purchase":1500,"Sale":1500,"Qty":0,"Watt":0,"Technology":"hybrid"},
+        {"Category":"Transport","Name":"Transport (Local Swabi)","Purchase":2000,"Sale":3000,"Qty":100,"Watt":0,"Technology":"local"},
+        {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":""}
+    ];
+
     // ========== HELPER: Parse kW from name ==========
     function parseKwFromName(name) {
         if (!name) return null;
@@ -342,7 +333,7 @@
         return tierItems.length ? tierItems : items;
     }
 
-    // ========== HELPER: Pick by tier ==========
+    // ========== HELPER: Pick by tier (price-based) ==========
     function pickByTier(items, tier) {
         if (!items.length) return null;
         let filtered = filterByTier(items, tier);
@@ -353,92 +344,87 @@
         return sorted[Math.floor(sorted.length / 2)];
     }
 
-    // ========== HELPER: Find closest kW match ==========
+    // ========== IMPROVED: Find closest kW match with tier fallback (tolerance 3 kW) ==========
     function findClosestByKw(items, targetKw, tier) {
         if (!items.length) return null;
         let filtered = filterByTier(items, tier);
         if (!filtered.length) filtered = items;
+
         const withKw = filtered.map(item => {
-            const kw = item.watt > 0 ? item.watt / 1000 : parseKwFromName(item.name) || 999;
-            return { ...item, kw };
+            const kw = item.watt > 0 ? item.watt / 1000 : parseKwFromName(item.name);
+            return { ...item, kw: kw || 999 };
         });
-        let closest = null;
-        let closestDiff = Infinity;
-        for (const item of withKw) {
-            const diff = Math.abs(item.kw - targetKw);
-            if (diff < closestDiff) {
-                closestDiff = diff;
-                closest = item;
-            }
+
+        const sorted = withKw.sort((a, b) => Math.abs(a.kw - targetKw) - Math.abs(b.kw - targetKw));
+        const closest = sorted[0];
+
+        if (closest && Math.abs(closest.kw - targetKw) <= 3) {
+            console.log(`✅ Inverter matched: ${closest.name} (${closest.kw} kW, diff ${Math.abs(closest.kw - targetKw).toFixed(1)} kW)`);
+            return closest;
         }
-        if (closest && closestDiff <= 1.5) return closest;
+
+        console.warn(`⚠️ No inverter within 3 kW for ${targetKw} kW, falling back to tier selection.`);
         return pickByTier(items, tier);
     }
 
-    // ========== INVENTORY LOADING (Auto + Cache Buster) ==========
+    // ========== INVENTORY LOADING ==========
     function setInventory(data) {
         inventory = data;
         populateDropdowns();
         generateBtn.disabled = false;
+        const invCount = inventory.filter(i => i.category.toLowerCase().includes('inverter')).length;
+        console.log(`📦 Total items: ${inventory.length}, Inverters: ${invCount}`);
         statusBar.className = 'success';
-        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items from inventory file.`;
+        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items (${invCount} inverters).`;
     }
 
-    function showError(msg) {
-        statusBar.className = 'error';
-        statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${msg}`;
-        generateBtn.disabled = true;
+    function useDefaultInventory() {
+        const mapped = DEFAULT_INVENTORY.map(row => ({
+            category: (row.Category || row.category || '').toString().trim(),
+            name: (row.Name || row.name || '').toString().trim(),
+            purchase: parseFloat(row.Purchase || row.purchase || 0),
+            sale: parseFloat(row.Sale || row.sale || 0),
+            qty: parseInt(row.Qty || row.qty || 0),
+            watt: parseFloat(row.Watt || row.watt || 0),
+            technology: (row.Technology || row.technology || '').toString().toLowerCase()
+        }));
+        const inStock = mapped.filter(item => item.sale > 0);
+        setInventory(inStock);
+        statusBar.className = 'warning';
+        statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Using built‑in sample inventory (inventory.json not found).`;
     }
 
     async function loadInventoryFromURL() {
-        // Cache-busting: add timestamp to force fresh fetch every time
-        const paths = [
-            'inventory.xlsx',
-            './inventory.xlsx',
-            'data/inventory.xlsx'
-        ];
-        let loaded = false;
-        for (const path of paths) {
-            try {
-                const url = path + '?t=' + Date.now();
-                const response = await fetch(url);
-                if (!response.ok) continue;
-                const buffer = await response.arrayBuffer();
-                const workbook = XLSX.read(buffer, { type: 'array' });
-                const sheet = workbook.Sheets['Inventory'];
-                if (!sheet) continue;
-                const json = XLSX.utils.sheet_to_json(sheet);
-                const data = json.map(row => ({
-                    category: (row.Category || row.category || '').toString().trim(),
-                    name: (row.Name || row.name || '').toString().trim(),
-                    purchase: parseFloat(row.Purchase || row.purchase || 0),
-                    sale: parseFloat(row.Sale || row.sale || 0),
-                    qty: parseInt(row.Qty || row.qty || 0),
-                    watt: parseFloat(row.Watt || row.watt || 0),
-                    technology: (row.Technology || row.technology || '').toString().toLowerCase()
-                }));
-                if (data.length) {
-                    setInventory(data);
-                    loaded = true;
-                    break;
-                }
-            } catch (e) {
-                // Try next path
-            }
-        }
-        if (!loaded) {
-            showError('Could not load inventory.xlsx. Please ensure the file exists in the server folder.');
+        try {
+            const url = 'inventory.json?t=' + Date.now() + '&v=' + Math.random();
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const data = await response.json();
+            if (!data || !data.length) throw new Error('Empty JSON');
+            const mapped = data.map(row => ({
+                category: (row.Category || row.category || '').toString().trim(),
+                name: (row.Name || row.name || '').toString().trim(),
+                purchase: parseFloat(row.Purchase || row.purchase || 0),
+                sale: parseFloat(row.Sale || row.sale || 0),
+                qty: parseInt(row.Qty || row.qty || 0),
+                watt: parseFloat(row.Watt || row.watt || 0),
+                technology: (row.Technology || row.technology || '').toString().toLowerCase()
+            }));
+            const inStock = mapped.filter(item => item.sale > 0);
+            if (!inStock.length) throw new Error('No sale prices > 0');
+            setInventory(inStock);
+        } catch (err) {
+            console.warn('Failed to load inventory.json, using default:', err);
+            useDefaultInventory();
         }
     }
 
-    // ========== POPULATE DROPDOWNS (only items with sale > 0) ==========
+    // ========== POPULATE DROPDOWNS ==========
     function populateDropdowns() {
         updateSizeOptions();
         const structSel = document.getElementById('sysStructure');
         structSel.innerHTML = '<option value="">Select</option>';
-        const structures = inventory.filter(i =>
-            i.category.toLowerCase().includes('structure') && i.sale > 0
-        );
+        const structures = inventory.filter(i => i.category.toLowerCase().includes('structure'));
         structures.forEach(item => {
             const opt = document.createElement('option');
             opt.value = item.name;
@@ -519,13 +505,13 @@
         const sizeVal = document.getElementById('sysSize').value;
         const tier = document.getElementById('sysTier').value;
         const structureName = document.getElementById('sysStructure').value;
-        const structure = inventory.find(i => i.name === structureName && i.sale > 0);
+        const structure = inventory.find(i => i.name === structureName);
 
         updatePrintDetails();
 
-        // ---- PANELS (sale > 0) ----
-        const panels = inventory.filter(i => i.category.toLowerCase().includes('panel') && i.sale > 0);
-        if (!panels.length) return alert('No panels with available stock (sale price > 0).');
+        // ---- PANELS ----
+        const panels = inventory.filter(i => i.category.toLowerCase().includes('panel'));
+        if (!panels.length) return alert('No panels with available stock.');
         const panel = pickByTier(panels, tier);
         const panelWatt = panel.watt || 550;
         let panelQty = 0;
@@ -539,27 +525,49 @@
         }
         addQuoteItem(panel.category, panel, panelQty);
 
-        // ---- INVERTER (sale > 0) ----
-        let inverters = inventory.filter(i => i.category.toLowerCase().includes('inverter') && i.sale > 0);
+        // ---- INVERTER ----
+        let inverters = inventory.filter(i => i.category.toLowerCase().includes('inverter'));
         let inverter = null;
+
         if (sysType === 'Daytime') {
             const daytimeInverters = inverters.filter(i => i.name.toLowerCase().includes('daytime'));
-            inverter = daytimeInverters.length ? pickByTier(daytimeInverters, tier) : pickByTier(inverters, tier);
+            inverter = daytimeInverters.length ? pickByTier(daytimeInverters, tier) : null;
         } else {
-            const hybridInverters = inverters.filter(i => i.name.toLowerCase().includes('hybrid'));
-            if (hybridInverters.length) {
+            // Hybrid: use all inverters that are NOT daytime
+            const hybridCandidates = inverters.filter(i => !i.name.toLowerCase().includes('daytime'));
+            console.log(`🔎 Total hybrid candidates: ${hybridCandidates.length}`);
+            if (hybridCandidates.length) {
                 const targetKw = parseFloat(sizeVal);
-                inverter = findClosestByKw(hybridInverters, targetKw, tier);
-                if (!inverter) inverter = pickByTier(hybridInverters, tier);
+                console.log(`🎯 Target kW: ${targetKw}, tier: ${tier}`);
+                console.log('📋 All candidates:', hybridCandidates.map(i => `${i.name} (${i.watt/1000 || parseKwFromName(i.name)} kW)`));
+                inverter = findClosestByKw(hybridCandidates, targetKw, tier);
+                if (!inverter) {
+                    inverter = pickByTier(hybridCandidates, tier);
+                    console.log('🔄 Fallback to tier selection:', inverter?.name);
+                } else {
+                    console.log('✅ Selected inverter:', inverter.name);
+                }
             } else {
-                inverter = pickByTier(inverters, tier);
+                inverter = null;
             }
         }
-        if (!inverter) return alert('No suitable inverter with available stock.');
-        addQuoteItem(inverter.category, inverter, 1);
 
-        // ---- DISTRIBUTION BOX (sale > 0) ----
-        let boxes = inventory.filter(i => i.category.toLowerCase().includes('distribution') && i.sale > 0);
+        if (!inverter) {
+            quoteItems.push({
+                category: 'Inverter',
+                item: '⚠️ No compatible inverter in stock for this size',
+                rate: 0,
+                qty: 1,
+                total: 0
+            });
+            statusBar.className = 'warning';
+            statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No inverter found for ${sizeVal} ${sysType} system. Please update stock.`;
+        } else {
+            addQuoteItem(inverter.category, inverter, 1);
+        }
+
+        // ---- DISTRIBUTION BOX ----
+        let boxes = inventory.filter(i => i.category.toLowerCase().includes('distribution'));
         let box = null;
         if (sysType === 'Daytime') {
             const daytimeBoxes = boxes.filter(i => i.name.toLowerCase().includes('daytime'));
@@ -572,11 +580,12 @@
 
         // ---- STRUCTURE ----
         if (structure) {
-            const structQty = Math.ceil(panelQty / 3);
+            const divisor = getStructureDivisor(structure.name);
+            const structQty = Math.ceil(panelQty / divisor);
             addQuoteItem(structure.category, structure, structQty);
         }
 
-        // ---- BATTERY (Hybrid only, sale > 0) ----
+        // ---- BATTERY (Hybrid only) ----
         if (sysType === 'Hybrid') {
             const voltage = document.getElementById('batteryVoltage').value;
             const targetVoltage = voltage === '24V' ? '24v' : '48v';
@@ -585,32 +594,47 @@
                 i.sale > 0 &&
                 (i.name.toLowerCase().includes(targetVoltage) || i.technology.includes(targetVoltage))
             );
-            if (!batteries.length) batteries = inventory.filter(i => i.category.toLowerCase().includes('battery') && i.sale > 0);
-            if (batteries.length) {
+            if (!batteries.length) {
+                batteries = inventory.filter(i => i.category.toLowerCase().includes('battery') && i.sale > 0);
+                if (batteries.length) {
+                    const bat = pickByTier(batteries, tier);
+                    addQuoteItem(bat.category, bat, 1);
+                    statusBar.className = 'warning';
+                    statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No ${voltage} battery found, using generic battery.`;
+                } else {
+                    quoteItems.push({
+                        category: 'Battery',
+                        item: '⚠️ No battery in stock',
+                        rate: 0,
+                        qty: 1,
+                        total: 0
+                    });
+                    statusBar.className = 'warning';
+                    statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No battery found in inventory.`;
+                }
+            } else {
                 const bat = pickByTier(batteries, tier);
                 addQuoteItem(bat.category, bat, 1);
             }
         }
 
-        // ---- CABLES (sale > 0) ----
-        const cables = inventory.filter(i => i.category.toLowerCase().includes('cable') && i.sale > 0);
+        // ---- CABLES ----
+        const cables = inventory.filter(i => i.category.toLowerCase().includes('cable'));
         if (cables.length) {
             const cable = pickByTier(cables, tier);
             addQuoteItem(cable.category, cable, 30);
         }
 
-        // ---- INSTALLATION LABOR (sale > 0) ----
+        // ---- INSTALLATION LABOR ----
         const installKey = sysType === 'Daytime' ? 'daytime' : 'hybrid';
         const installItems = inventory.filter(i =>
             i.category.toLowerCase().includes('installation') &&
-            i.sale > 0 &&
             i.name.toLowerCase().includes(installKey)
         );
         if (installItems.length) {
             const install = pickByTier(installItems, tier);
             addQuoteItem(install.category, install, panelQty);
         } else {
-            // Fallback only if no stock item exists
             const rate = sysType === 'Daytime' ? 1000 : 1500;
             quoteItems.push({
                 category: 'Installation',
@@ -621,27 +645,41 @@
             });
         }
 
-        // ---- TRANSPORT (sale > 0) ----
-        const transportItems = inventory.filter(i => i.category.toLowerCase().includes('transport') && i.sale > 0);
+        // ---- TRANSPORT ----
+        const transportItems = inventory.filter(i => i.category.toLowerCase().includes('transport'));
         if (transportItems.length) {
             const localTransport = transportItems.find(i => i.name.toLowerCase().includes('local'));
             const chosen = localTransport || pickByTier(transportItems, tier);
             if (chosen) addQuoteItem(chosen.category, chosen, 1);
         }
 
-        // ---- OTHERS (Accessories with "other", sale > 0) ----
+        // ---- OTHERS ----
         const othersItems = inventory.filter(i =>
             i.category.toLowerCase().includes('accessories') &&
-            i.sale > 0 &&
             i.name.toLowerCase().includes('other')
         );
         if (othersItems.length) {
             const other = pickByTier(othersItems, tier);
             addQuoteItem(other.category, other, 1);
+        } else {
+            quoteItems.push({
+                category: 'Accessories',
+                item: 'Others (miscellaneous)',
+                rate: 0,
+                qty: 1,
+                total: 0
+            });
         }
 
         renderQuote();
         document.getElementById('resultsArea').classList.remove('hidden');
+    }
+
+    function getStructureDivisor(structureName) {
+        const name = structureName.toLowerCase();
+        if (name.includes('l2')) return 2;
+        if (name.includes('l3')) return 3;
+        return 2;
     }
 
     function renderQuote() {
@@ -667,6 +705,8 @@
         document.getElementById('printSize').textContent = '-';
         document.getElementById('printTier').textContent = '-';
         document.getElementById('printStructure').textContent = '-';
+        statusBar.className = 'success';
+        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items.`;
     }
 
     // ========== SHARE VIA WHATSAPP ==========

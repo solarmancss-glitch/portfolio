@@ -1,0 +1,48 @@
+[
+    {"Category":"Solar Panel","Name":"Arm 585W N-Type","Purchase":26000,"Sale":26300,"Qty":50,"Watt":585,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"Jesco 585W N-Type","Purchase":24000,"Sale":24200,"Qty":50,"Watt":585,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"JINKO N Type BF 590W","Purchase":28000,"Sale":28500,"Qty":50,"Watt":590,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"CANADIAN N Type BF 585W","Purchase":27450,"Sale":27500,"Qty":44,"Watt":585,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"CANADIAN N Type BF 615W","Purchase":27000,"Sale":27800,"Qty":50,"Watt":615,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"CANADIAN N Type BF 715W","Purchase":29200,"Sale":34200,"Qty":44,"Watt":715,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"ASTRO N Type BF 625W","Purchase":24000,"Sale":26719,"Qty":50,"Watt":625,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"LONGi 640W Mono","Purchase":24500,"Sale":27360,"Qty":50,"Watt":640,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"Jinko 580W N-Type","Purchase":26250,"Sale":26300,"Qty":50,"Watt":580,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"Znshine Solar 585W","Purchase":24800,"Sale":25250,"Qty":50,"Watt":585,"Technology":"mono"},
+
+    {"Category":"Inverter","Name":"Solis 6kW Hybrid","Purchase":209000,"Sale":220000,"Qty":1,"Watt":6000,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Solis 8kW Hybrid","Purchase":291000,"Sale":305000,"Qty":1,"Watt":8000,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Knox 6.5kW Hybrid","Purchase":161000,"Sale":175000,"Qty":1,"Watt":6500,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Knox 8.5kW Hybrid","Purchase":255000,"Sale":265000,"Qty":1,"Watt":8500,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Growatt 6kW Hybrid","Purchase":180000,"Sale":210000,"Qty":50,"Watt":6000,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Growatt 8kW Hybrid","Purchase":260000,"Sale":305000,"Qty":50,"Watt":8000,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Goodwe 6kW Hybrid","Purchase":200000,"Sale":230000,"Qty":15,"Watt":6000,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Goodwe 12kW Hybrid","Purchase":390000,"Sale":435000,"Qty":10,"Watt":12000,"Technology":"hybrid"},
+    {"Category":"Inverter","Name":"Daytime 8kW","Purchase":22000,"Sale":26000,"Qty":-1,"Watt":8000,"Technology":"daytime"},
+    {"Category":"Inverter","Name":"Daytime 10kW","Purchase":29000,"Sale":35000,"Qty":3,"Watt":10000,"Technology":"daytime"},
+    {"Category":"Inverter","Name":"Daytime 8kw offer","Purchase":25000,"Sale":28000,"Qty":10,"Watt":8000,"Technology":"daytime"},
+
+    {"Category":"Battery","Name":"Dyness 5kW 48V Lithium","Purchase":265000,"Sale":270000,"Qty":1,"Watt":5000,"Technology":"48v"},
+    {"Category":"Battery","Name":"Knox 3.0 24V Lithium","Purchase":128000,"Sale":132000,"Qty":1,"Watt":3000,"Technology":"24v"},
+    {"Category":"Battery","Name":"Knox 4.15 24V Lithium","Purchase":133000,"Sale":140000,"Qty":1,"Watt":4150,"Technology":"24v"},
+    {"Category":"Battery","Name":"Itel 24V 100Ah","Purchase":125000,"Sale":130000,"Qty":1,"Watt":3000,"Technology":"24v"},
+
+    {"Category":"Solar Structure","Name":"L2 Structure (14 Gauge)","Purchase":3000,"Sale":4000,"Qty":-3,"Watt":0,"Technology":""},
+    {"Category":"Solar Structure","Name":"L3 Structure (14 Gauge)","Purchase":5100,"Sale":6000,"Qty":-2,"Watt":0,"Technology":""},
+    {"Category":"Solar Structure","Name":"Elevated 16 guage","Purchase":7000,"Sale":7500,"Qty":10,"Watt":0,"Technology":""},
+
+    {"Category":"Distribution Box","Name":"Distribution Box Daytime","Purchase":4000,"Sale":8000,"Qty":5,"Watt":0,"Technology":"daytime"},
+    {"Category":"Distribution Box","Name":"Distribution Box Hybrid 4-5 kW","Purchase":8500,"Sale":12500,"Qty":3,"Watt":0,"Technology":"hybrid"},
+    {"Category":"Distribution Box","Name":"10 Way Reliable","Purchase":1800,"Sale":2200,"Qty":3,"Watt":0,"Technology":""},
+
+    {"Category":"Wires and Cables","Name":"6mm DC Cable (per yard)","Purchase":250,"Sale":320,"Qty":120,"Watt":0,"Technology":""},
+    {"Category":"Wires and Cables","Name":"10mm DC Cable (per yard)","Purchase":320,"Sale":400,"Qty":150,"Watt":0,"Technology":""},
+
+    {"Category":"Installation","Name":"Installation Labor DAYTIME","Purchase":1000,"Sale":1000,"Qty":-6,"Watt":0,"Technology":"daytime"},
+    {"Category":"Installation","Name":"Installation Labor HYBRID","Purchase":1500,"Sale":1500,"Qty":0,"Watt":0,"Technology":"hybrid"},
+
+    {"Category":"Transport","Name":"Transport (Local Swabi)","Purchase":2000,"Sale":3000,"Qty":100,"Watt":0,"Technology":"local"},
+    {"Category":"Transport","Name":"Transport (Out of City)","Purchase":5000,"Sale":8000,"Qty":50,"Watt":0,"Technology":"out"},
+
+    {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":""}
+]
