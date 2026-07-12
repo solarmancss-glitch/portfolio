@@ -188,7 +188,7 @@
         .product-card .product-specs {
             font-size: 0.85rem;
             color: #555;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }
         .product-card .product-specs span {
             display: inline-block;
@@ -197,20 +197,41 @@
             border-radius: 20px;
             margin: 2px 4px 2px 0;
         }
-        .product-card .btn-detail {
+
+        /* ========== ACTION BUTTONS (Two small buttons) ========== */
+        .product-card .action-buttons {
+            display: flex;
+            gap: 10px;
             margin-top: auto;
-            background: #F7931E;
-            color: #fff;
-            border: none;
-            padding: 8px 0;
+        }
+        .product-card .action-buttons .btn-action {
+            flex: 1;
+            padding: 6px 0;
             border-radius: 30px;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: 0.3s;
             text-align: center;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
         }
-        .product-card .btn-detail:hover {
-            background: #0057B8;
+        .product-card .action-buttons .btn-datasheet {
+            background: #e9ecef;
+            color: #333;
+            border: 1px solid #ced4da;
+        }
+        .product-card .action-buttons .btn-datasheet:hover {
+            background: #dee2e6;
+        }
+        .product-card .action-buttons .btn-buynow {
+            background: #25D366;
+            color: #fff;
+        }
+        .product-card .action-buttons .btn-buynow:hover {
+            background: #1da851;
+            transform: translateY(-2px);
         }
 
         /* ========== MODAL ========== */
@@ -231,7 +252,7 @@
         }
         .modal-content {
             background: #fff;
-            max-width: 600px;
+            max-width: 650px;
             width: 90%;
             border-radius: 20px;
             padding: 25px 30px;
@@ -256,7 +277,7 @@
         }
         .modal-body img {
             width: 100%;
-            max-height: 300px;
+            max-height: 500px;
             object-fit: contain;
             margin-bottom: 15px;
             border-radius: 10px;
@@ -268,7 +289,7 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 200px;
+            height: 250px;
             border-radius: 10px;
             margin-bottom: 15px;
             color: #fff;
@@ -342,6 +363,10 @@
             .modal-content {
                 padding: 20px;
             }
+            .product-card .action-buttons {
+                flex-direction: column;
+                gap: 6px;
+            }
         }
     </style>
 </head>
@@ -382,7 +407,6 @@
         // ==========================================
         // SHOP PAGE – Loads inventory.json
         // Categories: Inverter, Battery, Distribution Box
-        // Auto-detects images from /images/products/ folder
         // ==========================================
 
         let allProducts = [];
@@ -405,36 +429,37 @@
             'distribution box': 'fa-box'
         };
 
+        // ========== CLEAN FILENAME ==========
+        function cleanFilename(name) {
+            if (!name) return '';
+            // Remove content in parentheses (e.g., "(14 Gauge)")
+            let cleaned = name.replace(/\s*\([^)]*\)/g, '');
+            // Remove special characters, keep letters, numbers, hyphens, dots
+            cleaned = cleaned.replace(/[^a-zA-Z0-9\s\-\.]/g, '');
+            // Replace spaces and multiple spaces with single hyphen
+            cleaned = cleaned.trim().replace(/\s+/g, '-');
+            // Remove multiple hyphens
+            cleaned = cleaned.replace(/-+/g, '-');
+            // Lowercase
+            return cleaned.toLowerCase();
+        }
+
         // ========== GENERATE IMAGE URL ==========
         function getImageUrl(product) {
-            // First, check if product has an Image field
+            // If product has an explicit Image field, use it
             if (product.Image && product.Image.trim() !== '') {
                 return product.Image;
             }
 
-            // Generate filename from product name
-            const name = product.Name || '';
-            let filename = name
-                .toLowerCase()
-                .replace(/\s*\([^)]*\)/g, '') // Remove parenthetical notes
-                .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
-                .replace(/\s+/g, '-') // Replace spaces with hyphens
-                .replace(/-+/g, '-') // Remove multiple hyphens
-                .trim();
-
-            // Try to load from images/products/ folder
-            // We'll try .jpg, .png, .webp sequentially
-            return `images/products/${filename}.jpg`;
+            const cleaned = cleanFilename(product.Name);
+            // Try .jpg first, but we just return the base name; the onerror handles fallback
+            return `images/products/${cleaned}.jpg`;
         }
 
-        // ========== CHECK IF IMAGE EXISTS ==========
-        function imageExists(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
+        // ========== GENERATE DATASHEET URL ==========
+        function getDatasheetUrl(product) {
+            const cleaned = cleanFilename(product.Name);
+            return `images/products/dat-${cleaned}.jpg`;
         }
 
         // ========== LOAD DATA ==========
@@ -445,7 +470,6 @@
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
 
-                // Filter: only in-stock items (Sale > 0) and allowed categories
                 allProducts = data.filter(item => {
                     const cat = (item.Category || '').toLowerCase().trim();
                     return item.Sale > 0 && ALLOWED_CATEGORIES.some(allow => cat.includes(allow));
@@ -485,7 +509,6 @@
 
             let html = '';
             items.forEach((item, index) => {
-                // Determine category
                 const cat = (item.Category || '').toLowerCase();
                 const catColor = CATEGORY_COLORS[cat] || '#0057B8';
                 const catIcon = CATEGORY_ICONS[cat] || 'fa-box';
@@ -497,8 +520,12 @@
                 if (item.Qty !== undefined) specs.push(`Stock: ${item.Qty}`);
                 const specStr = specs.join(' • ');
 
-                // Image handling
                 const imagePath = getImageUrl(item);
+                const datasheetPath = getDatasheetUrl(item);
+                const cleanName = cleanFilename(item.Name);
+
+                // Debug log to check filename
+                console.log(`📷 Product: ${item.Name} -> Image: ${imagePath}`);
 
                 html += `
                     <div class="product-card" data-category="${cat}">
@@ -512,7 +539,15 @@
                             <div class="product-name">${item.Name}</div>
                             <div class="product-price">PKR ${item.Sale.toLocaleString()}</div>
                             <div class="product-specs"><span>${specStr}</span></div>
-                            <button class="btn-detail" onclick="openModal(${items.indexOf(item)})">View Details</button>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-datasheet" onclick="openDatasheet('${datasheetPath}', '${item.Name}')">
+                                    <i class="fas fa-file-pdf"></i> Details
+                                </button>
+                                <a href="https://wa.me/923149233105?text=I'm%20interested%20in%20${encodeURIComponent(item.Name)}%20(PKR%20${item.Sale.toLocaleString()})" 
+                                   target="_blank" class="btn-action btn-buynow">
+                                    <i class="fas fa-shopping-cart"></i> Buy Now
+                                </a>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -520,40 +555,27 @@
             grid.innerHTML = html;
         }
 
-        // ========== MODAL ==========
-        function openModal(index) {
-            const item = allProducts[index];
-            if (!item) return;
+        // ========== OPEN DATASHEET (in Modal) ==========
+        function openDatasheet(imagePath, productName) {
             const modal = document.getElementById('productModal');
             const body = document.getElementById('modalBody');
 
-            const cat = (item.Category || '').toLowerCase();
-            const catColor = CATEGORY_COLORS[cat] || '#0057B8';
-            const catIcon = CATEGORY_ICONS[cat] || 'fa-box';
-            const imagePath = getImageUrl(item);
-
-            let specs = [];
-            if (item.Watt && item.Watt > 0) specs.push(`<strong>Wattage:</strong> ${item.Watt}W`);
-            if (item.Technology && item.Technology.trim() !== '') specs.push(`<strong>Technology:</strong> ${item.Technology}`);
-            if (item.Purchase) specs.push(`<strong>Cost Price:</strong> PKR ${item.Purchase.toLocaleString()}`);
-            if (item.Qty !== undefined) specs.push(`<strong>Stock:</strong> ${item.Qty} units`);
-            const specHtml = specs.map(s => `<p>${s}</p>`).join('');
-
             body.innerHTML = `
-                <img src="${imagePath}" alt="${item.Name}" 
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image-modal\\' style=\\'background:${catColor};\\'><i class=\\'fas ${catIcon}\\'></i>${item.Name}</div>'">
-                <span class="modal-category">${item.Category}</span>
-                <h2>${item.Name}</h2>
-                <div class="modal-price">PKR ${item.Sale.toLocaleString()}</div>
-                <div class="modal-specs">${specHtml}</div>
-                <a href="https://wa.me/923149233105?text=I'm%20interested%20in%20${encodeURIComponent(item.Name)}%20(PKR%20${item.Sale.toLocaleString()})"
-                   target="_blank" class="btn-whatsapp-modal">
-                    <i class="fab fa-whatsapp"></i> Inquire via WhatsApp
+                <span class="modal-category">📄 Datasheet</span>
+                <h2>${productName}</h2>
+                <img src="${imagePath}" alt="Datasheet for ${productName}"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image-modal\\' style=\\'background:#6c757d;\\'><i class=\\'fas fa-file-image\\'></i>Datasheet not available for ${productName}</div>'">
+                <a href="${imagePath}" target="_blank" class="btn-whatsapp-modal" style="background:#0057B8;">
+                    <i class="fas fa-external-link-alt"></i> Open Full Size
                 </a>
+                <button onclick="closeModal()" class="btn-whatsapp-modal" style="background:#6c757d; margin-left:10px;">
+                    Close
+                </button>
             `;
             modal.classList.add('show');
         }
 
+        // ========== CLOSE MODAL ==========
         function closeModal() {
             document.getElementById('productModal').classList.remove('show');
         }
@@ -576,4 +598,4 @@
         loadInventory();
     </script>
 </body>
-</html>
+</html>g
