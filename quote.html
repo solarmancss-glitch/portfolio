@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
-        /* (same styles as before – copy from your existing file or the previous version) */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Poppins', sans-serif;
@@ -53,6 +52,21 @@
         #statusBar.error { color: #dc3545; background: #fde8e8; }
         #statusBar.warning { color: #856404; background: #fff3cd; }
         #statusBar i { margin-right: 4px; }
+
+        #debugInfo {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            color: #333;
+            font-family: monospace;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            justify-content: center;
+        }
+        #debugInfo span { font-weight: bold; }
 
         .controls {
             display: flex;
@@ -105,7 +119,17 @@
         .results { margin-top: 20px; overflow-x: auto; }
         .results table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         .results th { background: #1e2a3a; color: white; padding: 10px 12px; text-align: left; }
-        .results td { padding: 8px 12px; border-bottom: 1px solid #e9ecef; }
+        .results td { padding: 8px 12px; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
+        .results td select {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            background: white;
+            min-width: 120px;
+        }
+        .results td select:focus { border-color: #F7931E; outline: none; }
         .results tfoot td { font-weight: 700; background: #f8f9fa; border-top: 2px solid #dee2e6; }
         .total-display {
             font-size: 1.2rem;
@@ -161,11 +185,12 @@
             .controls { flex-direction: column; align-items: stretch; gap: 10px; }
             .controls .field { min-width: unset; }
             .btn-generate { width: 100%; }
+            .results td select { min-width: unset; }
         }
 
         @media print {
             .no-print, .controls, #statusBar, .actions, .btn-generate,
-            .header .tag { display: none !important; }
+            .header .tag, #debugInfo { display: none !important; }
             html, body { margin: 0 !important; padding: 0 !important; background: white !important; }
             .container { max-width: 100% !important; padding: 10mm 12mm !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: white !important; }
             .header { border-bottom: 2px solid #1e2a3a !important; padding-bottom: 6px !important; margin-bottom: 8px !important; display: flex !important; justify-content: space-between !important; align-items: center !important; }
@@ -182,6 +207,9 @@
             .results table { font-size: 0.75rem !important; border-collapse: collapse !important; width: 100% !important; }
             .results th { background: #1e2a3a !important; color: white !important; padding: 5px 8px !important; font-size: 0.7rem !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .results td { padding: 4px 8px !important; border-bottom: 1px solid #e9ecef !important; font-size: 0.75rem !important; }
+            .results td select { border: none !important; padding: 0 !important; font-size: 0.75rem !important; background: transparent !important; -webkit-appearance: none !important; appearance: none !important; }
+            .results td select option { display: none !important; }
+            .results td select option:checked { display: block !important; }
             .results tfoot td { padding: 5px 8px !important; background: #f8f9fa !important; font-weight: 700 !important; font-size: 0.8rem !important; border-top: 2px solid #1e2a3a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .total-display { font-size: 1rem !important; margin: 6px 0 0 0 !important; text-align: right !important; color: #0057B8 !important; }
             .disclaimer { font-size: 0.7rem !important; color: #6c757d !important; background: #f8f9fa !important; padding: 6px 12px !important; border-left: 3px solid #F7931E !important; margin-top: 10px !important; border-radius: 4px !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -199,6 +227,13 @@
         <h1>SOLARMAN <span>Quote</span></h1>
         <span class="tag"><i class="fas fa-solar-panel"></i> Professional Solar Estimate</span>
         <span class="print-date" style="display:none;">Date: <span id="printDate"></span></span>
+    </div>
+
+    <div id="debugInfo">
+        <span>📦 Total: <span id="totalItems">0</span></span>
+        <span>🔌 Inverters: <span id="inverterCount">0</span></span>
+        <span>🔋 Batteries: <span id="batteryCount">0</span></span>
+        <span>📁 File: <span id="fileSource">-</span></span>
     </div>
 
     <div id="statusBar"><i class="fas fa-spinner fa-pulse"></i> Loading inventory…</div>
@@ -258,7 +293,7 @@
         <div class="total-display">Estimated Total: <span id="quoteTotal">0</span> PKR</div>
         <div class="results">
             <table>
-                <thead><tr><th>Category</th><th>Item</th><th>Rate (PKR)</th><th>Qty</th><th>Total (PKR)</th></tr></thead>
+                <thead><tr><th>Category</th><th>Item / Selection</th><th>Rate (PKR)</th><th>Qty</th><th>Total (PKR)</th></tr></thead>
                 <tbody id="quoteBody"></tbody>
                 <tfoot><tr><td colspan="4" style="text-align:right;">Grand Total</td><td id="quoteGrandTotal">0</td></tr></tfoot>
             </table>
@@ -279,7 +314,8 @@
 <script>
     // ========== GLOBAL STATE ==========
     let inventory = [];
-    let quoteItems = [];
+    let quoteItems = []; // Will store { type, label, qty, list, selectedIndex, fixedRate? }
+    let quoteRows = []; // For rendering
 
     const statusBar = document.getElementById('statusBar');
     const generateBtn = document.getElementById('generateBtn');
@@ -344,38 +380,25 @@
         return sorted[Math.floor(sorted.length / 2)];
     }
 
-    // ========== IMPROVED: Find closest kW match with tier fallback (tolerance 3 kW) ==========
-    function findClosestByKw(items, targetKw, tier) {
-        if (!items.length) return null;
-        let filtered = filterByTier(items, tier);
-        if (!filtered.length) filtered = items;
-
-        const withKw = filtered.map(item => {
-            const kw = item.watt > 0 ? item.watt / 1000 : parseKwFromName(item.name);
-            return { ...item, kw: kw || 999 };
-        });
-
-        const sorted = withKw.sort((a, b) => Math.abs(a.kw - targetKw) - Math.abs(b.kw - targetKw));
-        const closest = sorted[0];
-
-        if (closest && Math.abs(closest.kw - targetKw) <= 3) {
-            console.log(`✅ Inverter matched: ${closest.name} (${closest.kw} kW, diff ${Math.abs(closest.kw - targetKw).toFixed(1)} kW)`);
-            return closest;
-        }
-
-        console.warn(`⚠️ No inverter within 3 kW for ${targetKw} kW, falling back to tier selection.`);
-        return pickByTier(items, tier);
+    // ========== INVENTORY LOADING ==========
+    function updateDebugInfo(source) {
+        const total = inventory.length;
+        const inverters = inventory.filter(i => i.category.toLowerCase().includes('inverter'));
+        const batteries = inventory.filter(i => i.category.toLowerCase().includes('battery'));
+        document.getElementById('totalItems').textContent = total;
+        document.getElementById('inverterCount').textContent = inverters.length;
+        document.getElementById('batteryCount').textContent = batteries.length;
+        document.getElementById('fileSource').textContent = source || 'unknown';
+        console.log(`📊 Loaded: ${total} items, ${inverters.length} inverters, ${batteries.length} batteries`);
     }
 
-    // ========== INVENTORY LOADING ==========
-    function setInventory(data) {
+    function setInventory(data, source = 'inventory.json') {
         inventory = data;
         populateDropdowns();
         generateBtn.disabled = false;
-        const invCount = inventory.filter(i => i.category.toLowerCase().includes('inverter')).length;
-        console.log(`📦 Total items: ${inventory.length}, Inverters: ${invCount}`);
+        updateDebugInfo(source);
         statusBar.className = 'success';
-        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items (${invCount} inverters).`;
+        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items from ${source}.`;
     }
 
     function useDefaultInventory() {
@@ -389,7 +412,7 @@
             technology: (row.Technology || row.technology || '').toString().toLowerCase()
         }));
         const inStock = mapped.filter(item => item.sale > 0);
-        setInventory(inStock);
+        setInventory(inStock, 'default (fallback)');
         statusBar.className = 'warning';
         statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Using built‑in sample inventory (inventory.json not found).`;
     }
@@ -412,7 +435,7 @@
             }));
             const inStock = mapped.filter(item => item.sale > 0);
             if (!inStock.length) throw new Error('No sale prices > 0');
-            setInventory(inStock);
+            setInventory(inStock, 'inventory.json');
         } catch (err) {
             console.warn('Failed to load inventory.json, using default:', err);
             useDefaultInventory();
@@ -466,31 +489,103 @@
         toggleBattery();
     });
 
-    // ========== ADD QUOTE ITEM ==========
-    function addQuoteItem(cat, item, qty) {
-        if (!item) return;
-        quoteItems.push({
-            category: cat,
-            item: item.name,
-            rate: item.sale,
-            qty: qty,
-            total: item.sale * qty
-        });
-    }
-
     // ========== UPDATE PRINT DETAILS ==========
     function updatePrintDetails() {
         const type = document.getElementById('sysType').value;
         const size = document.getElementById('sysSize').value;
         const tier = document.getElementById('sysTier').value;
         const struct = document.getElementById('sysStructure').value || 'Not selected';
-
         document.getElementById('printType').textContent = type;
         document.getElementById('printSize').textContent = size;
         document.getElementById('printTier').textContent = tier.charAt(0).toUpperCase() + tier.slice(1);
         document.getElementById('printStructure').textContent = struct;
         document.getElementById('printDate').textContent = new Date().toLocaleDateString();
         document.querySelector('.print-date').style.display = 'inline';
+    }
+
+    // ========== RENDER QUOTE WITH DROPDOWNS ==========
+    function renderQuoteTable() {
+        const tbody = document.getElementById('quoteBody');
+        let html = '';
+        let grandTotal = 0;
+
+        quoteItems.forEach((item, index) => {
+            if (item.type === 'dropdown') {
+                const selected = item.list[item.selectedIndex] || item.list[0];
+                if (!selected) return;
+                const total = selected.sale * item.qty;
+                grandTotal += total;
+
+                html += `<tr>
+                    <td>${item.category}</td>
+                    <td>
+                        <select data-index="${index}" onchange="updateQuoteTotals()">
+                            ${item.list.map((opt, i) => 
+                                `<option value="${i}" ${i === item.selectedIndex ? 'selected' : ''}>${opt.name}</option>`
+                            ).join('')}
+                        </select>
+                    </td>
+                    <td class="rate-cell">${selected.sale.toLocaleString()}</td>
+                    <td>${item.qty}</td>
+                    <td class="total-cell">${total.toLocaleString()}</td>
+                </tr>`;
+            } else {
+                // Fixed item
+                const total = item.rate * item.qty;
+                grandTotal += total;
+                html += `<tr>
+                    <td>${item.category}</td>
+                    <td>${item.name}</td>
+                    <td>${item.rate.toLocaleString()}</td>
+                    <td>${item.qty}</td>
+                    <td>${total.toLocaleString()}</td>
+                </tr>`;
+            }
+        });
+
+        tbody.innerHTML = html;
+        document.getElementById('quoteGrandTotal').innerText = grandTotal.toLocaleString();
+        document.getElementById('quoteTotal').innerText = grandTotal.toLocaleString();
+    }
+
+    // ========== UPDATE TOTALS ON DROPDOWN CHANGE ==========
+    function updateQuoteTotals() {
+        const selects = document.querySelectorAll('#quoteBody select');
+        selects.forEach(select => {
+            const index = parseInt(select.dataset.index);
+            const newIndex = parseInt(select.value);
+            if (quoteItems[index] && quoteItems[index].type === 'dropdown') {
+                quoteItems[index].selectedIndex = newIndex;
+            }
+        });
+
+        // Recalculate and re-render totals only (update rate and total cells)
+        let grandTotal = 0;
+        const rows = document.querySelectorAll('#quoteBody tr');
+        quoteItems.forEach((item, index) => {
+            const row = rows[index];
+            if (!row) return;
+            const rateCell = row.querySelector('.rate-cell');
+            const totalCell = row.querySelector('.total-cell');
+            const select = row.querySelector('select');
+
+            if (item.type === 'dropdown') {
+                const selected = item.list[item.selectedIndex] || item.list[0];
+                if (!selected) return;
+                const total = selected.sale * item.qty;
+                grandTotal += total;
+                if (rateCell) rateCell.textContent = selected.sale.toLocaleString();
+                if (totalCell) totalCell.textContent = total.toLocaleString();
+            } else {
+                const total = item.rate * item.qty;
+                grandTotal += total;
+                // Fixed items don't change, but keep total updated
+                if (totalCell) totalCell.textContent = total.toLocaleString();
+            }
+        });
+
+        document.getElementById('quoteGrandTotal').innerText = grandTotal.toLocaleString();
+        document.getElementById('quoteTotal').innerText = grandTotal.toLocaleString();
     }
 
     // ========== MAIN QUOTE GENERATION ==========
@@ -509,10 +604,14 @@
 
         updatePrintDetails();
 
-        // ---- PANELS ----
-        const panels = inventory.filter(i => i.category.toLowerCase().includes('panel'));
-        if (!panels.length) return alert('No panels with available stock.');
-        const panel = pickByTier(panels, tier);
+        // ---- 1. PANELS (Dropdown: all panels) ----
+        let panelCandidates = inventory.filter(i => 
+            i.category.toLowerCase().includes('panel') && i.sale > 0
+        );
+        // Sort by sale price for consistency
+        panelCandidates.sort((a, b) => a.sale - b.sale);
+
+        let panel = pickByTier(panelCandidates, tier) || panelCandidates[0];
         const panelWatt = panel.watt || 550;
         let panelQty = 0;
         if (sysType === 'Daytime') {
@@ -523,51 +622,98 @@
             const kw = parseFloat(sizeVal);
             panelQty = Math.ceil((kw * 1000) / panelWatt);
         }
-        addQuoteItem(panel.category, panel, panelQty);
 
-        // ---- INVERTER ----
-        let inverters = inventory.filter(i => i.category.toLowerCase().includes('inverter'));
-        let inverter = null;
+        // Find index of selected panel in candidates
+        let panelIndex = panelCandidates.findIndex(p => p.name === panel.name);
+        if (panelIndex === -1) panelIndex = 0;
+
+        quoteItems.push({
+            type: 'dropdown',
+            category: 'Solar Panel',
+            list: panelCandidates,
+            selectedIndex: panelIndex,
+            qty: panelQty
+        });
+
+        // ---- 2. INVERTER (Dropdown: only matching kW) ----
+        let allInverters = inventory.filter(i => i.category.toLowerCase().includes('inverter') && i.sale > 0);
+        let inverterCandidates = [];
 
         if (sysType === 'Daytime') {
-            const daytimeInverters = inverters.filter(i => i.name.toLowerCase().includes('daytime'));
-            inverter = daytimeInverters.length ? pickByTier(daytimeInverters, tier) : null;
+            inverterCandidates = allInverters.filter(i => i.name.toLowerCase().includes('daytime'));
         } else {
-            // Hybrid: use all inverters that are NOT daytime
-            const hybridCandidates = inverters.filter(i => !i.name.toLowerCase().includes('daytime'));
-            console.log(`🔎 Total hybrid candidates: ${hybridCandidates.length}`);
-            if (hybridCandidates.length) {
-                const targetKw = parseFloat(sizeVal);
-                console.log(`🎯 Target kW: ${targetKw}, tier: ${tier}`);
-                console.log('📋 All candidates:', hybridCandidates.map(i => `${i.name} (${i.watt/1000 || parseKwFromName(i.name)} kW)`));
-                inverter = findClosestByKw(hybridCandidates, targetKw, tier);
-                if (!inverter) {
-                    inverter = pickByTier(hybridCandidates, tier);
-                    console.log('🔄 Fallback to tier selection:', inverter?.name);
-                } else {
-                    console.log('✅ Selected inverter:', inverter.name);
-                }
+            // Hybrid: exclude daytime, match by kW
+            const targetKw = parseFloat(sizeVal);
+            const tolerance = 0.6; // ±0.6 kW
+            inverterCandidates = allInverters.filter(i => {
+                const kw = i.watt > 0 ? i.watt / 1000 : parseKwFromName(i.name);
+                return kw && Math.abs(kw - targetKw) <= tolerance && !i.name.toLowerCase().includes('daytime');
+            });
+            // Sort by price
+            inverterCandidates.sort((a, b) => a.sale - b.sale);
+        }
+
+        if (!inverterCandidates.length) {
+            // Fallback: show all inverters (except daytime)
+            inverterCandidates = allInverters.filter(i => !i.name.toLowerCase().includes('daytime'));
+            if (!inverterCandidates.length) {
+                inverterCandidates = allInverters;
+            }
+            statusBar.className = 'warning';
+            statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No exact match for ${sizeVal} kW, showing all inverters.`;
+        }
+
+        let inverter = pickByTier(inverterCandidates, tier) || inverterCandidates[0];
+        let inverterIndex = inverterCandidates.findIndex(i => i.name === inverter.name);
+        if (inverterIndex === -1) inverterIndex = 0;
+
+        quoteItems.push({
+            type: 'dropdown',
+            category: 'Inverter',
+            list: inverterCandidates,
+            selectedIndex: inverterIndex,
+            qty: 1
+        });
+
+        // ---- 3. BATTERY (Dropdown: only matching voltage) ----
+        let batteryCandidates = [];
+        if (sysType === 'Hybrid') {
+            const voltage = document.getElementById('batteryVoltage').value;
+            const targetVoltage = voltage === '24V' ? '24v' : '48v';
+            batteryCandidates = inventory.filter(i =>
+                i.category.toLowerCase().includes('battery') &&
+                i.sale > 0 &&
+                (i.name.toLowerCase().includes(targetVoltage) || i.technology.includes(targetVoltage))
+            );
+            batteryCandidates.sort((a, b) => a.sale - b.sale);
+
+            if (batteryCandidates.length) {
+                let battery = pickByTier(batteryCandidates, tier) || batteryCandidates[0];
+                let batteryIndex = batteryCandidates.findIndex(b => b.name === battery.name);
+                if (batteryIndex === -1) batteryIndex = 0;
+                quoteItems.push({
+                    type: 'dropdown',
+                    category: 'Battery',
+                    list: batteryCandidates,
+                    selectedIndex: batteryIndex,
+                    qty: 1
+                });
             } else {
-                inverter = null;
+                // No battery found
+                quoteItems.push({
+                    type: 'fixed',
+                    category: 'Battery',
+                    name: '⚠️ No battery in stock for selected voltage',
+                    rate: 0,
+                    qty: 1
+                });
+                statusBar.className = 'warning';
+                statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No ${voltage} battery found.`;
             }
         }
 
-        if (!inverter) {
-            quoteItems.push({
-                category: 'Inverter',
-                item: '⚠️ No compatible inverter in stock for this size',
-                rate: 0,
-                qty: 1,
-                total: 0
-            });
-            statusBar.className = 'warning';
-            statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No inverter found for ${sizeVal} ${sysType} system. Please update stock.`;
-        } else {
-            addQuoteItem(inverter.category, inverter, 1);
-        }
-
-        // ---- DISTRIBUTION BOX ----
-        let boxes = inventory.filter(i => i.category.toLowerCase().includes('distribution'));
+        // ---- 4. DISTRIBUTION BOX (Fixed) ----
+        let boxes = inventory.filter(i => i.category.toLowerCase().includes('distribution') && i.sale > 0);
         let box = null;
         if (sysType === 'Daytime') {
             const daytimeBoxes = boxes.filter(i => i.name.toLowerCase().includes('daytime'));
@@ -576,102 +722,112 @@
             const hybridBoxes = boxes.filter(i => i.name.toLowerCase().includes('hybrid'));
             box = hybridBoxes.length ? pickByTier(hybridBoxes, tier) : (boxes.length ? pickByTier(boxes, tier) : null);
         }
-        if (box) addQuoteItem(box.category, box, 1);
+        if (box) {
+            quoteItems.push({
+                type: 'fixed',
+                category: box.category,
+                name: box.name,
+                rate: box.sale,
+                qty: 1
+            });
+        }
 
-        // ---- STRUCTURE ----
+        // ---- 5. STRUCTURE (Fixed) ----
         if (structure) {
             const divisor = getStructureDivisor(structure.name);
             const structQty = Math.ceil(panelQty / divisor);
-            addQuoteItem(structure.category, structure, structQty);
+            quoteItems.push({
+                type: 'fixed',
+                category: structure.category,
+                name: structure.name,
+                rate: structure.sale,
+                qty: structQty
+            });
         }
 
-        // ---- BATTERY (Hybrid only) ----
-        if (sysType === 'Hybrid') {
-            const voltage = document.getElementById('batteryVoltage').value;
-            const targetVoltage = voltage === '24V' ? '24v' : '48v';
-            let batteries = inventory.filter(i =>
-                i.category.toLowerCase().includes('battery') &&
-                i.sale > 0 &&
-                (i.name.toLowerCase().includes(targetVoltage) || i.technology.includes(targetVoltage))
-            );
-            if (!batteries.length) {
-                batteries = inventory.filter(i => i.category.toLowerCase().includes('battery') && i.sale > 0);
-                if (batteries.length) {
-                    const bat = pickByTier(batteries, tier);
-                    addQuoteItem(bat.category, bat, 1);
-                    statusBar.className = 'warning';
-                    statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No ${voltage} battery found, using generic battery.`;
-                } else {
-                    quoteItems.push({
-                        category: 'Battery',
-                        item: '⚠️ No battery in stock',
-                        rate: 0,
-                        qty: 1,
-                        total: 0
-                    });
-                    statusBar.className = 'warning';
-                    statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No battery found in inventory.`;
-                }
-            } else {
-                const bat = pickByTier(batteries, tier);
-                addQuoteItem(bat.category, bat, 1);
-            }
-        }
-
-        // ---- CABLES ----
-        const cables = inventory.filter(i => i.category.toLowerCase().includes('cable'));
+        // ---- 6. CABLES (Fixed) ----
+        const cables = inventory.filter(i => i.category.toLowerCase().includes('cable') && i.sale > 0);
         if (cables.length) {
             const cable = pickByTier(cables, tier);
-            addQuoteItem(cable.category, cable, 30);
+            quoteItems.push({
+                type: 'fixed',
+                category: cable.category,
+                name: cable.name,
+                rate: cable.sale,
+                qty: 30
+            });
         }
 
-        // ---- INSTALLATION LABOR ----
+        // ---- 7. INSTALLATION LABOR (Fixed) ----
         const installKey = sysType === 'Daytime' ? 'daytime' : 'hybrid';
         const installItems = inventory.filter(i =>
             i.category.toLowerCase().includes('installation') &&
-            i.name.toLowerCase().includes(installKey)
+            i.name.toLowerCase().includes(installKey) &&
+            i.sale > 0
         );
         if (installItems.length) {
             const install = pickByTier(installItems, tier);
-            addQuoteItem(install.category, install, panelQty);
+            quoteItems.push({
+                type: 'fixed',
+                category: install.category,
+                name: install.name,
+                rate: install.sale,
+                qty: panelQty
+            });
         } else {
             const rate = sysType === 'Daytime' ? 1000 : 1500;
             quoteItems.push({
+                type: 'fixed',
                 category: 'Installation',
-                item: `Installation Labor (${rate}/panel)`,
+                name: `Installation Labor (${rate}/panel)`,
                 rate: rate,
-                qty: panelQty,
-                total: rate * panelQty
+                qty: panelQty
             });
         }
 
-        // ---- TRANSPORT ----
-        const transportItems = inventory.filter(i => i.category.toLowerCase().includes('transport'));
+        // ---- 8. TRANSPORT (Fixed) ----
+        const transportItems = inventory.filter(i => i.category.toLowerCase().includes('transport') && i.sale > 0);
         if (transportItems.length) {
             const localTransport = transportItems.find(i => i.name.toLowerCase().includes('local'));
             const chosen = localTransport || pickByTier(transportItems, tier);
-            if (chosen) addQuoteItem(chosen.category, chosen, 1);
+            if (chosen) {
+                quoteItems.push({
+                    type: 'fixed',
+                    category: chosen.category,
+                    name: chosen.name,
+                    rate: chosen.sale,
+                    qty: 1
+                });
+            }
         }
 
-        // ---- OTHERS ----
+        // ---- 9. OTHERS (Fixed) ----
         const othersItems = inventory.filter(i =>
             i.category.toLowerCase().includes('accessories') &&
-            i.name.toLowerCase().includes('other')
+            i.name.toLowerCase().includes('other') &&
+            i.sale > 0
         );
         if (othersItems.length) {
             const other = pickByTier(othersItems, tier);
-            addQuoteItem(other.category, other, 1);
+            quoteItems.push({
+                type: 'fixed',
+                category: other.category,
+                name: other.name,
+                rate: other.sale,
+                qty: 1
+            });
         } else {
             quoteItems.push({
+                type: 'fixed',
                 category: 'Accessories',
-                item: 'Others (miscellaneous)',
+                name: 'Others (miscellaneous)',
                 rate: 0,
-                qty: 1,
-                total: 0
+                qty: 1
             });
         }
 
-        renderQuote();
+        // Render the table
+        renderQuoteTable();
         document.getElementById('resultsArea').classList.remove('hidden');
     }
 
@@ -680,19 +836,6 @@
         if (name.includes('l2')) return 2;
         if (name.includes('l3')) return 3;
         return 2;
-    }
-
-    function renderQuote() {
-        const tbody = document.getElementById('quoteBody');
-        let html = '';
-        let total = 0;
-        quoteItems.forEach(it => {
-            total += it.total;
-            html += `<tr><td>${it.category}</td><td>${it.item}</td><td>${it.rate.toLocaleString()}</td><td>${it.qty}</td><td>${it.total.toLocaleString()}</td></tr>`;
-        });
-        tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center; color:#999;">No items generated</td></tr>';
-        document.getElementById('quoteGrandTotal').innerText = total.toLocaleString();
-        document.getElementById('quoteTotal').innerText = total.toLocaleString();
     }
 
     function resetQuote() {
@@ -712,14 +855,33 @@
     // ========== SHARE VIA WHATSAPP ==========
     function shareWhatsApp() {
         if (!quoteItems.length) return alert('Generate a quote first.');
-        const total = quoteItems.reduce((sum, it) => sum + it.total, 0);
+        // Get current selections
+        const selects = document.querySelectorAll('#quoteBody select');
+        let itemNames = [];
+        quoteItems.forEach((item, index) => {
+            if (item.type === 'dropdown') {
+                const select = selects[index];
+                if (select) {
+                    const idx = parseInt(select.value);
+                    const selected = item.list[idx] || item.list[0];
+                    itemNames.push(`${selected.name} x ${item.qty}`);
+                } else {
+                    const selected = item.list[item.selectedIndex] || item.list[0];
+                    itemNames.push(`${selected.name} x ${item.qty}`);
+                }
+            } else {
+                itemNames.push(`${item.name} x ${item.qty}`);
+            }
+        });
+
+        const total = parseFloat(document.getElementById('quoteGrandTotal').innerText.replace(/,/g, ''));
         let msg = 'SOLARMAN Solar Quote\n\n';
         msg += 'System: ' + document.getElementById('sysType').value + '\n';
         msg += 'Size: ' + document.getElementById('sysSize').value + '\n';
         msg += 'Tier: ' + document.getElementById('sysTier').value + '\n\n';
         msg += 'Items:\n';
-        quoteItems.forEach(it => {
-            msg += `${it.item} x ${it.qty} = ${it.total.toLocaleString()} PKR\n`;
+        itemNames.forEach(name => {
+            msg += `- ${name}\n`;
         });
         msg += `\nTotal: ${total.toLocaleString()} PKR`;
         msg += '\n\n📌 This is a general quote. Prices may change daily. Final pricing confirmed on call.';
