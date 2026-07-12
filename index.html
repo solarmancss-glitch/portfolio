@@ -19,7 +19,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="style.css" />
 
@@ -59,13 +59,10 @@
                 <a href="#about">About</a>
                 <a href="#services">Services</a>
                 <a href="#projects">Projects</a>
+                <a href="#shop">Shop</a>
                 <a href="#testimonials">Testimonials</a>
                 <a href="#contact">Contact</a>
-<<<<<<< HEAD
-                <a href="shop.html">Shop</a>
-=======
->>>>>>> 15fe1fef3a361ff54b6993921df8a611a8281b68
-                <a href="quote.html" target="_blank" style="color:#F7931E; font-weight:600;">
+                <a href="quote.html" target="_blank" class="nav-quote-btn">
                     <i class="fas fa-calculator"></i> Get Quote
                 </a>
             </nav>
@@ -81,7 +78,7 @@
                 Professional Solar PV<br />
                 <span style="color:#F7931E;">Design &amp; Engineering</span>
             </h1>
-            <p class="hero-subtitle">Residential • Commercial • Industrial</p>
+            <p class="hero-subtitle">Residential <span class="dot">•</span> Commercial <span class="dot">•</span> Industrial</p>
             <div class="hero-skills">
                 <span><i class="fas fa-check-circle"></i> SketchUp</span>
                 <span><i class="fas fa-check-circle"></i> AutoCAD</span>
@@ -89,9 +86,12 @@
                 <span><i class="fas fa-check-circle"></i> Net Billing</span>
             </div>
             <div class="hero-buttons">
-                <a href="#projects" class="btn">View Portfolio</a>
-                <a href="quote.html" target="_blank" class="btn btn-outline">
+                <a href="#projects" class="btn btn-primary">View Portfolio</a>
+                <a href="quote.html" target="_blank" class="btn btn-secondary">
                     <i class="fas fa-calculator"></i> Get a Quote
+                </a>
+                <a href="#shop" class="btn btn-secondary">
+                    <i class="fas fa-shopping-cart"></i> Shop Now
                 </a>
             </div>
         </div>
@@ -114,7 +114,7 @@
                         <div><span>10+</span><br />Countries</div>
                         <div><span>5+</span><br />Years Experience</div>
                     </div>
-                    <a href="#" class="btn" style="margin-top:20px;">
+                    <a href="#" class="btn btn-primary" style="margin-top:20px;">
                         <i class="fas fa-download"></i> Download CV
                     </a>
                 </div>
@@ -169,7 +169,6 @@
             </div>
 
             <div class="projects">
-                <!-- Project 1 -->
                 <div class="project" data-category="residential">
                     <img src="images/project1.jpg" alt="10.44 kW Hybrid System in Swabi" loading="lazy" />
                     <div class="project-info">
@@ -181,7 +180,6 @@
                         <a href="#" class="project-btn">View Project</a>
                     </div>
                 </div>
-                <!-- Project 2 -->
                 <div class="project" data-category="commercial">
                     <img src="images/project2.jpg" alt="15 kW Commercial Rooftop in Islamabad" loading="lazy" />
                     <div class="project-info">
@@ -193,7 +191,6 @@
                         <a href="#" class="project-btn">View Project</a>
                     </div>
                 </div>
-                <!-- Project 3 -->
                 <div class="project" data-category="industrial">
                     <img src="images/project3.jpg" alt="25 kW Industrial System in Mardan" loading="lazy" />
                     <div class="project-info">
@@ -205,7 +202,6 @@
                         <a href="#" class="project-btn">View Project</a>
                     </div>
                 </div>
-                <!-- Project 4 -->
                 <div class="project" data-category="residential">
                     <img src="images/project4.jpg" alt="8 kW Villa Installation in Peshawar" loading="lazy" />
                     <div class="project-info">
@@ -217,7 +213,6 @@
                         <a href="#" class="project-btn">View Project</a>
                     </div>
                 </div>
-                <!-- Project 5 -->
                 <div class="project" data-category="commercial">
                     <img src="images/project5.jpg" alt="50 kW Commercial Building in Abbottabad" loading="lazy" />
                     <div class="project-info">
@@ -229,7 +224,6 @@
                         <a href="#" class="project-btn">View Project</a>
                     </div>
                 </div>
-                <!-- Project 6 -->
                 <div class="project" data-category="industrial">
                     <img src="images/project6.jpg" alt="100 kW Factory Installation in Nowshera" loading="lazy" />
                     <div class="project-info">
@@ -241,6 +235,26 @@
                         <a href="#" class="project-btn">View Project</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SHOP / PRODUCTS ========== -->
+    <section id="shop">
+        <div class="container">
+            <h2>Shop <span style="color:#F7931E;">Solar Products</span></h2>
+            <p class="section-text">Browse our range of high‑quality solar equipment. Click <strong>"Details"</strong> for specs or <strong>"Buy Now"</strong> to order via WhatsApp.</p>
+
+            <div class="product-filters" id="productFilters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="inverter">Inverters</button>
+                <button class="filter-btn" data-filter="battery">Batteries</button>
+                <button class="filter-btn" data-filter="distribution box">Distribution Boxes</button>
+                <button class="filter-btn" data-filter="solar panel">Solar Panels</button>
+            </div>
+
+            <div class="product-grid" id="productGrid">
+                <p style="text-align:center; color:#888; padding:40px; width:100%;">Loading products…</p>
             </div>
         </div>
     </section>
@@ -302,14 +316,14 @@
                         <option>Project Type: Industrial</option>
                     </select>
                     <textarea rows="4" placeholder="Tell me about your project..." required></textarea>
-                    <button type="submit" class="btn">Send Message <i class="fas fa-paper-plane"></i></button>
+                    <button type="submit" class="btn btn-primary">Send Message <i class="fas fa-paper-plane"></i></button>
                 </form>
                 <div class="contact-info">
                     <div><i class="fas fa-phone"></i> +92 314 9233105</div>
                     <div><i class="fas fa-envelope"></i> solarmancss@gmail.com</div>
                     <div><i class="fas fa-map-marker-alt"></i> Pakistan (Remote Worldwide)</div>
                     <div style="margin-top:20px;">
-                        <a href="https://wa.me/923149233105" class="btn" style="background:#25D366;">
+                        <a href="https://wa.me/923149233105" class="btn btn-success" style="background:#25D366;">
                             <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
                     </div>
@@ -340,6 +354,14 @@
     <button id="backToTop" aria-label="Back to top">
         <i class="fas fa-arrow-up"></i>
     </button>
+
+    <!-- ========== PRODUCT DETAIL MODAL ========== -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
