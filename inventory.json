@@ -58,7 +58,7 @@
     {"Category":"Inverter","Name":"SAJ 30kW Three Phase Hybrid","Purchase":890000,"Sale":985000,"Qty":4,"Watt":30000,"Technology":"three-phase"},
     {"Category":"Inverter","Name":"SAJ 50kW Three Phase Hybrid","Purchase":1450000,"Sale":1600000,"Qty":2,"Watt":50000,"Technology":"three-phase"},
 
-    {"Category":"Inverter","Name":"Crown 3kW Single Phase Hybrid","Purchase":95000,"Sale":105000,"Qty":20,"Watt":3000,"Technology":"single-phase"},
+    {"Category":"Inverter","Name":"Crown 3kW Single Phase Hybrid","Purchase":75000,"Sale":80000,"Qty":20,"Watt":3000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Crown 5kW Single Phase Hybrid","Purchase":130000,"Sale":142000,"Qty":20,"Watt":5000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Crown 6kW Single Phase Hybrid","Purchase":155000,"Sale":170000,"Qty":18,"Watt":6000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Crown 8kW Single Phase Hybrid","Purchase":240000,"Sale":265000,"Qty":15,"Watt":8000,"Technology":"single-phase"},
@@ -74,7 +74,7 @@
     {"Category":"Inverter","Name":"Inverex 8kW Single Phase Hybrid","Purchase":340000,"Sale":365000,"Qty":8,"Watt":8000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Inverex 10kW Single Phase Hybrid","Purchase":420000,"Sale":450000,"Qty":6,"Watt":10000,"Technology":"single-phase"},
 
-    {"Category":"Inverter","Name":"Knox 3kW Single Phase Hybrid","Purchase":85000,"Sale":92000,"Qty":15,"Watt":3000,"Technology":"single-phase"},
+    {"Category":"Inverter","Name":"Knox 3kW Single Phase Hybrid","Purchase":70000,"Sale":75000,"Qty":15,"Watt":3000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Knox 4kW Single Phase Hybrid","Purchase":91000,"Sale":96000,"Qty":12,"Watt":4000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Knox 4.5kW Single Phase Hybrid","Purchase":113000,"Sale":120000,"Qty":10,"Watt":4500,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Knox 6.5kW Single Phase Hybrid","Purchase":161000,"Sale":175000,"Qty":8,"Watt":6500,"Technology":"single-phase"},
