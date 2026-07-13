@@ -10,8 +10,6 @@
     {"Category":"Solar Panel","Name":"Jinko 590W N-Type","Purchase":26250,"Sale":26300,"Qty":50,"Watt":590,"Technology":"mono"},
     {"Category":"Solar Panel","Name":"Znshine Solar 585W","Purchase":24800,"Sale":25250,"Qty":50,"Watt":585,"Technology":"mono"},
 
-    {"Category":"Inverter","Name":"Solis 3kW Single Phase Hybrid","Purchase":145000,"Sale":155000,"Qty":10,"Watt":3000,"Technology":"single-phase"},
-    {"Category":"Inverter","Name":"Solis 5kW Single Phase Hybrid","Purchase":195000,"Sale":210000,"Qty":15,"Watt":5000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Solis 6kW Single Phase Hybrid","Purchase":230000,"Sale":235000,"Qty":10,"Watt":6000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Solis 8kW Single Phase Hybrid","Purchase":330000,"Sale":335000,"Qty":8,"Watt":8000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Solis 10kW Single Phase Hybrid","Purchase":385000,"Sale":400000,"Qty":6,"Watt":10000,"Technology":"single-phase"},
@@ -22,8 +20,6 @@
     {"Category":"Inverter","Name":"Solis 40kW Three Phase Hybrid","Purchase":1100000,"Sale":1220000,"Qty":3,"Watt":40000,"Technology":"three-phase"},
     {"Category":"Inverter","Name":"Solis 50kW Three Phase Hybrid","Purchase":1360000,"Sale":1510000,"Qty":3,"Watt":50000,"Technology":"three-phase"},
 
-    {"Category":"Inverter","Name":"Growatt 3kW Single Phase Hybrid","Purchase":125000,"Sale":135000,"Qty":15,"Watt":3000,"Technology":"single-phase"},
-    {"Category":"Inverter","Name":"Growatt 5kW Single Phase Hybrid","Purchase":160000,"Sale":175000,"Qty":20,"Watt":5000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Growatt 6kW Single Phase Hybrid","Purchase":220000,"Sale":230000,"Qty":20,"Watt":6000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Growatt 8kW Single Phase Hybrid","Purchase":260000,"Sale":305000,"Qty":15,"Watt":8000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Growatt 10kW Single Phase Hybrid","Purchase":340000,"Sale":380000,"Qty":10,"Watt":10000,"Technology":"single-phase"},
@@ -34,8 +30,6 @@
     {"Category":"Inverter","Name":"Growatt 40kW Three Phase Hybrid","Purchase":1080000,"Sale":1200000,"Qty":3,"Watt":40000,"Technology":"three-phase"},
     {"Category":"Inverter","Name":"Growatt 50kW Three Phase Hybrid","Purchase":1350000,"Sale":1500000,"Qty":3,"Watt":50000,"Technology":"three-phase"},
 
-    {"Category":"Inverter","Name":"Goodwe 3kW Single Phase Hybrid","Purchase":135000,"Sale":145000,"Qty":12,"Watt":3000,"Technology":"single-phase"},
-    {"Category":"Inverter","Name":"Goodwe 5kW Single Phase Hybrid","Purchase":175000,"Sale":190000,"Qty":15,"Watt":5000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Goodwe 6kW Single Phase Hybrid","Purchase":200000,"Sale":230000,"Qty":15,"Watt":6000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Goodwe 8kW Single Phase Hybrid","Purchase":280000,"Sale":310000,"Qty":10,"Watt":8000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Goodwe 10kW Single Phase Hybrid","Purchase":360000,"Sale":400000,"Qty":8,"Watt":10000,"Technology":"single-phase"},
@@ -46,8 +40,6 @@
     {"Category":"Inverter","Name":"Goodwe 40kW Three Phase Hybrid","Purchase":1150000,"Sale":1280000,"Qty":3,"Watt":40000,"Technology":"three-phase"},
     {"Category":"Inverter","Name":"Goodwe 50kW Three Phase Hybrid","Purchase":1300000,"Sale":1450000,"Qty":3,"Watt":50000,"Technology":"three-phase"},
 
-    {"Category":"Inverter","Name":"SAJ 3kW Single Phase Hybrid","Purchase":110000,"Sale":120000,"Qty":15,"Watt":3000,"Technology":"single-phase"},
-    {"Category":"Inverter","Name":"SAJ 5kW Single Phase Hybrid","Purchase":145000,"Sale":158000,"Qty":18,"Watt":5000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"SAJ 6kW Single Phase Hybrid","Purchase":165000,"Sale":185000,"Qty":15,"Watt":6000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"SAJ 8kW Single Phase Hybrid","Purchase":255000,"Sale":285000,"Qty":12,"Watt":8000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"SAJ 10kW Single Phase Hybrid","Purchase":300000,"Sale":335000,"Qty":10,"Watt":10000,"Technology":"single-phase"},
@@ -85,11 +77,9 @@
     {"Category":"Inverter","Name":"Daytime 10kW","Purchase":29000,"Sale":35000,"Qty":3,"Watt":10000,"Technology":"daytime"},
     {"Category":"Inverter","Name":"Daytime 8kw offer","Purchase":25000,"Sale":28000,"Qty":10,"Watt":8000,"Technology":"daytime"},
 
-    {"Category":"Battery","Name":"Dyness 3.5kW 48V Lithium (B3)","Purchase":195000,"Sale":205000,"Qty":5,"Watt":3500,"Technology":"48v"},
+    {"Category":"Battery","Name":"Dyness 2.5kW 48V Lithium (B3)","Purchase":195000,"Sale":205000,"Qty":5,"Watt":3500,"Technology":"48v"},
     {"Category":"Battery","Name":"Dyness 5kW 48V Lithium (B5)","Purchase":265000,"Sale":270000,"Qty":5,"Watt":5000,"Technology":"48v"},
-    {"Category":"Battery","Name":"Dyness 6.1kW 48V Lithium (BX51100)","Purchase":320000,"Sale":335000,"Qty":4,"Watt":6100,"Technology":"48v"},
-    {"Category":"Battery","Name":"Dyness 10kW 48V Lithium (BX48200)","Purchase":520000,"Sale":545000,"Qty":3,"Watt":10000,"Technology":"48v"},
-    {"Category":"Battery","Name":"Dyness 12.5kW 48V Lithium","Purchase":650000,"Sale":680000,"Qty":2,"Watt":12500,"Technology":"48v"},
+    {"Category":"Battery","Name":"Dyness 16kW 48V Lithium","Purchase":650000,"Sale":700000,"Qty":2,"Watt":12500,"Technology":"48v"},
 
     {"Category":"Battery","Name":"Inverex Nitrox 2.4kW 24V Lithium","Purchase":120000,"Sale":128000,"Qty":8,"Watt":2400,"Technology":"24v"},
     {"Category":"Battery","Name":"Inverex Nitrox 3.5kW 48V Lithium","Purchase":195000,"Sale":210000,"Qty":6,"Watt":3500,"Technology":"48v"},
@@ -99,8 +89,7 @@
 
     {"Category":"Battery","Name":"Knox 3.0 24V 100Ah Lithium","Purchase":128000,"Sale":132000,"Qty":6,"Watt":3000,"Technology":"24v"},
     {"Category":"Battery","Name":"Knox 4.15 24V 150Ah Lithium","Purchase":133000,"Sale":140000,"Qty":5,"Watt":4150,"Technology":"24v"},
-    {"Category":"Battery","Name":"Knox 5kW 48V 100Ah Lithium","Purchase":235000,"Sale":245000,"Qty":4,"Watt":5000,"Technology":"48v"},
-    {"Category":"Battery","Name":"Knox 10kW 48V 200Ah Lithium","Purchase":440000,"Sale":460000,"Qty":3,"Watt":10000,"Technology":"48v"},
+    {"Category":"Battery","Name":"Knox 6.0 48V 100Ah Lithium","Purchase":235000,"Sale":245000,"Qty":4,"Watt":5000,"Technology":"48v"},
     {"Category":"Battery","Name":"Knox 15kW 48V 300Ah Lithium","Purchase":650000,"Sale":680000,"Qty":2,"Watt":15000,"Technology":"48v"},
 
     {"Category":"Battery","Name":"Itel 24V 100Ah Lithium","Purchase":125000,"Sale":130000,"Qty":6,"Watt":3000,"Technology":"24v"},
