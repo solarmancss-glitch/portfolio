@@ -45,10 +45,6 @@
     {"Category":"Inverter","Name":"SAJ 10kW Single Phase Hybrid","Purchase":300000,"Sale":335000,"Qty":10,"Watt":10000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"SAJ 12kW Three Phase Hybrid","Purchase":415000,"Sale":460000,"Qty":8,"Watt":12000,"Technology":"three-phase"},
     {"Category":"Inverter","Name":"SAJ 16kW Three Phase Hybrid","Purchase":525000,"Sale":585000,"Qty":6,"Watt":16000,"Technology":"three-phase"},
-    {"Category":"Inverter","Name":"SAJ 20kW Three Phase Hybrid","Purchase":645000,"Sale":715000,"Qty":5,"Watt":20000,"Technology":"three-phase"},
-    {"Category":"Inverter","Name":"SAJ 25kW Three Phase Hybrid","Purchase":760000,"Sale":840000,"Qty":4,"Watt":25000,"Technology":"three-phase"},
-    {"Category":"Inverter","Name":"SAJ 30kW Three Phase Hybrid","Purchase":890000,"Sale":985000,"Qty":4,"Watt":30000,"Technology":"three-phase"},
-    {"Category":"Inverter","Name":"SAJ 50kW Three Phase Hybrid","Purchase":1450000,"Sale":1600000,"Qty":2,"Watt":50000,"Technology":"three-phase"},
 
     {"Category":"Inverter","Name":"Crown 3kW Single Phase Hybrid","Purchase":75000,"Sale":80000,"Qty":20,"Watt":3000,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Crown 5kW Single Phase Hybrid","Purchase":130000,"Sale":142000,"Qty":20,"Watt":5000,"Technology":"single-phase"},
