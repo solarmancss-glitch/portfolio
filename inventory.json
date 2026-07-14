@@ -1,8 +1,8 @@
 [
     {"Category":"Solar Panel","Name":"Arm 585W N-Type","Purchase":24570,"Sale":25000,"Qty":50,"Watt":585,"Technology":"mono"},
-    {"Category":"Solar Panel","Name":"Jesco 585W N-Type","Purchase":24570,"Sale":24500,"Qty":50,"Watt":585,"Technology":"mono"},
-    {"Category":"Solar Panel","Name":"JINKO N Type BF 585W","Purchase":25750,"Sale":26000,"Qty":50,"Watt":585,"Technology":"mono"},
-    {"Category":"Solar Panel","Name":"CANADIAN N Type BF 585W","Purchase":27450,"Sale":27500,"Qty":44,"Watt":585,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"Jesco 585W N-Type","Purchase":24470,"Sale":24500,"Qty":50,"Watt":585,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"JINKO N Type BF 585W","Purchase":25450,"Sale":26000,"Qty":50,"Watt":585,"Technology":"mono"},
+    {"Category":"Solar Panel","Name":"CANADIAN N Type BF 585W","Purchase":26300,"Sale":26900,"Qty":44,"Watt":585,"Technology":"mono"},
     {"Category":"Solar Panel","Name":"CANADIAN N Type BF 615W","Purchase":27000,"Sale":27800,"Qty":50,"Watt":615,"Technology":"mono"},
     {"Category":"Solar Panel","Name":"CANADIAN N Type BF 715W","Purchase":30750,"Sale":31000,"Qty":44,"Watt":715,"Technology":"mono"},
     {"Category":"Solar Panel","Name":"ASTRO N Type BF 625W","Purchase":24000,"Sale":26719,"Qty":50,"Watt":625,"Technology":"mono"},
