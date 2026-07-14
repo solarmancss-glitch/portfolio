@@ -10,392 +10,79 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
-        /* ========== RESET & BASE ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* ========== HEADER ========== */
-        .shop-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 2px solid #eaeef3;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .shop-header h1 {
-            color: #0057B8;
-            font-size: 1.8rem;
-        }
-        .shop-header h1 span {
-            color: #F7931E;
-        }
-        .shop-header .back-link {
-            color: #0057B8;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .shop-header .back-link:hover {
-            color: #F7931E;
-        }
-
-        /* ========== STATUS BAR ========== */
-        #statusBar {
-            text-align: center;
-            font-size: 0.9rem;
-            padding: 8px 0;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            background: #f8f9fc;
-        }
-        #statusBar.success {
-            color: #28a745;
-            background: #e6f9ed;
-        }
-        #statusBar.error {
-            color: #dc3545;
-            background: #fde8e8;
-        }
-        #statusBar.warning {
-            color: #856404;
-            background: #fff3cd;
-        }
-        #statusBar i {
-            margin-right: 6px;
-        }
-
-        /* ========== FILTERS ========== */
-        .shop-filters {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .shop-filters .filter-btn {
-            background: #eaeef3;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 50px;
-            font-family: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.3s;
-            color: #333;
-            font-size: 0.9rem;
-        }
-        .shop-filters .filter-btn.active,
-        .shop-filters .filter-btn:hover {
-            background: #0057B8;
-            color: #fff;
-        }
-
-        /* ========== PRODUCT GRID ========== */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        .product-card {
-            background: #fff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-        .product-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.10);
-        }
-        .product-card .product-image-wrapper {
-            width: 100%;
-            height: 220px;
-            background: #f0f2f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-        .product-card .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .product-card .product-image-wrapper .no-image {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.9rem;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            padding: 20px;
-        }
-        .product-card .product-image-wrapper .no-image i {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .product-card .product-body {
-            padding: 15px 18px 18px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .product-card .product-category {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: #F7931E;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        .product-card .product-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1e2a3a;
-            margin-bottom: 6px;
-            line-height: 1.3;
-        }
-        .product-card .product-price {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #0057B8;
-            margin: 6px 0 8px;
-        }
-        .product-card .product-specs {
-            font-size: 0.85rem;
-            color: #555;
-            margin-bottom: 12px;
-        }
-        .product-card .product-specs span {
-            display: inline-block;
-            background: #f5f7fa;
-            padding: 2px 10px;
-            border-radius: 20px;
-            margin: 2px 4px 2px 0;
-        }
-
-        /* ========== ACTION BUTTONS (Two small buttons) ========== */
-        .product-card .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: auto;
-        }
-        .product-card .action-buttons .btn-action {
-            flex: 1;
-            padding: 6px 0;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.3s;
-            text-align: center;
-            border: none;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .product-card .action-buttons .btn-datasheet {
-            background: #e9ecef;
-            color: #333;
-            border: 1px solid #ced4da;
-        }
-        .product-card .action-buttons .btn-datasheet:hover {
-            background: #dee2e6;
-        }
-        .product-card .action-buttons .btn-buynow {
-            background: #25D366;
-            color: #fff;
-        }
-        .product-card .action-buttons .btn-buynow:hover {
-            background: #1da851;
-            transform: translateY(-2px);
-        }
-
-        /* ========== MODAL ========== */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal.show {
-            display: flex;
-        }
-        .modal-content {
-            background: #fff;
-            max-width: 650px;
-            width: 90%;
-            border-radius: 20px;
-            padding: 25px 30px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-close {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 28px;
-            font-weight: 700;
-            color: #aaa;
-            cursor: pointer;
-        }
-        .modal-close:hover {
-            color: #333;
-        }
-        .modal-body {
-            margin-top: 10px;
-        }
-        .modal-body img {
-            width: 100%;
-            max-height: 500px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            background: #f5f7fa;
-        }
-        .modal-body .no-image-modal {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 250px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            color: #fff;
-            font-weight: 600;
-        }
-        .modal-body .no-image-modal i {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-        .modal-body h2 {
-            color: #0057B8;
-            margin-bottom: 6px;
-        }
-        .modal-body .modal-category {
-            display: inline-block;
-            background: #F7931E;
-            color: #fff;
-            padding: 2px 14px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .modal-body .modal-price {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #0057B8;
-            margin: 10px 0;
-        }
-        .modal-body .modal-specs {
-            margin: 10px 0;
-        }
-        .modal-body .modal-specs p {
-            margin: 4px 0;
-            font-size: 0.95rem;
-        }
-        .modal-body .btn-whatsapp-modal {
-            background: #25D366;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
-            display: inline-block;
-            text-decoration: none;
-        }
-        .modal-body .btn-whatsapp-modal:hover {
-            transform: scale(1.03);
-            background: #1da851;
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .shop-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-        }
-        @media (max-width: 480px) {
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-            .modal-content {
-                padding: 20px;
-            }
-            .product-card .action-buttons {
-                flex-direction: column;
-                gap: 6px;
-            }
-        }
+        /* (same styles as before – keep unchanged) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; color: #333; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1400px; width: 100%; margin: 0 auto; }
+        .shop-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 2px solid #eaeef3; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .shop-header h1 { color: #0057B8; font-size: 1.8rem; }
+        .shop-header h1 span { color: #F7931E; }
+        .shop-header .back-link { color: #0057B8; text-decoration: none; font-weight: 500; }
+        .shop-header .back-link:hover { color: #F7931E; }
+        #statusBar { text-align: center; font-size: 0.9rem; padding: 8px 0; margin-bottom: 15px; border-radius: 6px; background: #f8f9fc; }
+        #statusBar.success { color: #28a745; background: #e6f9ed; }
+        #statusBar.error { color: #dc3545; background: #fde8e8; }
+        #statusBar.warning { color: #856404; background: #fff3cd; }
+        #statusBar i { margin-right: 6px; }
+        .shop-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .shop-filters .filter-btn { background: #eaeef3; border: none; padding: 8px 24px; border-radius: 50px; font-family: inherit; font-weight: 500; cursor: pointer; transition: 0.3s; color: #333; font-size: 0.9rem; }
+        .shop-filters .filter-btn.active, .shop-filters .filter-btn:hover { background: #0057B8; color: #fff; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .product-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.06); transition: 0.3s; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.10); }
+        .product-card .product-image-wrapper { width: 100%; height: 220px; background: #f0f2f5; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .product-card .product-image { width: 100%; height: 100%; object-fit: cover; }
+        .product-card .product-image-wrapper .no-image { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 0.9rem; width: 100%; height: 100%; text-align: center; padding: 20px; }
+        .product-card .product-image-wrapper .no-image i { font-size: 2.5rem; margin-bottom: 10px; }
+        .product-card .product-body { padding: 15px 18px 18px; flex: 1; display: flex; flex-direction: column; }
+        .product-card .product-category { font-size: 0.7rem; text-transform: uppercase; color: #F7931E; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .product-card .product-name { font-size: 1rem; font-weight: 600; color: #1e2a3a; margin-bottom: 6px; line-height: 1.3; }
+        .product-card .product-price { font-size: 1.1rem; font-weight: 700; color: #0057B8; margin: 6px 0 8px; }
+        .product-card .product-specs { font-size: 0.85rem; color: #555; margin-bottom: 12px; }
+        .product-card .product-specs span { display: inline-block; background: #f5f7fa; padding: 2px 10px; border-radius: 20px; margin: 2px 4px 2px 0; }
+        .product-card .action-buttons { display: flex; gap: 10px; margin-top: auto; }
+        .product-card .action-buttons .btn-action { flex: 1; padding: 6px 0; border-radius: 30px; font-weight: 500; font-size: 0.8rem; cursor: pointer; transition: 0.3s; text-align: center; border: none; text-decoration: none; display: inline-block; }
+        .product-card .action-buttons .btn-datasheet { background: #e9ecef; color: #333; border: 1px solid #ced4da; }
+        .product-card .action-buttons .btn-datasheet:hover { background: #dee2e6; }
+        .product-card .action-buttons .btn-buynow { background: #25D366; color: #fff; }
+        .product-card .action-buttons .btn-buynow:hover { background: #1da851; transform: translateY(-2px); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: #fff; max-width: 650px; width: 90%; border-radius: 20px; padding: 25px 30px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-close { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: 700; color: #aaa; cursor: pointer; }
+        .modal-close:hover { color: #333; }
+        .modal-body { margin-top: 10px; }
+        .modal-body img { width: 100%; max-height: 500px; object-fit: contain; margin-bottom: 15px; border-radius: 10px; background: #f5f7fa; }
+        .modal-body .no-image-modal { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 250px; border-radius: 10px; margin-bottom: 15px; color: #fff; font-weight: 600; }
+        .modal-body .no-image-modal i { font-size: 3rem; margin-bottom: 10px; }
+        .modal-body h2 { color: #0057B8; margin-bottom: 6px; }
+        .modal-body .modal-category { display: inline-block; background: #F7931E; color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; }
+        .modal-body .modal-price { font-size: 1.4rem; font-weight: 700; color: #0057B8; margin: 10px 0; }
+        .modal-body .modal-specs p { margin: 4px 0; font-size: 0.95rem; }
+        .modal-body .btn-whatsapp-modal { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 40px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s; margin-top: 15px; display: inline-block; text-decoration: none; }
+        .modal-body .btn-whatsapp-modal:hover { transform: scale(1.03); background: #1da851; }
+        @media (max-width: 768px) { .product-grid { grid-template-columns: repeat(2, 1fr); } .shop-header { flex-direction: column; align-items: flex-start; gap: 8px; } }
+        @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } .modal-content { padding: 20px; } .product-card .action-buttons { flex-direction: column; gap: 6px; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
         <div class="shop-header">
             <h1>SOLARMAN <span>Shop</span></h1>
             <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
         </div>
-
-        <!-- STATUS BAR -->
         <div id="statusBar"><i class="fas fa-spinner fa-pulse"></i> Loading products…</div>
-
-        <!-- FILTERS -->
         <div class="shop-filters" id="shopFilters">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="inverter">Inverters</button>
             <button class="filter-btn" data-filter="battery">Batteries</button>
             <button class="filter-btn" data-filter="distribution box">Distribution Boxes</button>
         </div>
-
-        <!-- PRODUCT GRID -->
         <div class="product-grid" id="productGrid">
             <p style="text-align:center; color:#888; padding:40px; width:100%;">Loading products…</p>
         </div>
     </div>
 
-    <!-- ========== MODAL ========== -->
     <div class="modal" id="productModal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal()">&times;</span>
@@ -405,64 +92,59 @@
 
     <script>
         // ==========================================
-        // SHOP PAGE – Loads inventory.json
-        // Categories: Inverter, Battery, Distribution Box
+        // SHOP PAGE – with image fallback & debug
         // ==========================================
 
         let allProducts = [];
         const statusBar = document.getElementById('statusBar');
         const grid = document.getElementById('productGrid');
 
-        // Allowed categories (lowercase)
         const ALLOWED_CATEGORIES = ['inverter', 'battery', 'distribution box'];
 
-        // Brand colors for placeholders
         const CATEGORY_COLORS = {
             'inverter': '#0057B8',
             'battery': '#28a745',
             'distribution box': '#F7931E'
         };
-
         const CATEGORY_ICONS = {
             'inverter': 'fa-microchip',
             'battery': 'fa-battery-full',
             'distribution box': 'fa-box'
         };
 
-        // ========== CLEAN FILENAME ==========
+        // ----- Clean filename -----
         function cleanFilename(name) {
             if (!name) return '';
-            // Remove content in parentheses (e.g., "(14 Gauge)")
             let cleaned = name.replace(/\s*\([^)]*\)/g, '');
-            // Remove special characters, keep letters, numbers, hyphens, dots
             cleaned = cleaned.replace(/[^a-zA-Z0-9\s\-\.]/g, '');
-            // Replace spaces and multiple spaces with single hyphen
             cleaned = cleaned.trim().replace(/\s+/g, '-');
-            // Remove multiple hyphens
             cleaned = cleaned.replace(/-+/g, '-');
-            // Lowercase
             return cleaned.toLowerCase();
         }
 
-        // ========== GENERATE IMAGE URL ==========
-        function getImageUrl(product) {
-            // If product has an explicit Image field, use it
+        // ----- Get image URLs (try .jpg, then .png) -----
+        function getImageUrls(product) {
+            const base = cleanFilename(product.Name);
+            // If explicit Image field, use that
             if (product.Image && product.Image.trim() !== '') {
-                return product.Image;
+                return [product.Image];
             }
-
-            const cleaned = cleanFilename(product.Name);
-            // Try .jpg first, but we just return the base name; the onerror handles fallback
-            return `images/products/${cleaned}.jpg`;
+            // Try .jpg and .png
+            return [
+                `images/products/${base}.jpg`,
+                `images/products/${base}.png`
+            ];
         }
 
-        // ========== GENERATE DATASHEET URL ==========
-        function getDatasheetUrl(product) {
-            const cleaned = cleanFilename(product.Name);
-            return `images/products/dat-${cleaned}.jpg`;
+        function getDatasheetUrls(product) {
+            const base = cleanFilename(product.Name);
+            return [
+                `images/products/dat-${base}.jpg`,
+                `images/products/dat-${base}.png`
+            ];
         }
 
-        // ========== LOAD DATA ==========
+        // ----- Load inventory -----
         async function loadInventory() {
             try {
                 const url = 'inventory.json?t=' + Date.now();
@@ -493,7 +175,7 @@
             }
         }
 
-        // ========== RENDER PRODUCTS ==========
+        // ----- Render products with image fallback -----
         function renderProducts(filter) {
             let items = allProducts;
             if (filter !== 'all') {
@@ -513,26 +195,32 @@
                 const catColor = CATEGORY_COLORS[cat] || '#0057B8';
                 const catIcon = CATEGORY_ICONS[cat] || 'fa-box';
 
-                // Build specs
                 let specs = [];
                 if (item.Watt && item.Watt > 0) specs.push(`${item.Watt}W`);
                 if (item.Technology && item.Technology.trim() !== '') specs.push(item.Technology);
                 if (item.Qty !== undefined) specs.push(`Stock: ${item.Qty}`);
                 const specStr = specs.join(' • ');
 
-                const imagePath = getImageUrl(item);
-                const datasheetPath = getDatasheetUrl(item);
-                const cleanName = cleanFilename(item.Name);
+                // Get image URLs
+                const imgUrls = getImageUrls(item);
+                const datUrls = getDatasheetUrls(item);
+                // Use the first as primary, the second as fallback via onerror
+                const primaryImg = imgUrls[0];
+                const fallbackImg = imgUrls[1] || '';
 
-                // Debug log to check filename
-                console.log(`📷 Product: ${item.Name} -> Image: ${imagePath}`);
+                console.log(`🖼️ Product: ${item.Name} → primary: ${primaryImg} | fallback: ${fallbackImg}`);
+
+                // Build image with onerror to fallback to PNG then to placeholder
+                const imgTag = `
+                    <img class="product-image" src="${primaryImg}" 
+                         alt="${item.Name}" loading="lazy"
+                         onerror="this.onerror=null; this.src='${fallbackImg}'; this.onerror=function(){ this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image\\' style=\\'background:${catColor};\\'><i class=\\'fas ${catIcon}\\'></i>${item.Name.substring(0,30)}</div>'; }">
+                `;
 
                 html += `
                     <div class="product-card" data-category="${cat}">
                         <div class="product-image-wrapper" style="background: ${catColor}20;">
-                            <img class="product-image" src="${imagePath}" 
-                                 alt="${item.Name}" loading="lazy"
-                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image\\' style=\\'background:${catColor};\\'><i class=\\'fas ${catIcon}\\'></i>${item.Name.substring(0,30)}</div>'">
+                            ${imgTag}
                         </div>
                         <div class="product-body">
                             <div class="product-category">${item.Category}</div>
@@ -540,7 +228,7 @@
                             <div class="product-price">PKR ${item.Sale.toLocaleString()}</div>
                             <div class="product-specs"><span>${specStr}</span></div>
                             <div class="action-buttons">
-                                <button class="btn-action btn-datasheet" onclick="openDatasheet('${datasheetPath}', '${item.Name}')">
+                                <button class="btn-action btn-datasheet" onclick="openDatasheet('${datUrls[0]}', '${datUrls[1] || ''}', '${item.Name}')">
                                     <i class="fas fa-file-pdf"></i> Details
                                 </button>
                                 <a href="https://wa.me/923149233105?text=I'm%20interested%20in%20${encodeURIComponent(item.Name)}%20(PKR%20${item.Sale.toLocaleString()})" 
@@ -555,17 +243,17 @@
             grid.innerHTML = html;
         }
 
-        // ========== OPEN DATASHEET (in Modal) ==========
-        function openDatasheet(imagePath, productName) {
+        // ----- Open Datasheet with fallback -----
+        function openDatasheet(primary, fallback, productName) {
             const modal = document.getElementById('productModal');
             const body = document.getElementById('modalBody');
 
             body.innerHTML = `
                 <span class="modal-category">📄 Datasheet</span>
                 <h2>${productName}</h2>
-                <img src="${imagePath}" alt="Datasheet for ${productName}"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image-modal\\' style=\\'background:#6c757d;\\'><i class=\\'fas fa-file-image\\'></i>Datasheet not available for ${productName}</div>'">
-                <a href="${imagePath}" target="_blank" class="btn-whatsapp-modal" style="background:#0057B8;">
+                <img src="${primary}" alt="Datasheet for ${productName}"
+                     onerror="this.onerror=null; this.src='${fallback}'; this.onerror=function(){ this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image-modal\\' style=\\'background:#6c757d;\\'><i class=\\'fas fa-file-image\\'></i>Datasheet not available for ${productName}</div>'; }">
+                <a href="${primary}" target="_blank" class="btn-whatsapp-modal" style="background:#0057B8;">
                     <i class="fas fa-external-link-alt"></i> Open Full Size
                 </a>
                 <button onclick="closeModal()" class="btn-whatsapp-modal" style="background:#6c757d; margin-left:10px;">
@@ -575,17 +263,14 @@
             modal.classList.add('show');
         }
 
-        // ========== CLOSE MODAL ==========
         function closeModal() {
             document.getElementById('productModal').classList.remove('show');
         }
 
-        // Click outside modal to close
         document.getElementById('productModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
 
-        // ========== FILTER BUTTONS ==========
         document.querySelectorAll('#shopFilters .filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.remove('active'));
@@ -594,8 +279,7 @@
             });
         });
 
-        // ========== INIT ==========
         loadInventory();
     </script>
 </body>
-</html>g
+</html>
