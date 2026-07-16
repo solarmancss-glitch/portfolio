@@ -1,0 +1,9 @@
+{
+    "terminal.explorerKind": "external",
+    "terminal.integrated.allowChords": true,
+    "terminal.integrated.confirmOnExit": "always",
+    "terminal.integrated.defaultLocation": "view",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.macOptionIsMeta": true,
+    "terminal.integrated.windowsUseConptyDll": true
+}
