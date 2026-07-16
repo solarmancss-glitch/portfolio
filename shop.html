@@ -131,8 +131,11 @@
             }
             // Try .jpg and .png
             return [
-                `images/products/${base}.jpg`,
-                `images/products/${base}.png`
+                return [
+    `images/products/${base}.jpg`,
+    `images/products/${base}.webp`,
+    `images/products/${base}.png`
+];
             ];
         }
 
