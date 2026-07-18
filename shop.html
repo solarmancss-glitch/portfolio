@@ -4,67 +4,131 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SOLARMAN – Shop Solar Products</title>
-    <meta name="description" content="Buy solar inverters, lithium batteries, and distribution boxes online." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
-        /* (same styles as before – keep unchanged) */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #f5f7fa; color: #333; padding: 20px; min-height: 100vh; }
-        .container { max-width: 1400px; width: 100%; margin: 0 auto; }
-        .shop-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 2px solid #eaeef3; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .shop-header h1 { color: #0057B8; font-size: 1.8rem; }
-        .shop-header h1 span { color: #F7931E; }
-        .shop-header .back-link { color: #0057B8; text-decoration: none; font-weight: 500; }
-        .shop-header .back-link:hover { color: #F7931E; }
-        #statusBar { text-align: center; font-size: 0.9rem; padding: 8px 0; margin-bottom: 15px; border-radius: 6px; background: #f8f9fc; }
-        #statusBar.success { color: #28a745; background: #e6f9ed; }
-        #statusBar.error { color: #dc3545; background: #fde8e8; }
-        #statusBar.warning { color: #856404; background: #fff3cd; }
-        #statusBar i { margin-right: 6px; }
-        .shop-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .shop-filters .filter-btn { background: #eaeef3; border: none; padding: 8px 24px; border-radius: 50px; font-family: inherit; font-weight: 500; cursor: pointer; transition: 0.3s; color: #333; font-size: 0.9rem; }
-        .shop-filters .filter-btn.active, .shop-filters .filter-btn:hover { background: #0057B8; color: #fff; }
-        .product-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; }
-        .product-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.06); transition: 0.3s; display: flex; flex-direction: column; }
-        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.10); }
-        .product-card .product-image-wrapper { width: 100%; height: 160px; background: #f0f2f5; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .product-card .product-image { width: 100%; height: 100%; object-fit: contain; cursor: pointer; padding: 6px; }
-        .product-card .product-image-wrapper .no-image { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 0.9rem; width: 100%; height: 100%; text-align: center; padding: 20px; }
-        .product-card .product-image-wrapper .no-image i { font-size: 2.5rem; margin-bottom: 10px; }
-        .product-card .product-body { padding: 15px 18px 18px; flex: 1; display: flex; flex-direction: column; }
-        .product-card .product-category { font-size: 0.7rem; text-transform: uppercase; color: #F7931E; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .product-card .product-name { font-size: 1rem; font-weight: 600; color: #1e2a3a; margin-bottom: 6px; line-height: 1.3; }
-        .product-card .product-price { font-size: 1.1rem; font-weight: 700; color: #0057B8; margin: 6px 0 8px; }
-        .product-card .product-specs { font-size: 0.85rem; color: #555; margin-bottom: 12px; }
-        .product-card .product-specs span { display: inline-block; background: #f5f7fa; padding: 2px 10px; border-radius: 20px; margin: 2px 4px 2px 0; }
-        .product-card .action-buttons { display: flex; gap: 10px; margin-top: auto; }
-        .product-card .action-buttons .btn-action { flex: 1; padding: 6px 0; border-radius: 30px; font-weight: 500; font-size: 0.8rem; cursor: pointer; transition: 0.3s; text-align: center; border: none; text-decoration: none; display: inline-block; }
-        .product-card .action-buttons .btn-datasheet { background: #e9ecef; color: #333; border: 1px solid #ced4da; }
-        .product-card .action-buttons .btn-datasheet:hover { background: #dee2e6; }
-        .product-card .action-buttons .btn-buynow { background: #25D366; color: #fff; }
-        .product-card .action-buttons .btn-buynow:hover { background: #1da851; transform: translateY(-2px); }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-        .modal.show { display: flex; }
-        .modal-content { background: #fff; max-width: 650px; width: 90%; border-radius: 20px; padding: 25px 30px; position: relative; max-height: 90vh; overflow-y: auto; }
-        .modal-close { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: 700; color: #aaa; cursor: pointer; }
-        .modal-close:hover { color: #333; }
-        .modal-body { margin-top: 10px; }
-        .modal-body img { width: auto; max-width: 100%; max-height: calc(100vh - 160px); object-fit: contain; margin-bottom: 15px; border-radius: 10px; background: #f5f7fa; }
-        .modal-body .no-image-modal { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 250px; border-radius: 10px; margin-bottom: 15px; color: #fff; font-weight: 600; }
-        .modal-body .no-image-modal i { font-size: 3rem; margin-bottom: 10px; }
-        .modal-body h2 { color: #0057B8; margin-bottom: 6px; }
-        .modal-body .modal-category { display: inline-block; background: #F7931E; color: #fff; padding: 2px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px; }
-        .modal-body .modal-price { font-size: 1.4rem; font-weight: 700; color: #0057B8; margin: 10px 0; }
-        .modal-body .modal-specs p { margin: 4px 0; font-size: 0.95rem; }
-        .modal-body .btn-whatsapp-modal { background: #25D366; color: white; border: none; padding: 12px 30px; border-radius: 40px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.3s; margin-top: 15px; display: inline-block; text-decoration: none; }
-        .modal-body .btn-whatsapp-modal:hover { transform: scale(1.03); background: #1da851; }
-        @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-        @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        @media (max-width: 768px) { .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .shop-header { flex-direction: column; align-items: flex-start; gap: 8px; } }
-        @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } .modal-content { padding: 20px; } .product-card .action-buttons { flex-direction: column; gap: 6px; } }
+        /* ===== DARK THEME – PORTRAIT IMAGES ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; background:#0d1117; color:#e6edf3; padding:20px; min-height:100vh; }
+        .container { max-width:1400px; width:100%; margin:0 auto; }
+
+        .shop-header { display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:2px solid #30363d; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+        .shop-header h1 { color:#f0f6fc; font-size:1.8rem; }
+        .shop-header h1 span { color:#f0883e; }
+        .shop-header .back-link { color:#8b949e; text-decoration:none; font-weight:500; transition:0.3s; }
+        .shop-header .back-link:hover { color:#f0883e; }
+
+        #statusBar { text-align:center; font-size:0.9rem; padding:8px 0; margin-bottom:15px; border-radius:6px; background:#161b22; color:#8b949e; }
+        #statusBar.success { color:#3fb950; background:#1c2333; }
+        #statusBar.error { color:#f85149; background:#2d1b1b; }
+        #statusBar.warning { color:#d29922; background:#1f1b1b; }
+        #statusBar i { margin-right:6px; }
+
+        .search-section { display:flex; justify-content:center; margin-bottom:20px; }
+        .search-section input { width:100%; max-width:500px; padding:10px 18px; border-radius:50px; border:1px solid #30363d; background:#161b22; color:#e6edf3; font-size:1rem; font-family:inherit; outline:none; transition:0.3s; }
+        .search-section input::placeholder { color:#8b949e; }
+        .search-section input:focus { border-color:#f0883e; box-shadow:0 0 0 3px rgba(240,136,62,0.2); }
+
+        .shop-filters { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:25px; }
+        .shop-filters .filter-btn { background:#161b22; border:1px solid #30363d; padding:8px 24px; border-radius:50px; font-family:inherit; font-weight:500; cursor:pointer; transition:0.3s; color:#c9d1d9; font-size:0.9rem; }
+        .shop-filters .filter-btn.active, .shop-filters .filter-btn:hover { background:#f0883e; color:#0d1117; border-color:#f0883e; }
+
+        .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:25px; }
+        .product-card { background:#161b22; border-radius:16px; overflow:hidden; border:1px solid #30363d; transition:0.3s; display:flex; flex-direction:column; }
+        .product-card:hover { transform:translateY(-6px); border-color:#f0883e; box-shadow:0 8px 30px rgba(0,0,0,0.6); }
+        .product-card .product-image-wrapper { width:100%; height:320px; background:#0d1117; display:flex; align-items:center; justify-content:center; overflow:hidden; border-bottom:1px solid #30363d; padding:8px; }
+        .product-card .product-image { width:100%; height:100%; object-fit:contain; }
+        .product-card .product-image-wrapper .no-image { display:flex; flex-direction:column; align-items:center; justify-content:center; color:#8b949e; font-weight:500; font-size:0.9rem; width:100%; height:100%; text-align:center; padding:20px; }
+        .product-card .product-image-wrapper .no-image i { font-size:2.8rem; margin-bottom:10px; color:#f0883e; }
+        .product-card .product-body { padding:15px 18px 18px; flex:1; display:flex; flex-direction:column; }
+        .product-card .product-category { font-size:0.7rem; text-transform:uppercase; color:#f0883e; font-weight:600; letter-spacing:0.5px; margin-bottom:4px; }
+        .product-card .product-name { font-size:1rem; font-weight:600; color:#f0f6fc; margin-bottom:6px; line-height:1.3; }
+        .product-card .product-price { font-size:1.1rem; font-weight:700; color:#f0883e; margin:6px 0 8px; }
+        .product-card .product-specs { font-size:0.8rem; color:#8b949e; margin-bottom:12px; }
+        .product-card .product-specs span { display:inline-block; background:#21262d; padding:2px 10px; border-radius:20px; margin:2px 4px 2px 0; color:#c9d1d9; }
+
+        .product-card .action-buttons { display:flex; gap:10px; margin-top:auto; }
+        .product-card .action-buttons .btn-action { flex:1; padding:7px 0; border-radius:30px; font-weight:500; font-size:0.8rem; cursor:pointer; transition:0.3s; text-align:center; border:none; text-decoration:none; display:inline-block; }
+        .product-card .action-buttons .btn-details { background:#21262d; color:#c9d1d9; border:1px solid #30363d; }
+        .product-card .action-buttons .btn-details:hover { background:#30363d; }
+        .product-card .action-buttons .btn-buynow { background:#25D366; color:#0d1117; font-weight:600; }
+        .product-card .action-buttons .btn-buynow:hover { background:#1da851; transform:translateY(-2px); }
+
+        /* ===== FULL-SCREEN IMAGE MODAL – FITS ANY SCREEN ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.92);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 20px;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            max-width: 95vw;
+            max-height: 95vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: default;
+        }
+        .modal-content img {
+            max-width: 95vw;
+            max-height: 95vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+            background: #0d1117;
+        }
+        .modal-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 42px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 300;
+            transition: 0.3s;
+            z-index: 1001;
+            line-height: 1;
+            background: rgba(0,0,0,0.4);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            color: #f0883e;
+            transform: rotate(90deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-grid { grid-template-columns:repeat(2,1fr); gap:15px; }
+            .product-card .product-image-wrapper { height:250px; }
+            .shop-header { flex-direction:column; align-items:flex-start; gap:8px; }
+            .modal-content img { max-width: 98vw; max-height: 90vh; }
+            .modal-close { top:15px; right:15px; width:44px; height:44px; font-size:32px; }
+        }
+        @media (max-width: 480px) {
+            .product-grid { grid-template-columns:1fr; max-width:380px; margin:0 auto; }
+            .product-card .product-image-wrapper { height:280px; }
+            .product-card .action-buttons { flex-direction:column; gap:6px; }
+            .modal-content img { max-width: 98vw; max-height: 85vh; }
+        }
     </style>
 </head>
 <body>
@@ -73,81 +137,106 @@
             <h1>SOLARMAN <span>Shop</span></h1>
             <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
         </div>
+
         <div id="statusBar"><i class="fas fa-spinner fa-pulse"></i> Loading products…</div>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="🔍 Search products…" />
+        </div>
+
         <div class="shop-filters" id="shopFilters">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="inverter">Inverters</button>
             <button class="filter-btn" data-filter="battery">Batteries</button>
             <button class="filter-btn" data-filter="distribution box">Distribution Boxes</button>
+            <button class="filter-btn" data-filter="solar panel">Solar Panels</button>
+            <button class="filter-btn" data-filter="solar structure">Structures</button>
+            <button class="filter-btn" data-filter="wires and cables">Cables</button>
         </div>
+
         <div class="product-grid" id="productGrid">
-            <p style="text-align:center; color:#888; padding:40px; width:100%;">Loading products…</p>
+            <p style="text-align:center; color:#8b949e; padding:40px; width:100%;">Loading products…</p>
         </div>
     </div>
 
-    <div class="modal" id="productModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
-            <div id="modalBody"></div>
+    <!-- ===== FULL-SCREEN IMAGE MODAL ===== -->
+    <div class="modal" id="imageModal" onclick="closeImageModal(event)">
+        <span class="modal-close" onclick="closeImageModal(event)">&times;</span>
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <img id="modalImage" src="" alt="Product Image" />
         </div>
     </div>
 
     <script>
         // ==========================================
-        // SHOP PAGE – with image fallback & debug
+        // SHOP – CLEAR IMAGES, DETAILS OPENS FULL SIZE
         // ==========================================
 
         let allProducts = [];
+        let currentFilter = 'all';
+        let currentSearch = '';
+
         const statusBar = document.getElementById('statusBar');
         const grid = document.getElementById('productGrid');
+        const searchInput = document.getElementById('searchInput');
 
-        const ALLOWED_CATEGORIES = ['inverter', 'battery', 'distribution box'];
+        const ALLOWED_CATEGORIES = ['inverter', 'battery', 'distribution box', 'solar panel', 'solar structure', 'wires and cables'];
 
         const CATEGORY_COLORS = {
             'inverter': '#0057B8',
             'battery': '#28a745',
-            'distribution box': '#F7931E'
+            'distribution box': '#F7931E',
+            'solar panel': '#8e44ad',
+            'solar structure': '#e67e22',
+            'wires and cables': '#1abc9c'
         };
         const CATEGORY_ICONS = {
             'inverter': 'fa-microchip',
             'battery': 'fa-battery-full',
-            'distribution box': 'fa-box'
+            'distribution box': 'fa-box',
+            'solar panel': 'fa-solar-panel',
+            'solar structure': 'fa-building',
+            'wires and cables': 'fa-plug'
         };
 
-        // ----- Clean filename -----
-        function cleanFilename(name) {
-            if (!name) return '';
-            let cleaned = name.replace(/\s*\([^)]*\)/g, '');
-            cleaned = cleaned.replace(/[^a-zA-Z0-9\s\-\.]/g, '');
-            cleaned = cleaned.trim().replace(/\s+/g, '-');
-            cleaned = cleaned.replace(/-+/g, '-');
-            return cleaned.toLowerCase();
-        }
+        // ===== GENERATE ALL POSSIBLE IMAGE URLS =====
+        function generateAllImageUrls(product) {
+            const name = product.Name || '';
+            const explicit = product.Image || '';
 
-        // ----- Get image URLs (try .jpg, then .png) -----
-        function getImageUrls(product) {
-            const base = cleanFilename(product.Name);
-            // If explicit Image field, use that
-            if (product.Image && product.Image.trim() !== '') {
-                return [product.Image];
+            const urls = [];
+            if (explicit && explicit.trim() !== '') {
+                urls.push(explicit);
             }
-            // Try .jpg and .png
-            return [
-                `images/products/${base}.jpg`,
-                `images/products/${base}.webp`,
-                `images/products/${base}.png`
-            ];
+
+            const clean = name
+                .replace(/\s*\([^)]*\)/g, '')
+                .replace(/[^a-zA-Z0-9\s\-\.]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .toLowerCase();
+
+            const withSpaces = name.trim();
+            const lowerWithSpaces = withSpaces.toLowerCase();
+            const withUnderscores = withSpaces.replace(/\s+/g, '_');
+
+            const variations = [clean, withSpaces, lowerWithSpaces, withUnderscores];
+            for (const v of variations) {
+                if (v) {
+                    urls.push(`images/products/${v}.jpg`);
+                    urls.push(`images/products/${v}.png`);
+                }
+            }
+
+            return [...new Set(urls.filter(u => u && u.trim() !== ''))];
         }
 
-        function getDatasheetUrls(product) {
-            const base = cleanFilename(product.Name);
-            return [
-                `images/products/dat-${base}.jpg`,
-                `images/products/dat-${base}.png`
-            ];
+        function getImageUrls(product) {
+            return generateAllImageUrls(product);
         }
 
-        // ----- Load inventory -----
+        // ===== LOAD INVENTORY =====
         async function loadInventory() {
             try {
                 const url = 'inventory.json?t=' + Date.now();
@@ -157,43 +246,53 @@
 
                 allProducts = data.filter(item => {
                     const cat = (item.Category || '').toLowerCase().trim();
-                    return item.Sale > 0 && ALLOWED_CATEGORIES.some(allow => cat.includes(allow));
+                    const inStock = item.Qty > 0;
+                    return inStock && item.Sale > 0 && ALLOWED_CATEGORIES.some(allow => cat.includes(allow));
                 });
 
                 if (allProducts.length === 0) {
                     statusBar.className = 'warning';
-                    statusBar.innerHTML = '<i class="fas fa-exclamation-triangle"></i> No products found for the selected categories.';
-                    grid.innerHTML = '<p style="text-align:center; color:#888; padding:40px;">No products available yet.</p>';
+                    statusBar.innerHTML = '<i class="fas fa-exclamation-triangle"></i> No products in stock.';
+                    grid.innerHTML = '<p style="text-align:center; color:#8b949e; padding:40px;">No products available.</p>';
                     return;
                 }
 
                 statusBar.className = 'success';
-                statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${allProducts.length} products.`;
-                renderProducts('all');
+                statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${allProducts.length} in‑stock products.`;
+                renderProducts();
             } catch (err) {
                 console.error('Load error:', err);
                 statusBar.className = 'error';
-                statusBar.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Could not load inventory. Make sure inventory.json is in the same folder.';
-                grid.innerHTML = '<p style="text-align:center; color:#888; padding:40px;">⚠️ Failed to load products. Please try again later.</p>';
+                statusBar.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Could not load inventory.';
+                grid.innerHTML = '<p style="text-align:center; color:#8b949e; padding:40px;">⚠️ Failed to load products.</p>';
             }
         }
 
-        // ----- Render products with image fallback -----
-        function renderProducts(filter) {
+        // ===== RENDER PRODUCTS =====
+        function renderProducts() {
             let items = allProducts;
-            if (filter !== 'all') {
-                items = allProducts.filter(p =>
-                    (p.Category || '').toLowerCase().includes(filter)
+
+            if (currentFilter !== 'all') {
+                items = items.filter(p => (p.Category || '').toLowerCase().includes(currentFilter));
+            }
+
+            if (currentSearch.trim() !== '') {
+                const search = currentSearch.trim().toLowerCase();
+                items = items.filter(p =>
+                    p.Name.toLowerCase().includes(search) ||
+                    (p.Category || '').toLowerCase().includes(search) ||
+                    p.Technology.toLowerCase().includes(search) ||
+                    (p.Watt && p.Watt.toString().includes(search))
                 );
             }
 
             if (items.length === 0) {
-                grid.innerHTML = `<p style="text-align:center; color:#888; padding:40px; width:100%;">No products in this category.</p>`;
+                grid.innerHTML = `<p style="text-align:center; color:#8b949e; padding:40px; width:100%;">No products match your criteria.</p>`;
                 return;
             }
 
             let html = '';
-            items.forEach((item, index) => {
+            items.forEach((item) => {
                 const cat = (item.Category || '').toLowerCase();
                 const catColor = CATEGORY_COLORS[cat] || '#0057B8';
                 const catIcon = CATEGORY_ICONS[cat] || 'fa-box';
@@ -204,26 +303,19 @@
                 if (item.Qty !== undefined) specs.push(`Stock: ${item.Qty}`);
                 const specStr = specs.join(' • ');
 
-                // Get image URLs
                 const imgUrls = getImageUrls(item);
-                const datUrls = getDatasheetUrls(item);
-                // Use the first as primary, the second as fallback via onerror
-                const primaryImg = imgUrls[0];
-                const fallbackImg = imgUrls[1] || '';
+                const primaryImg = imgUrls[0] || '';
 
-                console.log(`🖼️ Product: ${item.Name} → primary: ${primaryImg} | fallback: ${fallbackImg}`);
+                console.log(`🖼️ ${item.Name} -> ${primaryImg}`);
 
-                // Build image with onerror to fallback to PNG then to placeholder
-                const imgTag = `
-                    <img class="product-image" src="${primaryImg}" 
-                         alt="${item.Name}" loading="lazy"
-                         onclick="openImageModal('${primaryImg}', '${fallbackImg}', '${item.Name}')"
-                         onerror="this.onerror=null; this.src='${fallbackImg}'; this.onerror=function(){ this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image\\' style=\\'background:${catColor};\\'><i class=\\'fas ${catIcon}\\'></i>${item.Name.substring(0,30)}</div>'; }">
+                let imgTag = `
+                    <img class="product-image" src="${primaryImg}" alt="${item.Name}" loading="lazy"
+                         onerror="tryFallbackImage(this, ${JSON.stringify(imgUrls)})">
                 `;
 
                 html += `
                     <div class="product-card" data-category="${cat}">
-                        <div class="product-image-wrapper" style="background: ${catColor}20;">
+                        <div class="product-image-wrapper">
                             ${imgTag}
                         </div>
                         <div class="product-body">
@@ -232,8 +324,8 @@
                             <div class="product-price">PKR ${item.Sale.toLocaleString()}</div>
                             <div class="product-specs"><span>${specStr}</span></div>
                             <div class="action-buttons">
-                                <button class="btn-action btn-datasheet" onclick="openDatasheet('${datUrls[0]}', '${datUrls[1] || ''}', '${item.Name}')">
-                                    <i class="fas fa-file-pdf"></i> Details
+                                <button class="btn-action btn-details" onclick="openImageModal('${primaryImg}')">
+                                    <i class="fas fa-expand"></i> Details
                                 </button>
                                 <a href="https://wa.me/923149233105?text=I'm%20interested%20in%20${encodeURIComponent(item.Name)}%20(PKR%20${item.Sale.toLocaleString()})" 
                                    target="_blank" class="btn-action btn-buynow">
@@ -247,62 +339,71 @@
             grid.innerHTML = html;
         }
 
-        // ----- Open Image Modal (full-screen) -----
-        function openImageModal(primary, fallback, productName) {
-            const modal = document.getElementById('productModal');
-            const body = document.getElementById('modalBody');
+        // ===== IMAGE FALLBACK =====
+        function tryFallbackImage(img, urls) {
+            if (!img._attempt) img._attempt = 0;
+            img._attempt++;
+            if (img._attempt < urls.length) {
+                img.src = urls[img._attempt];
+            } else {
+                const wrapper = img.parentElement;
+                const productName = img.alt || 'Product';
+                wrapper.innerHTML = `
+                    <div class="no-image" style="color:#f0883e;">
+                        <i class="fas fa-image"></i>
+                        ${productName.substring(0,30)}
+                    </div>
+                `;
+            }
+        }
 
-            body.innerHTML = `
-                <span class="modal-category">🖼️ Image</span>
-                <h2>${productName}</h2>
-                <img src="${primary}" alt="${productName}"
-                     onerror="this.onerror=null; this.src='${fallback}'; this.onerror=function(){ this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image-modal\\' style=\\'background:#6c757d;\\'><i class=\\'fas fa-image\\'></i>Image not available for ${productName}</div>'; }">
-                <a href="${primary}" target="_blank" class="btn-whatsapp-modal" style="background:#0057B8;">
-                    <i class="fas fa-external-link-alt"></i> Open Full Size
-                </a>
-                <button onclick="closeModal()" class="btn-whatsapp-modal" style="background:#6c757d; margin-left:10px;">
-                    Close
-                </button>
-            `;
+        // ===== FULL-SCREEN IMAGE MODAL =====
+        function openImageModal(imageUrl) {
+            if (!imageUrl || imageUrl === '') {
+                alert('No image available for this product.');
+                return;
+            }
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = imageUrl;
+            img.alt = 'Product Image';
             modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
         }
 
-        // ----- Open Datasheet with fallback -----
-        function openDatasheet(primary, fallback, productName) {
-            const modal = document.getElementById('productModal');
-            const body = document.getElementById('modalBody');
-
-            body.innerHTML = `
-                <span class="modal-category">📄 Datasheet</span>
-                <h2>${productName}</h2>
-                <img src="${primary}" alt="Datasheet for ${productName}"
-                     onerror="this.onerror=null; this.src='${fallback}'; this.onerror=function(){ this.style.display='none'; this.parentElement.innerHTML='<div class=\\'no-image-modal\\' style=\\'background:#6c757d;\\'><i class=\\'fas fa-file-image\\'></i>Datasheet not available for ${productName}</div>'; }">
-                <a href="${primary}" target="_blank" class="btn-whatsapp-modal" style="background:#0057B8;">
-                    <i class="fas fa-external-link-alt"></i> Open Full Size
-                </a>
-                <button onclick="closeModal()" class="btn-whatsapp-modal" style="background:#6c757d; margin-left:10px;">
-                    Close
-                </button>
-            `;
-            modal.classList.add('show');
+        function closeImageModal(event) {
+            // If event is passed and target is not the close button or overlay, ignore
+            if (event && event.target && event.target.closest && event.target.closest('.modal-content')) {
+                return;
+            }
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
         }
 
-        function closeModal() {
-            document.getElementById('productModal').classList.remove('show');
-        }
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal(e);
+            }
+        });
 
-        document.getElementById('productModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
+        // ===== SEARCH & FILTERS =====
+        searchInput.addEventListener('input', function() {
+            currentSearch = this.value;
+            renderProducts();
         });
 
         document.querySelectorAll('#shopFilters .filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                renderProducts(this.dataset.filter);
+                currentFilter = this.dataset.filter;
+                renderProducts();
             });
         });
 
+        // ===== INIT =====
         loadInventory();
     </script>
 </body>
