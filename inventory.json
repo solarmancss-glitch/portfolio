@@ -134,6 +134,7 @@
     {"Category":"Transport","Name":"Transport (Out of City)","Purchase":5000,"Sale":8000,"Qty":50,"Watt":0,"Technology":"out","Image":"images/products/transport-out-of-city.jpg"},
 
     {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/others.jpg"},
+    
     {"Category":"Bidirectional meters","Name":"Iesco Kbk ","Purchase":17000,"Sale":18500,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter1.jpg"},
     {"Category":"Bidirectional meters","Name":"Pesco Kbk ","Purchase":45000,"Sale":49000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter2.jpg"}
 ]
