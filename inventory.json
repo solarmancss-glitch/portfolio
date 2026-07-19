@@ -61,13 +61,13 @@
     {"Category":"Inverter","Name":"Inverex 6kW Single Phase Hybrid","Purchase":260000,"Sale":280000,"Qty":12,"Watt":6000,"Technology":"single-phase","Image":"images/products/inverex-6kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Inverex 8kW Single Phase Hybrid","Purchase":340000,"Sale":365000,"Qty":8,"Watt":8000,"Technology":"single-phase","Image":"images/products/inverex-8kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Inverex 10kW Single Phase Hybrid","Purchase":420000,"Sale":450000,"Qty":6,"Watt":10000,"Technology":"single-phase","Image":"images/products/inverex-10kw-single-phase-hybrid.jpg"},
-
-    {"Category":"Inverter","Name":"Knox 3kW Single Phase Hybrid","Purchase":70000,"Sale":75000,"Qty":15,"Watt":3000,"Technology":"single-phase","Image":"images/products/knox-3kw-single-phase-hybrid.jpg"},
+ 
     {"Category":"Inverter","Name":"Knox 4kW Single Phase Hybrid","Purchase":91000,"Sale":96000,"Qty":12,"Watt":4000,"Technology":"single-phase","Image":"images/products/knox-4kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Knox 4.5kW Single Phase Hybrid","Purchase":113000,"Sale":120000,"Qty":10,"Watt":4500,"Technology":"single-phase","Image":"images/products/knox-4.5kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Knox 6.5kW Single Phase Hybrid","Purchase":161000,"Sale":175000,"Qty":8,"Watt":6500,"Technology":"single-phase","Image":"images/products/knox-6.5kw-single-phase-hybrid.jpg"},
+    {"Category":"Inverter","Name":"Knox 6.2kW Single Phase Hybrid","Purchase":161000,"Sale":175000,"Qty":8,"Watt":6500,"Technology":"single-phase","Image":"images/products/knox-6.2kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Knox 8.5kW Single Phase Hybrid","Purchase":255000,"Sale":265000,"Qty":6,"Watt":8500,"Technology":"single-phase","Image":"images/products/knox-8.5kw-single-phase-hybrid.jpg"},
-    {"Category":"Inverter","Name":"Knox 12kW Three Phase Hybrid","Purchase":410000,"Sale":450000,"Qty":4,"Watt":12000,"Technology":"three-phase","Image":"images/products/knox-12kw-three-phase-hybrid.jpg"},
+    {"Category":"Inverter","Name":"Knox 11.5kW Three Phase Hybrid","Purchase":410000,"Sale":450000,"Qty":4,"Watt":12000,"Technology":"three-phase","Image":"images/products/knox-11.5kw-three-phase-hybrid.jpg"},
 
     {"Category":"Inverter","Name":"Daytime 8kW","Purchase":22000,"Sale":26000,"Qty":-1,"Watt":8000,"Technology":"daytime","Image":"images/products/daytime-8kw.jpg"},
     {"Category":"Inverter","Name":"Daytime 10kW","Purchase":29000,"Sale":35000,"Qty":3,"Watt":10000,"Technology":"daytime","Image":"images/products/daytime-10kw.jpg"},
@@ -134,4 +134,9 @@
     {"Category":"Transport","Name":"Transport (Out of City)","Purchase":5000,"Sale":8000,"Qty":50,"Watt":0,"Technology":"out","Image":"images/products/transport-out-of-city.jpg"},
 
     {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/others.jpg"}
+
+    {"Category":"Bidirectional meters","Name":"Iesco Kbk ","Purchase":17000,"Sale":18500,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter1.jpg"}
+    {"Category":"Bidirectional meters","Name":"Pesco Kbk ","Purchase":45000,"Sale":49000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter2.jpg"}
+     
+    
 ]
