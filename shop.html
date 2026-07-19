@@ -404,66 +404,7 @@
         });
 
         // ===== INIT =====
-<<<<<<< HEAD
-        loadInventory();        param(
-            [switch]$WhatIf
-        )
-        
-        # Run from repository root: E:\github\Solarman\portfolio
-        $prodDir = Join-Path -Path (Get-Location) -ChildPath "images\products"
-        if (-not (Test-Path $prodDir)) {
-            Write-Error "Products folder not found: $prodDir"
-            exit 1
-        }
-        
-        $log = Join-Path $prodDir "rename-log.txt"
-        "Rename started: $(Get-Date -Format o)" | Out-File -FilePath $log -Encoding utf8
-        
-        Get-ChildItem -Path $prodDir -File | ForEach-Object {
-            $oldName = $_.Name
-            $base = [System.IO.Path]::GetFileNameWithoutExtension($oldName)
-            $ext = $_.Extension.ToLower()
-        
-            $slug = $base.Trim() -replace '\s+','-' -replace '[^a-zA-Z0-9\-._]',''
-            if ([string]::IsNullOrWhiteSpace($slug)) { $slug = "unnamed" }
-        
-            $newName = "$slug$ext"
-            $targetPath = Join-Path $_.DirectoryName $newName
-        
-            # Handle conflicts by appending a numeric suffix
-            if (($oldName -ne $newName) -and (Test-Path -LiteralPath $targetPath)) {
-                $i = 1
-                do {
-                    $newName = "{0}-{1}{2}" -f $slug, $i, $ext
-                    $targetPath = Join-Path $_.DirectoryName $newName
-                    $i++
-                } while (Test-Path -LiteralPath $targetPath)
-            }
-        
-            if ($oldName -ne $newName) {
-                if ($WhatIf) {
-                    "$oldName -> $newName (whatif)" | Tee-Object -FilePath $log -Append
-                    Write-Host "WhatIf: $oldName -> $newName"
-                } else {
-                    try {
-                        Rename-Item -LiteralPath $_.FullName -NewName $newName -ErrorAction Stop
-                        "$oldName -> $newName" | Tee-Object -FilePath $log -Append
-                        Write-Host "Renamed: $oldName -> $newName"
-                    } catch {
-                        "ERROR renaming $oldName -> $newName : $_" | Tee-Object -FilePath $log -Append
-                        Write-Host "ERROR renaming $oldName -> $newName" -ForegroundColor Red
-                    }
-                }
-            } else {
-                "OK: $oldName (already formatted)" | Tee-Object -FilePath $log -Append
-            }
-        }
-        
-        "Rename finished: $(Get-Date -Format o)" | Out-File -FilePath $log -Append
-        Write-Host "Done. Log: $log"
-=======
         loadInventory();
->>>>>>> 672b5825be6cba08a75135780945d362693ab11d
     </script>
 </body>
 </html>

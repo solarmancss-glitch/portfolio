@@ -61,7 +61,7 @@
     {"Category":"Inverter","Name":"Inverex 6kW Single Phase Hybrid","Purchase":260000,"Sale":280000,"Qty":12,"Watt":6000,"Technology":"single-phase","Image":"images/products/inverex-6kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Inverex 8kW Single Phase Hybrid","Purchase":340000,"Sale":365000,"Qty":8,"Watt":8000,"Technology":"single-phase","Image":"images/products/inverex-8kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Inverex 10kW Single Phase Hybrid","Purchase":420000,"Sale":450000,"Qty":6,"Watt":10000,"Technology":"single-phase","Image":"images/products/inverex-10kw-single-phase-hybrid.jpg"},
- 
+
     {"Category":"Inverter","Name":"Knox 4kW Single Phase Hybrid","Purchase":91000,"Sale":96000,"Qty":12,"Watt":4000,"Technology":"single-phase","Image":"images/products/knox-4kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Knox 4.5kW Single Phase Hybrid","Purchase":113000,"Sale":120000,"Qty":10,"Watt":4500,"Technology":"single-phase","Image":"images/products/knox-4.5kw-single-phase-hybrid.jpg"},
     {"Category":"Inverter","Name":"Knox 6.5kW Single Phase Hybrid","Purchase":161000,"Sale":175000,"Qty":8,"Watt":6500,"Technology":"single-phase","Image":"images/products/knox-6.5kw-single-phase-hybrid.jpg"},
@@ -133,10 +133,7 @@
     {"Category":"Transport","Name":"Transport (Local Swabi)","Purchase":2000,"Sale":3000,"Qty":100,"Watt":0,"Technology":"local","Image":"images/products/transport-local-swabi.jpg"},
     {"Category":"Transport","Name":"Transport (Out of City)","Purchase":5000,"Sale":8000,"Qty":50,"Watt":0,"Technology":"out","Image":"images/products/transport-out-of-city.jpg"},
 
-    {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/others.jpg"}
-
-    {"Category":"Bidirectional meters","Name":"Iesco Kbk ","Purchase":17000,"Sale":18500,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter1.jpg"}
+    {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/others.jpg"},
+    {"Category":"Bidirectional meters","Name":"Iesco Kbk ","Purchase":17000,"Sale":18500,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter1.jpg"},
     {"Category":"Bidirectional meters","Name":"Pesco Kbk ","Purchase":45000,"Sale":49000,"Qty":10,"Watt":0,"Technology":"","Image":"images/products/meter2.jpg"}
-     
-    
 ]
