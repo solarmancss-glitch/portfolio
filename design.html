@@ -547,20 +547,21 @@
         let totalKw = 0;
 
         // ==============================================================================
-        // 2. THREE.JS SCENE INITIALIZATION (FIXED CLIPPING & Z-FIGHTING)
+        // 2. THREE.JS SCENE INITIALIZATION (HDRI LIGHTING + NATURAL DAYLIGHT)
         // ==============================================================================
         function init3D() {
             const container = document.getElementById('viewport');
             const canvas = document.getElementById('canvas3d');
 
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x13161c);
+            // Brighter sky background (soft blue)
+            scene.background = new THREE.Color(0x88bbdd);
 
             // OPTIMIZED CAMERA NEAR/FAR RANGE FOR CRISP RENDERING AT ALL ZOOM LEVELS
             camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 2000);
             camera.position.set(12, 14, 18);
 
-            // LOGARITHMIC DEPTH BUFFER PREVENTS PANEL Z-FIGHTING & BLURRINNESS WHEN ZOOMED OUT
+            // HIGH PERFORMANCE RENDERER WITH TONE MAPPING
             renderer = new THREE.WebGLRenderer({ 
                 canvas: canvas, 
                 antialias: true, 
@@ -574,7 +575,7 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.shadowMap.bias = -0.0001;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.2;
+            renderer.toneMappingExposure = 1.0;
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -595,10 +596,20 @@
             canvas.addEventListener('pointerdown', onPointerDown);
             canvas.addEventListener('dblclick', onDoubleClick);
 
-            const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
-            scene.add(ambientLight);
+            // ============================================================
+            //  HDRI ENVIRONMENT: Procedural Sky + Sun
+            // ============================================================
+            const hdriTexture = generateHDRISky();
+            hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
+            const pmremGenerator = new THREE.PMREMGenerator(renderer);
+            pmremGenerator.compileCubemapShader();
+            const envMap = pmremGenerator.fromEquirectangular(hdriTexture).texture;
+            scene.environment = envMap;
+            // Use as background too (bright sky)
+            scene.background = hdriTexture;
 
-            sunLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+            // ---- Sun Light (main directional light for shadows) ----
+            sunLight = new THREE.DirectionalLight(0xffeedd, 1.8);
             sunLight.castShadow = true;
             sunLight.shadow.mapSize.width = 2048;
             sunLight.shadow.mapSize.height = 2048;
@@ -611,6 +622,27 @@
             sunLight.shadow.bias = -0.0005;
             scene.add(sunLight);
 
+            // Target for sun
+            const sunTarget = new THREE.Object3D();
+            sunTarget.position.set(0, 0, 0);
+            scene.add(sunTarget);
+            sunLight.target = sunTarget;
+
+            // ---- Fill light (soft blue sky bounce) ----
+            const fillLight = new THREE.DirectionalLight(0x88ccff, 0.5);
+            fillLight.position.set(-20, 10, 30);
+            scene.add(fillLight);
+
+            // ---- Secondary fill (warm bounce from ground) ----
+            const groundFill = new THREE.DirectionalLight(0xffbb88, 0.25);
+            groundFill.position.set(0, -10, 10);
+            scene.add(groundFill);
+
+            // ---- Ambient (low, environment handles most) ----
+            const ambientLight = new THREE.AmbientLight(0x446688, 0.3);
+            scene.add(ambientLight);
+
+            // Set initial sun position based on user controls
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('sun_date').value = today;
             updateSun();
@@ -624,6 +656,74 @@
             animate();
             
             generateStructure();
+        }
+
+        // ============================================================
+        //  HDRI GENERATOR: Creates a realistic sky environment map
+        // ============================================================
+        function generateHDRISky() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            // Sky gradient: deep blue at top → warm horizon
+            const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+            gradient.addColorStop(0, '#4a8bc2');
+            gradient.addColorStop(0.3, '#7ab8e6');
+            gradient.addColorStop(0.55, '#a8d4f0');
+            gradient.addColorStop(0.7, '#f5d6b3');
+            gradient.addColorStop(0.85, '#f5cba0');
+            gradient.addColorStop(1, '#e8b88a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1024, 512);
+
+            // Sun glow (bright warm spot)
+            const sunX = 780,
+                sunY = 140;
+            const radGrad = ctx.createRadialGradient(sunX, sunY, 5, sunX, sunY, 280);
+            radGrad.addColorStop(0, 'rgba(255, 255, 240, 1)');
+            radGrad.addColorStop(0.15, 'rgba(255, 235, 200, 0.95)');
+            radGrad.addColorStop(0.4, 'rgba(255, 210, 150, 0.6)');
+            radGrad.addColorStop(0.7, 'rgba(255, 180, 100, 0.2)');
+            radGrad.addColorStop(1, 'rgba(255, 150, 50, 0)');
+            ctx.fillStyle = radGrad;
+            ctx.fillRect(0, 0, 1024, 512);
+
+            // Soft clouds (white blobs)
+            ctx.globalAlpha = 0.25;
+            const cloudPositions = [
+                [120, 80, 90],
+                [300, 60, 120],
+                [500, 100, 80],
+                [700, 50, 100],
+                [850, 90, 70],
+                [950, 60, 110],
+                [200, 160, 60],
+                [600, 170, 50],
+                [100, 180, 70]
+            ];
+            cloudPositions.forEach(([cx, cy, r]) => {
+                const cg = ctx.createRadialGradient(cx, cy, 5, cx, cy, r);
+                cg.addColorStop(0, 'rgba(255,255,255,0.7)');
+                cg.addColorStop(0.5, 'rgba(255,255,255,0.3)');
+                cg.addColorStop(1, 'rgba(255,255,255,0)');
+                ctx.fillStyle = cg;
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+
+            // Ground reflection at bottom
+            const groundGrad = ctx.createLinearGradient(0, 460, 0, 512);
+            groundGrad.addColorStop(0, 'rgba(60,90,110,0)');
+            groundGrad.addColorStop(0.5, 'rgba(60,90,110,0.15)');
+            groundGrad.addColorStop(1, 'rgba(60,90,110,0.35)');
+            ctx.fillStyle = groundGrad;
+            ctx.fillRect(0, 460, 1024, 52);
+
+            return new THREE.CanvasTexture(canvas);
         }
 
         function createGroundPlane(width, height, texture = null) {
@@ -640,12 +740,17 @@
                     side: THREE.DoubleSide, 
                     roughness: 0.7,
                     metalness: 0.0,
+                    envMapIntensity: 0.6,
                 });
                 document.getElementById('sum_map').innerText = `${width.toFixed(1)}×${height.toFixed(1)}m`;
             } else {
                 const gridHelper = new THREE.GridHelper(Math.max(width, height), Math.max(width, height), 0x3b82f6, 0x2a2f3d);
                 gridHelper.rotation.x = Math.PI / 2;
-                material = new THREE.MeshStandardMaterial({ color: 0x1a1d26, roughness: 0.9 });
+                material = new THREE.MeshStandardMaterial({ 
+                    color: 0x1a1d26, 
+                    roughness: 0.9,
+                    envMapIntensity: 0.3,
+                });
                 
                 groundMesh = new THREE.Mesh(geometry, material);
                 groundMesh.rotation.x = -Math.PI / 2;
@@ -1483,7 +1588,12 @@
 
         function createSolarPanelMesh(w, h, t) {
             const group = new THREE.Group();
-            const frameMat = new THREE.MeshStandardMaterial({ color: 0xb0b5c0, metalness: 0.8, roughness: 0.3 });
+            const frameMat = new THREE.MeshStandardMaterial({ 
+                color: 0xb0b5c0, 
+                metalness: 0.8, 
+                roughness: 0.3,
+                envMapIntensity: 0.8,
+            });
             const frameMesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, t), frameMat);
             frameMesh.castShadow = true;
             frameMesh.receiveShadow = true;
@@ -1494,6 +1604,7 @@
                 color: 0x0a192f, 
                 metalness: 0.9, 
                 roughness: 0.2,
+                envMapIntensity: 0.6,
                 polygonOffset: true,
                 polygonOffsetFactor: -1,
                 polygonOffsetUnits: -1
@@ -1514,7 +1625,12 @@
             } else {
                 geo = new THREE.BoxGeometry(length, 0.05, 0.04);
             }
-            const mat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.7, roughness: 0.4 });
+            const mat = new THREE.MeshStandardMaterial({ 
+                color: 0x94a3b8, 
+                metalness: 0.7, 
+                roughness: 0.4,
+                envMapIntensity: 0.6,
+            });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
@@ -1523,7 +1639,12 @@
 
         function createLegMesh(height) {
             const geo = new THREE.CylinderGeometry(0.025, 0.025, height, 12);
-            const mat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8, roughness: 0.3 });
+            const mat = new THREE.MeshStandardMaterial({ 
+                color: 0x64748b, 
+                metalness: 0.8, 
+                roughness: 0.3,
+                envMapIntensity: 0.5,
+            });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
@@ -2036,7 +2157,7 @@
             document.getElementById('sec-polygon').classList.add('collapsed');
             document.getElementById('sec-edit').classList.add('collapsed');
             
-            setStatus('SolarMount Pro v3.9 ready — crisp zoom & working draw tools');
+            setStatus('SolarMount Pro v3.9 ready — HDRI lighting enabled');
         };
     </script>
 </body>
