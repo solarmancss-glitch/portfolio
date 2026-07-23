@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Sizing</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 30px 20px; color: #1a1a2e; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        h1 { color: #0057B8; border-bottom: 3px solid #F7931E; padding-bottom: 12px; margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #0057B8; color: white; padding: 10px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #e0e0e0; }
+        .highlight { font-weight: 700; color: #F7931E; font-size: 1.1em; }
+        .btn-group { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn { padding: 10px 24px; background: #0057B8; color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+        .btn-secondary { background: #F7931E; }
+        .btn-outline { background: transparent; border: 2px solid #0057B8; color: #0057B8; }
+        .btn-outline:hover { background: #0057B8; color: white; }
+        .error { background: #ffebee; color: #c62828; padding: 20px; border-radius: 8px; border-left: 4px solid #c62828; }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <h1>☀️ System Sizing Summary</h1>
+        <div id="content"></div>
+        <div class="btn-group">
+            <a href="design.html" class="btn btn-outline">← Back to Design</a>
+            <button id="proceedBtn" class="btn btn-secondary">Proceed to Proposal →</button>
+        </div>
+    </div>
+
+    <script>
+        // Helper to read params
+        function getParams() {
+            const stored = localStorage.getItem('solarDesignParams');
+            if (!stored) return null;
+            try { return JSON.parse(stored); } catch (e) { return null; }
+        }
+
+        // Simple annual energy estimate: 5 peak sun hours, 80% efficiency
+        function estimateAnnualEnergy(kWp) {
+            const peakSunHours = 5;
+            const days = 365;
+            const efficiency = 0.8;
+            return kWp * peakSunHours * days * efficiency;
+        }
+
+        function displaySummary() {
+            const params = getParams();
+            const content = document.getElementById('content');
+
+            if (!params) {
+                content.innerHTML = `<div class="error">No design data found. Please create a design first on the <a href="design.html">Design page</a>.</div>`;
+                return;
+            }
+
+            const { rows, cols, panelKey, orientation, panelWidth, panelHeight, totalWidth, totalHeight, tiltDeg, wattage, gapX, gapY } = params;
+            const totalPanels = rows * cols;
+            const totalWattage = totalPanels * (wattage || 0);
+            const totalWattageKW = totalWattage / 1000;
+            const totalArea = totalWidth * totalHeight;
+            const annualEnergy = estimateAnnualEnergy(totalWattageKW);
+            const wattDisplay = wattage || 'N/A';
+
+            content.innerHTML = `
+                <table>
+                    <tr><th colspan="2">Design Parameters</th></tr>
+                    <tr><td>Panel Model</td><td>${panelKey}</td></tr>
+                    <tr><td>Orientation</td><td>${orientation}</td></tr>
+                    <tr><td>Rows × Columns</td><td>${rows} × ${cols}</td></tr>
+                    <tr><td>Gap X / Y (m)</td><td>${gapX} / ${gapY}</td></tr>
+                    <tr><td>Tilt Angle (°)</td><td>${tiltDeg}</td></tr>
+                </table>
+                <table>
+                    <tr><th colspan="2">System Sizing</th></tr>
+                    <tr><td>Number of Panels</td><td class="highlight">${totalPanels}</td></tr>
+                    <tr><td>Panel Wattage (Wp)</td><td>${wattDisplay}</td></tr>
+                    <tr><td>Total Installed Capacity</td><td class="highlight">${totalWattageKW.toFixed(2)} kWp</td></tr>
+                    <tr><td>Total Array Area (m²)</td><td>${totalArea.toFixed(2)}</td></tr>
+                </table>
+                <table>
+                    <tr><th colspan="2">Estimated Energy Production</th></tr>
+                    <tr><td>Annual Energy Yield</td><td class="highlight">${annualEnergy.toFixed(0)} kWh/year</td></tr>
+                    <tr><td>Assumptions</td><td>5 peak sun hours/day, 80% system efficiency</td></tr>
+                </table>
+                <p style="margin-top:20px; font-size:14px; color:#666;">* These are approximate estimates. Actual values depend on location, shading, and system losses.</p>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', displaySummary);
+
+        document.getElementById('proceedBtn').addEventListener('click', function() {
+            window.location.href = 'proposal.html';
+        });
+    </script>
+</body>
+</html>
