@@ -136,6 +136,8 @@
         .btn-danger { background-color: #dc2626; color: #fff; }
         .btn-danger:hover { background-color: #b91c1c; }
         .btn-sm { padding: 2px 6px; font-size: 0.65rem; width: auto; margin-top: 0; }
+        .btn-warning { background-color: #f59e0b; color: #000; }
+        .btn-warning:hover { background-color: #d97706; }
 
         #map-container {
             height: 140px;
@@ -252,7 +254,7 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
         <div class="header">
-            <span>☀️ SolarMount Pro v4.1</span>
+            <span>☀️ SolarMount Pro v4.4</span>
             <div class="header-actions">
                 <button class="btn-proposal" onclick="exportProposal()">📄 Proposal</button>
                 <button onclick="saveProject()">💾 Save</button>
@@ -294,8 +296,8 @@
                         </select>
                     </div>
                     <div class="grid-2">
-                        <div class="form-group"><label>Rows (Y)</label><input type="number" id="rows" value="2" min="1" onchange="generateStructure()"></div>
-                        <div class="form-group"><label>Cols (X)</label><input type="number" id="columns" value="4" min="1" onchange="generateStructure()"></div>
+                        <div class="form-group"><label>Rows (Y)</label><input type="number" id="rows" value="1" min="1" onchange="generateStructure()"></div>
+                        <div class="form-group"><label>Cols (X)</label><input type="number" id="columns" value="1" min="1" onchange="generateStructure()"></div>
                     </div>
                     <div class="grid-2">
                         <div class="form-group"><label>Tilt (°)</label><input type="number" id="tilt" value="20" min="0" max="80" onchange="generateStructure()"></div>
@@ -407,14 +409,22 @@
                     <span class="section-title"><span class="arrow">▼</span> Polygon & Auto Layout</span>
                 </div>
                 <div class="section-body">
-                    <button class="btn btn-primary" onclick="startDrawRectangle()">✏️ Draw Rectangle on Map</button>
+                    <div class="grid-2">
+                        <button class="btn btn-primary" onclick="startDrawRectangle()">✏️ Draw Rectangle (Map)</button>
+                        <button class="btn btn-warning" onclick="startDrawPolygon3D()">✏️ Draw Polygon (3D)</button>
+                    </div>
                     <div id="polygon-info" style="font-size:0.65rem; color:#9ab0d3; margin-top:3px;">No polygon drawn</div>
                     <div class="grid-2" style="margin-top:3px;">
                         <div class="form-group"><label>Width (m)</label><input type="number" id="poly_width" value="20" step="0.5" min="1"></div>
                         <div class="form-group"><label>Height (m)</label><input type="number" id="poly_height" value="15" step="0.5" min="1"></div>
                     </div>
+                    <div class="form-group" style="margin-top:2px;">
+                        <label style="width:50%;">Use map texture on building</label>
+                        <input type="checkbox" id="use_map_texture" checked>
+                    </div>
                     <button class="btn btn-success" onclick="importPolygonTo3D()">🚀 Auto Layout Panels</button>
                     <button class="btn btn-secondary" onclick="extrudePolygon()">📐 Extrude Building</button>
+                    <button class="btn btn-danger" onclick="deletePolygon()" style="margin-top:2px;">🗑️ Delete Polygon</button>
                 </div>
             </div>
 
@@ -547,33 +557,58 @@
         // ==============================================================================
         // 2. PROFILE SIZE DATABASE
         // ==============================================================================
-        const PROFILE_SIZES = {
-            'U_CHANNEL': [
-                { label: '50×80×5 mm', w: 0.05, h: 0.08, t: 0.005 },
-                { label: '75×100×6 mm', w: 0.075, h: 0.10, t: 0.006 },
-                { label: '100×120×8 mm', w: 0.10, h: 0.12, t: 0.008 },
-            ],
-            'H_BEAM': [
-                { label: '80×80×6 mm', w: 0.08, h: 0.08, t: 0.006 },
-                { label: '100×100×8 mm', w: 0.10, h: 0.10, t: 0.008 },
-                { label: '120×120×10 mm', w: 0.12, h: 0.12, t: 0.010 },
-            ],
-            'ROUND_PIPE': [
-                { label: '50mm OD × 3mm wall', rOuter: 0.025, t: 0.003 },
-                { label: '60mm OD × 4mm wall', rOuter: 0.030, t: 0.004 },
-                { label: '80mm OD × 5mm wall', rOuter: 0.040, t: 0.005 },
-            ],
-            'SQUARE_PIPE': [
-                { label: '50×50×4 mm', s: 0.05, t: 0.004 },
-                { label: '60×60×5 mm', s: 0.06, t: 0.005 },
-                { label: '80×80×6 mm', s: 0.08, t: 0.006 },
-            ],
-            'RECTANGLE_PIPE': [
-                { label: '80×40×4 mm', w: 0.08, h: 0.04, t: 0.004 },
-                { label: '100×50×5 mm', w: 0.10, h: 0.05, t: 0.005 },
-                { label: '120×60×6 mm', w: 0.12, h: 0.06, t: 0.006 },
-            ]
-        };
+     const PROFILE_SIZES = {
+    'U_CHANNEL': [
+        // small sizes
+        { label: '1" × 2" × 1/8" (25×50×3mm)', w: 0.0254, h: 0.0508, t: 0.003175 },
+        { label: '1.5" × 3" × 3/16" (38×76×5mm)', w: 0.0381, h: 0.0762, t: 0.0047625 },
+        { label: '2" × 4" × 1/4" (50×100×6mm)', w: 0.0508, h: 0.1016, t: 0.00635 },
+        // existing larger sizes
+        { label: '50×80×5 mm', w: 0.05, h: 0.08, t: 0.005 },
+        { label: '75×100×6 mm', w: 0.075, h: 0.10, t: 0.006 },
+        { label: '100×120×8 mm', w: 0.10, h: 0.12, t: 0.008 },
+    ],
+    'H_BEAM': [
+        // small H-beam (like 3" x 3" x 1/4")
+        { label: '3" × 3" × 1/4" (76×76×6mm)', w: 0.0762, h: 0.0762, t: 0.00635 },
+        { label: '4" × 4" × 1/4" (100×100×6mm)', w: 0.1016, h: 0.1016, t: 0.00635 },
+        { label: '5" × 5" × 5/16" (127×127×8mm)', w: 0.127, h: 0.127, t: 0.0079375 },
+        // existing
+        { label: '80×80×6 mm', w: 0.08, h: 0.08, t: 0.006 },
+        { label: '100×100×8 mm', w: 0.10, h: 0.10, t: 0.008 },
+        { label: '120×120×10 mm', w: 0.12, h: 0.12, t: 0.010 },
+    ],
+    'ROUND_PIPE': [
+        // small OD
+        { label: '1" OD × 1/8" wall (25×3mm)', rOuter: 0.0127, t: 0.003175 },
+        { label: '1.5" OD × 3/16" wall (38×5mm)', rOuter: 0.01905, t: 0.0047625 },
+        { label: '2" OD × 1/4" wall (50×6mm)', rOuter: 0.0254, t: 0.00635 },
+        // existing
+        { label: '50mm OD × 3mm wall', rOuter: 0.025, t: 0.003 },
+        { label: '60mm OD × 4mm wall', rOuter: 0.030, t: 0.004 },
+        { label: '80mm OD × 5mm wall', rOuter: 0.040, t: 0.005 },
+    ],
+    'SQUARE_PIPE': [
+        // small
+        { label: '1" × 1" × 1/8" (25×25×3mm)', s: 0.0254, t: 0.003175 },
+        { label: '1.5" × 1.5" × 3/16" (38×38×5mm)', s: 0.0381, t: 0.0047625 },
+        { label: '2" × 2" × 1/4" (50×50×6mm)', s: 0.0508, t: 0.00635 },
+        // existing
+        { label: '50×50×4 mm', s: 0.05, t: 0.004 },
+        { label: '60×60×5 mm', s: 0.06, t: 0.005 },
+        { label: '80×80×6 mm', s: 0.08, t: 0.006 },
+    ],
+    'RECTANGLE_PIPE': [
+        // small
+        { label: '2" × 1" × 1/8" (50×25×3mm)', w: 0.0508, h: 0.0254, t: 0.003175 },
+        { label: '3" × 1.5" × 3/16" (76×38×5mm)', w: 0.0762, h: 0.0381, t: 0.0047625 },
+        { label: '4" × 2" × 1/4" (100×50×6mm)', w: 0.1016, h: 0.0508, t: 0.00635 },
+        // existing
+        { label: '80×40×4 mm', w: 0.08, h: 0.04, t: 0.004 },
+        { label: '100×50×5 mm', w: 0.10, h: 0.05, t: 0.005 },
+        { label: '120×60×6 mm', w: 0.12, h: 0.06, t: 0.006 },
+    ]
+};
 
         let scene, camera, renderer, controls, transformControls, raycaster, mouse;
         let groundMesh, solarMasterGroup;
@@ -582,12 +617,20 @@
         let uploadedMapData = null;
         let currentMapProvider = 'esri';
         let sunLight;
-        let drawnPolygon = null;
-        let drawnPolygonLayer = null;
+        let drawnPolygon = null;          // for map‑based rectangle/polygon
+        let drawnPolygonLayer = null;     // leaflet layer
         let arrayEditMode = false;
         let editingArray = null;
         let totalPanelCount = 0;
         let totalKw = 0;
+
+        // ---- 3D Polygon Drawing ----
+        let drawingPolygon3D = false;
+        let polygonPoints3D = [];
+        let polygonPreviewGroup = null;
+        let polygonClosed = false;
+        let polygon3DData = null;         // store the final polygon (array of Vector3) for auto‑layout/extrude
+        let extrudedBuildingGroup = null; // to store the extruded building for deletion
 
         // ==============================================================================
         // 3. THREE.JS SCENE INITIALIZATION (HDRI LIGHTING + NATURAL DAYLIGHT)
@@ -633,6 +676,11 @@
             raycaster = new THREE.Raycaster();
             mouse = new THREE.Vector2();
 
+            // ---- Polygon drawing events ----
+            canvas.addEventListener('pointerdown', onCanvasPointerDown);
+            canvas.addEventListener('contextmenu', onCanvasRightClick);
+
+            // ---- Selection events (keep for objects) ----
             canvas.addEventListener('pointerdown', onPointerDown);
             canvas.addEventListener('dblclick', onDoubleClick);
 
@@ -817,10 +865,11 @@
         }
 
         // ==============================================================================
-        // 4. OBJECT SELECTION & EDITING
+        // 4. OBJECT SELECTION & EDITING (keep as before)
         // ==============================================================================
         function onPointerDown(event) {
             if (transformControls.dragging) return;
+            if (drawingPolygon3D) return; // let polygon drawing handle clicks
 
             const rect = renderer.domElement.getBoundingClientRect();
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -841,6 +890,11 @@
         }
 
         function onDoubleClick(event) {
+            if (drawingPolygon3D) {
+                closePolygon3D();
+                return;
+            }
+
             const rect = renderer.domElement.getBoundingClientRect();
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -1073,8 +1127,10 @@
         }
 
         // ==============================================================================
-        // 9. POLYGON & AUTO LAYOUT (FIXED RECTANGLE / POLYGON TOOL)
+        // 9. POLYGON DRAWING (MAP RECTANGLE)
         // ==============================================================================
+        let mapDrawEventBound = false;
+
         function startDrawRectangle() {
             if (!leafletMap) {
                 setStatus('Map is not ready.');
@@ -1086,7 +1142,13 @@
                 leafletMap.addLayer(window.drawnItems);
             }
 
+            // Clear previous drawings
             window.drawnItems.clearLayers();
+            if (drawnPolygonLayer && leafletMap.hasLayer(drawnPolygonLayer)) {
+                leafletMap.removeLayer(drawnPolygonLayer);
+                drawnPolygonLayer = null;
+            }
+            drawnPolygon = null;
 
             const rectangleDrawer = new L.Draw.Rectangle(leafletMap, {
                 shapeOptions: {
@@ -1099,18 +1161,19 @@
             rectangleDrawer.enable();
             setStatus('Click and drag on the map to draw a rectangle.');
 
+            // Remove any previous listener to avoid duplicates
+            leafletMap.off(L.Draw.Event.CREATED);
+
             leafletMap.once(L.Draw.Event.CREATED, function(event) {
                 const layer = event.layer;
                 window.drawnItems.addLayer(layer);
-                if (drawnPolygonLayer && leafletMap.hasLayer(drawnPolygonLayer)) {
-                    leafletMap.removeLayer(drawnPolygonLayer);
-                }
                 drawnPolygonLayer = layer;
                 
                 const bounds = layer.getBounds();
                 const sw = bounds.getSouthWest();
                 const ne = bounds.getNorthEast();
                 drawnPolygon = {
+                    type: 'rectangle',
                     latlngs: [sw, ne],
                     bounds: bounds,
                     width: getHaversineDistance(sw.lat, sw.lng, sw.lat, ne.lng),
@@ -1119,22 +1182,264 @@
                 document.getElementById('poly_width').value = drawnPolygon.width.toFixed(2);
                 document.getElementById('poly_height').value = drawnPolygon.height.toFixed(2);
                 document.getElementById('polygon-info').innerHTML = 
-                    `✅ Rectangle: ${drawnPolygon.width.toFixed(1)}m × ${drawnPolygon.height.toFixed(1)}m`;
+                    `✅ Rectangle (map): ${drawnPolygon.width.toFixed(1)}m × ${drawnPolygon.height.toFixed(1)}m`;
+
+                // Clear any existing 3D polygon
+                clear3DPolygonPreview();
 
                 setStatus('Rectangle drawn! Use Auto Layout to fill with panels.');
             });
         }
 
-        function importPolygonTo3D() {
-            if (!drawnPolygon) {
-                setStatus('Please draw a rectangle on the map first.');
+        // ==============================================================================
+        // 10. 3D POLYGON DRAWING
+        // ==============================================================================
+        function startDrawPolygon3D() {
+            if (drawingPolygon3D) {
+                setStatus('Already drawing a polygon. Double‑click to close.');
                 return;
             }
-            const realWidth = parseFloat(document.getElementById('poly_width').value) || drawnPolygon.width;
-            const realHeight = parseFloat(document.getElementById('poly_height').value) || drawnPolygon.height;
-            importMapTo3DWithBounds(drawnPolygon.bounds, realWidth, realHeight);
+            // Clear any existing 3D polygon preview
+            clear3DPolygonPreview();
+            // Also clear map rectangle if any
+            if (drawnPolygonLayer && leafletMap) {
+                leafletMap.removeLayer(drawnPolygonLayer);
+                drawnPolygonLayer = null;
+            }
+            drawnPolygon = null;
+            polygonPoints3D = [];
+            polygonClosed = false;
+            polygon3DData = null;
+            drawingPolygon3D = true;
+            document.getElementById('polygon-info').innerHTML = '✏️ Drawing polygon (click ground to add vertices, double‑click or right‑click to close)';
+            setStatus('Click on the ground to place vertices.');
         }
 
+        function onCanvasPointerDown(event) {
+            if (!drawingPolygon3D) return;
+            if (polygonClosed) return;
+
+            // Get ground intersection
+            const rect = renderer.domElement.getBoundingClientRect();
+            const mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            const mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            const raycasterLocal = new THREE.Raycaster();
+            raycasterLocal.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
+
+            if (!groundMesh) return;
+            const intersects = raycasterLocal.intersectObject(groundMesh, true);
+            if (intersects.length > 0) {
+                const point = intersects[0].point;
+                if (Math.abs(point.y) < 0.01) {
+                    polygonPoints3D.push(point.clone());
+                    updatePolygonPreview();
+                    setStatus(`Vertex ${polygonPoints3D.length} added. Double‑click or right‑click to close.`);
+                }
+            }
+        }
+
+        function onCanvasRightClick(event) {
+            if (drawingPolygon3D && !polygonClosed) {
+                event.preventDefault();
+                closePolygon3D();
+            }
+        }
+
+        function closePolygon3D() {
+            if (!drawingPolygon3D) return;
+            if (polygonPoints3D.length < 3) {
+                setStatus('Need at least 3 points to form a polygon.');
+                return;
+            }
+            polygonClosed = true;
+            drawingPolygon3D = false;
+            // Store the polygon points
+            polygon3DData = polygonPoints3D.map(p => p.clone());
+            // Update info
+            const area = computePolygonArea(polygonPoints3D);
+            document.getElementById('polygon-info').innerHTML = 
+                `✅ Polygon (3D): ${polygonPoints3D.length} vertices, area ≈ ${area.toFixed(2)} m²`;
+            // Update width/height (bounding box)
+            const xs = polygonPoints3D.map(p => p.x);
+            const zs = polygonPoints3D.map(p => p.z);
+            const minX = Math.min(...xs);
+            const maxX = Math.max(...xs);
+            const minZ = Math.min(...zs);
+            const maxZ = Math.max(...zs);
+            document.getElementById('poly_width').value = (maxX - minX).toFixed(2);
+            document.getElementById('poly_height').value = (maxZ - minZ).toFixed(2);
+            setStatus('Polygon closed. Use "Auto Layout Panels" or "Extrude Building".');
+        }
+
+        function clear3DPolygonPreview() {
+            if (polygonPreviewGroup) {
+                scene.remove(polygonPreviewGroup);
+                disposeObject(polygonPreviewGroup);
+                polygonPreviewGroup = null;
+            }
+            // Also remove any extruded building
+            if (extrudedBuildingGroup) {
+                scene.remove(extrudedBuildingGroup);
+                disposeObject(extrudedBuildingGroup);
+                extrudedBuildingGroup = null;
+            }
+        }
+
+        function updatePolygonPreview() {
+            clear3DPolygonPreview();
+            if (polygonPoints3D.length < 2) return;
+
+            const group = new THREE.Group();
+            const points = polygonPoints3D.map(p => new THREE.Vector3(p.x, 0.01, p.z));
+            const linePoints = points.slice();
+            if (polygonClosed) {
+                linePoints.push(points[0]);
+            }
+            const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
+            const lineMat = new THREE.LineBasicMaterial({ color: 0xffaa00, linewidth: 2 });
+            const line = new THREE.Line(lineGeo, lineMat);
+            group.add(line);
+
+            // Vertices
+            const sphereMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+            points.forEach(p => {
+                const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), sphereMat);
+                sphere.position.copy(p);
+                sphere.position.y = 0.01;
+                group.add(sphere);
+            });
+
+            // Fill if closed
+            if (polygonClosed && points.length >= 3) {
+                const shape = new THREE.Shape();
+                shape.moveTo(points[0].x, points[0].z);
+                for (let i = 1; i < points.length; i++) {
+                    shape.lineTo(points[i].x, points[i].z);
+                }
+                shape.closePath();
+                const fillGeo = new THREE.ShapeGeometry(shape);
+                const fillMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.2, side: THREE.DoubleSide });
+                const fillMesh = new THREE.Mesh(fillGeo, fillMat);
+                fillMesh.rotation.x = -Math.PI / 2;
+                fillMesh.position.y = 0.005;
+                group.add(fillMesh);
+            }
+
+            polygonPreviewGroup = group;
+            scene.add(group);
+        }
+
+        function computePolygonArea(pts) {
+            if (pts.length < 3) return 0;
+            let area = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const j = (i + 1) % pts.length;
+                area += pts[i].x * pts[j].z;
+                area -= pts[j].x * pts[i].z;
+            }
+            return Math.abs(area) / 2;
+        }
+
+        function deletePolygon() {
+            clear3DPolygonPreview();
+            polygonPoints3D = [];
+            polygonClosed = false;
+            polygon3DData = null;
+            drawingPolygon3D = false;
+            // Also clear map polygon if any
+            if (drawnPolygonLayer && leafletMap) {
+                leafletMap.removeLayer(drawnPolygonLayer);
+                drawnPolygonLayer = null;
+            }
+            drawnPolygon = null;
+            document.getElementById('polygon-info').innerHTML = 'No polygon drawn';
+            setStatus('Polygon deleted.');
+        }
+
+        // ==============================================================================
+        // 11. IMPORT POLYGON TO 3D (Auto Layout - SMART)
+        // ==============================================================================
+        function importPolygonTo3D() {
+            let polyData = polygon3DData; // 3D polygon takes precedence
+            let width, height;
+            if (!polyData && drawnPolygon) {
+                // Use map rectangle
+                width = parseFloat(document.getElementById('poly_width').value) || drawnPolygon.width;
+                height = parseFloat(document.getElementById('poly_height').value) || drawnPolygon.height;
+            } else if (polyData) {
+                // Use 3D polygon bounding box
+                const xs = polyData.map(p => p.x);
+                const zs = polyData.map(p => p.z);
+                const minX = Math.min(...xs);
+                const maxX = Math.max(...xs);
+                const minZ = Math.min(...zs);
+                const maxZ = Math.max(...zs);
+                width = maxX - minX;
+                height = maxZ - minZ;
+                document.getElementById('poly_width').value = width.toFixed(2);
+                document.getElementById('poly_height').value = height.toFixed(2);
+            } else {
+                setStatus('No polygon drawn. Draw a rectangle on the map or a polygon in 3D.');
+                return;
+            }
+
+            // --- Smart auto‑layout ---
+            // 1. Get user settings
+            const panelKey = document.getElementById('panel_list').value;
+            const panelData = PANEL_DB[panelKey];
+            const isLandscape = document.getElementById('orientation_landscape').checked;
+            let pw = panelData.w, ph = panelData.h;
+            if (isLandscape) { pw = panelData.h; ph = panelData.w; }
+            const gapX = 0.02;
+            const gapY = 0.02;
+            const pitchX = pw + gapX;
+            const pitchY = ph + gapY;
+
+            // 2. Fixed rows from Quick Setup
+            const fixedRows = parseInt(document.getElementById('rows').value) || 1;
+
+            // 3. Compute columns that fit in the width
+            const maxCols = Math.floor((width + gapX) / pitchX);
+            let cols = Math.max(1, maxCols);
+            // Ensure the block width doesn't exceed the polygon width
+            let blockWidth = cols * pitchX - gapX;
+            // If blockWidth > width, reduce cols
+            while (blockWidth > width && cols > 1) {
+                cols--;
+                blockWidth = cols * pitchX - gapX;
+            }
+            // Now we have the optimal columns to fill width
+
+            // 4. Block height
+            let blockHeight = fixedRows * pitchY - gapY;
+
+            // 5. Compute how many blocks can fit along depth (array rows)
+            const arraySpacingY = parseFloat(document.getElementById('array_spacing_y').value) || 5.0;
+            // We need to fit blocks with spacing between them
+            // Number of blocks = floor((height + arraySpacingY) / (blockHeight + arraySpacingY))
+            let arrayRows = Math.max(1, Math.floor((height + arraySpacingY) / (blockHeight + arraySpacingY)));
+            // Optionally, we could also distribute the extra space by adjusting spacing, but we'll keep it simple.
+            // Ensure blockHeight * arrayRows + (arrayRows-1)*arraySpacingY <= height
+            while (arrayRows > 1 && (blockHeight * arrayRows + (arrayRows-1) * arraySpacingY) > height) {
+                arrayRows--;
+            }
+
+            // 6. Set array columns to 1 (since columns already fill width)
+            const arrayCols = 1;
+
+            // 7. Update UI with computed values
+            document.getElementById('rows').value = fixedRows;
+            document.getElementById('columns').value = cols;
+            document.getElementById('array_rows').value = arrayRows;
+            document.getElementById('array_columns').value = arrayCols;
+
+            // 8. Generate the structure
+            generateStructure();
+            setStatus(`Auto‑layout: ${cols} columns × ${fixedRows} rows per block, ${arrayRows} blocks along depth (total ${cols * fixedRows * arrayRows} panels)`);
+        }
+
+        // ---- Map tile fetch for polygon import (kept for ground texture) ----
         async function importMapTo3DWithBounds(bounds, realWidth, realHeight) {
             const zoom = Math.min(leafletMap.getZoom(), 18);
             const sw = bounds.getSouthWest();
@@ -1227,71 +1532,93 @@
                 texture.needsUpdate = true;
                 createGroundPlane(realWidth, realHeight, texture);
                 document.getElementById('sum_map').innerText = `Polygon (${realWidth.toFixed(1)}×${realHeight.toFixed(1)}m)`;
-                autoLayoutPanels(realWidth, realHeight);
+                // Also auto‑layout using the new smart method
+                // But we already have drawnPolygon set, so call importPolygonTo3D again to trigger layout
+                // Actually, we can just call importPolygonTo3D() after setting the texture.
+                importPolygonTo3D();
             } catch(err) {
                 console.error(err);
                 setStatus('Error creating texture from polygon.');
             }
         }
 
-        function autoLayoutPanels(width, height) {
-            const panelKey = document.getElementById('panel_list').value;
-            const panelData = PANEL_DB[panelKey];
-            const isLandscape = document.getElementById('orientation_landscape').checked;
-            let pw = panelData.w, ph = panelData.h;
-            if (isLandscape) { pw = panelData.h; ph = panelData.w; }
-            const gapX = 0.02, gapY = 0.02;
-            const pitchX = pw + gapX;
-            const pitchY = ph + gapY;
-
-            const cols = Math.floor((width - gapX) / pitchX);
-            const rows = Math.floor((height - gapY) / pitchY);
-            if (cols < 1 || rows < 1) {
-                setStatus('Area too small for any panel.');
-                return;
-            }
-
-            const origRows = parseInt(document.getElementById('rows').value);
-            const origCols = parseInt(document.getElementById('columns').value);
-            const origArrayRows = parseInt(document.getElementById('array_rows').value);
-            const origArrayCols = parseInt(document.getElementById('array_columns').value);
-
-            document.getElementById('rows').value = rows;
-            document.getElementById('columns').value = cols;
-            document.getElementById('array_rows').value = 1;
-            document.getElementById('array_columns').value = 1;
-
-            generateStructure();
-
-            document.getElementById('rows').value = origRows;
-            document.getElementById('columns').value = origCols;
-            document.getElementById('array_rows').value = origArrayRows;
-            document.getElementById('array_columns').value = origArrayCols;
-
-            setStatus(`Auto-layout: ${cols}×${rows} panels (${cols*rows} total)`);
-        }
-
+        // ---- Extrude building from polygon ----
         function extrudePolygon() {
-            if (!drawnPolygon) {
-                setStatus('Please draw a rectangle first.');
+            let polyData = polygon3DData;
+            let useMapTexture = document.getElementById('use_map_texture').checked;
+            let texture = null;
+            if (useMapTexture && groundMesh && groundMesh.material && groundMesh.material.map) {
+                texture = groundMesh.material.map;
+            }
+
+            if (!polyData && drawnPolygon) {
+                // Map rectangle
+                const realWidth = parseFloat(document.getElementById('poly_width').value) || drawnPolygon.width;
+                const realHeight = parseFloat(document.getElementById('poly_height').value) || drawnPolygon.height;
+                const height = 3.0;
+                const geo = new THREE.BoxGeometry(realWidth, height, realHeight);
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: texture ? 0xffffff : 0x8b9bb5,
+                    map: texture,
+                    transparent: false,
+                    roughness: 0.6,
+                    metalness: 0.1
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(0, height/2, 0);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                if (extrudedBuildingGroup) {
+                    scene.remove(extrudedBuildingGroup);
+                    disposeObject(extrudedBuildingGroup);
+                }
+                extrudedBuildingGroup = new THREE.Group();
+                extrudedBuildingGroup.add(mesh);
+                scene.add(extrudedBuildingGroup);
+                updateSummary();
+                setStatus('Building extruded from rectangle.');
+                return;
+            } else if (polyData) {
+                // Extrude the 3D polygon shape
+                const points = polyData.map(p => new THREE.Vector3(p.x, 0, p.z));
+                const shape = new THREE.Shape();
+                shape.moveTo(points[0].x, points[0].z);
+                for (let i = 1; i < points.length; i++) {
+                    shape.lineTo(points[i].x, points[i].z);
+                }
+                shape.closePath();
+                const extrudeHeight = 3.0;
+                const extrudeSettings = { depth: extrudeHeight, bevelEnabled: false };
+                const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                geo.rotateX(-Math.PI / 2);
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: texture ? 0xffffff : 0x8b9bb5,
+                    map: texture,
+                    transparent: false,
+                    roughness: 0.6,
+                    metalness: 0.1,
+                    side: THREE.DoubleSide
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.y = 0;
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                if (extrudedBuildingGroup) {
+                    scene.remove(extrudedBuildingGroup);
+                    disposeObject(extrudedBuildingGroup);
+                }
+                extrudedBuildingGroup = new THREE.Group();
+                extrudedBuildingGroup.add(mesh);
+                scene.add(extrudedBuildingGroup);
+                updateSummary();
+                setStatus('Building extruded from 3D polygon.');
                 return;
             }
-            const realWidth = parseFloat(document.getElementById('poly_width').value) || drawnPolygon.width;
-            const realHeight = parseFloat(document.getElementById('poly_height').value) || drawnPolygon.height;
-            const height = 3.0;
-            const geo = new THREE.BoxGeometry(realWidth, height, realHeight);
-            const mat = new THREE.MeshStandardMaterial({ color: 0x8b9bb5, transparent: true, opacity: 0.25 });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.set(0, height/2, 0);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            solarMasterGroup.add(mesh);
-            updateSummary();
-            setStatus('Building extruded.');
+            setStatus('No polygon drawn.');
         }
 
         // ==============================================================================
-        // 10. MAP FUNCTIONS
+        // 12. MAP FUNCTIONS
         // ==============================================================================
         function getMapTileUrl(provider) {
             switch(provider) {
@@ -1396,7 +1723,7 @@
         }
 
         // ==============================================================================
-        // 11. MAP IMAGE UPLOAD
+        // 13. MAP IMAGE UPLOAD
         // ==============================================================================
         function uploadMapImage(event) {
             const file = event.target.files[0];
@@ -1571,7 +1898,7 @@
         }
 
         // ==============================================================================
-        // 12. SELECT ALL ARRAYS & MOVE ALL
+        // 14. SELECT ALL ARRAYS & MOVE ALL
         // ==============================================================================
         function selectAllArrays() {
             if (solarMasterGroup.children.length === 0) {
@@ -1593,7 +1920,7 @@
         }
 
         // ==============================================================================
-        // 13. PROFILE SIZE & MATERIAL HELPERS
+        // 15. PROFILE SIZE & MATERIAL HELPERS
         // ==============================================================================
         function populateProfileSizes() {
             const profileType = document.getElementById('profile_type').value;
@@ -1612,7 +1939,6 @@
                 opt.textContent = 'Default';
                 sizeSelect.appendChild(opt);
             }
-            // Ensure a selection
             if (sizeSelect.selectedIndex === -1) sizeSelect.selectedIndex = 0;
         }
 
@@ -1624,14 +1950,12 @@
         }
 
         function getMaterialFinish() {
-            return document.getElementById('material_finish').value; // 'GALVANIZED' or 'PAINTED'
+            return document.getElementById('material_finish').value;
         }
 
         // ==============================================================================
-        // 14. ADVANCED STRUCTURAL PROFILE FUNCTIONS (WITH SIZE PARAMS)
+        // 16. ADVANCED STRUCTURAL PROFILE FUNCTIONS
         // ==============================================================================
-
-        // ---- Cross‑section shapes ----
         function getUChannelShape(w, h, t) {
             const shape = new THREE.Shape();
             shape.moveTo(-w/2, -h/2);
@@ -1712,7 +2036,6 @@
             return shape;
         }
 
-        // ---- Profile mesh with size and material ----
         function createProfileMesh(profileType, length, sizeParams, materialFinish) {
             let shape;
             switch(profileType) {
@@ -1743,7 +2066,6 @@
                     break;
                 }
                 default: {
-                    // fallback to U-channel
                     shape = getUChannelShape(0.05, 0.08, 0.005);
                 }
             }
@@ -1752,13 +2074,12 @@
             const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
             geo.center();
 
-            // Material based on finish
             let color, metalness, roughness;
             if (materialFinish === 'PAINTED') {
                 color = 0x222222;
                 metalness = 0.1;
                 roughness = 0.6;
-            } else { // GALVANIZED
+            } else {
                 color = 0x94a3b8;
                 metalness = 0.8;
                 roughness = 0.3;
@@ -1776,7 +2097,6 @@
             return mesh;
         }
 
-        // ---- Base plate (unchanged, keep as is) ----
         function createBasePlateMesh(sizeKey) {
             const group = new THREE.Group();
             const sizeM = (sizeKey === '8x8') ? 0.2032 : 0.1524;
@@ -1807,7 +2127,6 @@
             return { group, thickness, sizeM };
         }
 
-        // ---- Leg with base plate (takes size and material) ----
         function createLegWithBasePlate(profileType, height, basePlateSize, sizeParams, materialFinish) {
             const group = new THREE.Group();
 
@@ -1880,7 +2199,7 @@
         }
 
         // ==============================================================================
-        // 15. STRUCTURE GENERATION (USING ADVANCED PROFILES & BASE PLATES)
+        // 17. STRUCTURE GENERATION
         // ==============================================================================
         function computeSpacing(count, totalLength) {
             if (count <= 1) return [0.0];
@@ -1978,7 +2297,6 @@
 
             const tiltRad = tiltDeg * Math.PI / 180.0;
 
-            // Get selected profile size and material
             const sizeParams = getSelectedProfileSize();
             const materialFinish = getMaterialFinish();
 
@@ -1996,7 +2314,6 @@
                     const panelCenterX = -((cols - 1) * pitchX) / 2;
                     const panelCenterY = -((rows - 1) * pitchY) / 2;
 
-                    // Panels
                     for (let r = 0; r < rows; r++) {
                         for (let c = 0; c < cols; c++) {
                             const panel = createSolarPanelMesh(pw, ph, pt);
@@ -2007,10 +2324,8 @@
                         }
                     }
 
-                    // ---- Rails ----
                     let railPositions = [];
                     if (isLandscape) {
-                        // Rails along Z, at each column X offset
                         for (let c = 0; c < cols; c++) {
                             const colX = panelCenterX + c * pitchX;
                             const r1 = createProfileMesh(profileType, blockHeight, sizeParams, materialFinish);
@@ -2024,7 +2339,6 @@
                             railPositions.push({ x: colX + railOffset, z: 0 });
                         }
                     } else {
-                        // Portrait: rails along X, at each row Z offset
                         for (let r = 0; r < rows; r++) {
                             const rowY = panelCenterY + r * pitchY;
                             const r1 = createProfileMesh(profileType, blockWidth, sizeParams, materialFinish);
@@ -2041,13 +2355,11 @@
                         }
                     }
 
-                    // Tilt the whole panel+rail group
                     tiltGroup.rotation.x = tiltRad;
                     const frontRiseOffset = (blockHeight / 2.0) * Math.sin(tiltRad);
                     tiltGroup.position.y = minFrontHeight + frontRiseOffset;
                     blockGroup.add(tiltGroup);
 
-                    // ---- Legs ----
                     const legSpacingZ = computeSpacing(legCountY, blockHeight);
                     const legSpacingX = computeSpacing(legCountX, blockWidth);
 
@@ -2113,7 +2425,7 @@
         }
 
         // ==============================================================================
-        // 16. PROPOSAL EXPORT
+        // 18. PROPOSAL EXPORT
         // ==============================================================================
         function exportProposal() {
             const views = [
@@ -2257,11 +2569,11 @@
         }
 
         // ==============================================================================
-        // 17. PROJECT SAVE / LOAD
+        // 19. PROJECT SAVE / LOAD
         // ==============================================================================
         function saveProject() {
             const projectData = {
-                version: '4.1',
+                version: '4.4',
                 timestamp: new Date().toISOString(),
                 settings: {
                     structure_type: document.getElementById('structure_type').value,
@@ -2384,7 +2696,7 @@
         }
 
         // ==============================================================================
-        // 18. BOM EXPORT
+        // 20. BOM EXPORT
         // ==============================================================================
         function exportBOM() {
             const rows = parseInt(document.getElementById('rows').value) || 1;
@@ -2424,7 +2736,7 @@
         }
 
         // ==============================================================================
-        // 19. INIT
+        // 21. INIT
         // ==============================================================================
         window.onload = () => {
             init3D();
@@ -2447,7 +2759,7 @@
             document.getElementById('sec-polygon').classList.add('collapsed');
             document.getElementById('sec-edit').classList.add('collapsed');
             
-            setStatus('SolarMount Pro v4.1 ready — Standard sizes & material finishes');
+            setStatus('SolarMount Pro v4.4 — smart auto‑layout with fixed rows');
         };
     </script>
 </body>
