@@ -20,7 +20,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { display: flex; height: 100vh; background-color: #1a1c23; color: #e1e4ed; overflow: hidden; }
 
-        /* Sidebar Styling */
         #sidebar {
             width: 380px;
             background-color: #222631;
@@ -64,7 +63,6 @@
         .content::-webkit-scrollbar { width: 4px; }
         .content::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 4px; }
         
-        /* Collapsible Sections */
         .section-box {
             background-color: #2a2f3d;
             border-radius: 6px;
@@ -118,7 +116,6 @@
         .form-group input[type="file"] { width: 56%; padding: 2px; font-size: 0.65rem; background: #1c202b; border: 1px solid #3d455d; border-radius: 4px; color: #ccc; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 
-        /* Buttons */
         .btn {
             width: 100%;
             padding: 5px 8px;
@@ -140,7 +137,6 @@
         .btn-danger:hover { background-color: #b91c1c; }
         .btn-sm { padding: 2px 6px; font-size: 0.65rem; width: auto; margin-top: 0; }
 
-        /* Map Container */
         #map-container {
             height: 140px;
             width: 100%;
@@ -149,11 +145,9 @@
             border: 1px solid #3d455d;
         }
 
-        /* 3D Viewport */
         #viewport { flex: 1; position: relative; background: #0d0f17; }
         #canvas3d { width: 100%; height: 100%; display: block; }
         
-        /* Floating Toolbar */
         #viewport-toolbar {
             position: absolute;
             top: 10px;
@@ -183,7 +177,6 @@
         #viewport-toolbar .btn-jpg { background: #059669; color: #fff; }
         #viewport-toolbar .btn-jpg:hover { background: #10b981; }
 
-        /* Summary Overlay - Enhanced */
         #summary-overlay {
             position: absolute;
             top: 10px;
@@ -222,7 +215,6 @@
         .section-body { max-height: 800px; overflow: hidden; transition: max-height 0.3s ease; }
         .section-box.collapsed .section-body { max-height: 0; padding: 0 10px; }
 
-        /* Status bar */
         #status-bar {
             position: absolute;
             bottom: 10px;
@@ -260,7 +252,7 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
         <div class="header">
-            <span>☀️ SolarMount Pro v3.9</span>
+            <span>☀️ SolarMount Pro v4.1</span>
             <div class="header-actions">
                 <button class="btn-proposal" onclick="exportProposal()">📄 Proposal</button>
                 <button onclick="saveProject()">💾 Save</button>
@@ -329,7 +321,7 @@
                 </div>
             </div>
 
-            <!-- ADVANCED -->
+            <!-- ADVANCED STRUCTURAL PROFILES -->
             <div class="section-box" id="sec-advanced">
                 <div class="section-header" onclick="toggleSection('sec-advanced')">
                     <span class="section-title"><span class="arrow">▼</span> Structural Profiles</span>
@@ -337,12 +329,32 @@
                 <div class="section-body">
                     <div class="form-group">
                         <label>Profile Type</label>
-                        <select id="profile_type" onchange="generateStructure()">
-                            <option value="C_CHANNEL">C-Channel</option>
-                            <option value="SQUARE">Square Tube</option>
-                            <option value="ROUND">Round Pipe</option>
-                            <option value="H_BEAM">H-Beam</option>
-                            <option value="ANGLE">Angle Arm</option>
+                        <select id="profile_type" onchange="populateProfileSizes(); generateStructure();">
+                            <option value="U_CHANNEL">U‑Channel / C‑Channel</option>
+                            <option value="H_BEAM">H‑Beam / I‑Beam</option>
+                            <option value="ROUND_PIPE">Round Pipe / Tube</option>
+                            <option value="SQUARE_PIPE">Square Pipe (HSS)</option>
+                            <option value="RECTANGLE_PIPE">Rectangular Pipe (HSS)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Size</label>
+                        <select id="profile_size" onchange="generateStructure()">
+                            <!-- populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Material Finish</label>
+                        <select id="material_finish" onchange="generateStructure()">
+                            <option value="GALVANIZED">Galvanized (Silver)</option>
+                            <option value="PAINTED">Painted (Black)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Leg Base Plate</label>
+                        <select id="base_plate_size" onchange="generateStructure()">
+                            <option value="6x6">6" × 6" Base Plate (152×152mm)</option>
+                            <option value="8x8">8" × 8" Base Plate (203×203mm)</option>
                         </select>
                     </div>
                     <div class="grid-2">
@@ -532,6 +544,37 @@
             'TRINA_VERTEX_700': { w: 1.303, h: 2.384, t: 0.033, watts: 700 }
         };
 
+        // ==============================================================================
+        // 2. PROFILE SIZE DATABASE
+        // ==============================================================================
+        const PROFILE_SIZES = {
+            'U_CHANNEL': [
+                { label: '50×80×5 mm', w: 0.05, h: 0.08, t: 0.005 },
+                { label: '75×100×6 mm', w: 0.075, h: 0.10, t: 0.006 },
+                { label: '100×120×8 mm', w: 0.10, h: 0.12, t: 0.008 },
+            ],
+            'H_BEAM': [
+                { label: '80×80×6 mm', w: 0.08, h: 0.08, t: 0.006 },
+                { label: '100×100×8 mm', w: 0.10, h: 0.10, t: 0.008 },
+                { label: '120×120×10 mm', w: 0.12, h: 0.12, t: 0.010 },
+            ],
+            'ROUND_PIPE': [
+                { label: '50mm OD × 3mm wall', rOuter: 0.025, t: 0.003 },
+                { label: '60mm OD × 4mm wall', rOuter: 0.030, t: 0.004 },
+                { label: '80mm OD × 5mm wall', rOuter: 0.040, t: 0.005 },
+            ],
+            'SQUARE_PIPE': [
+                { label: '50×50×4 mm', s: 0.05, t: 0.004 },
+                { label: '60×60×5 mm', s: 0.06, t: 0.005 },
+                { label: '80×80×6 mm', s: 0.08, t: 0.006 },
+            ],
+            'RECTANGLE_PIPE': [
+                { label: '80×40×4 mm', w: 0.08, h: 0.04, t: 0.004 },
+                { label: '100×50×5 mm', w: 0.10, h: 0.05, t: 0.005 },
+                { label: '120×60×6 mm', w: 0.12, h: 0.06, t: 0.006 },
+            ]
+        };
+
         let scene, camera, renderer, controls, transformControls, raycaster, mouse;
         let groundMesh, solarMasterGroup;
         let leafletMap, mapMarker;
@@ -547,21 +590,18 @@
         let totalKw = 0;
 
         // ==============================================================================
-        // 2. THREE.JS SCENE INITIALIZATION (HDRI LIGHTING + NATURAL DAYLIGHT)
+        // 3. THREE.JS SCENE INITIALIZATION (HDRI LIGHTING + NATURAL DAYLIGHT)
         // ==============================================================================
         function init3D() {
             const container = document.getElementById('viewport');
             const canvas = document.getElementById('canvas3d');
 
             scene = new THREE.Scene();
-            // Brighter sky background (soft blue)
             scene.background = new THREE.Color(0x88bbdd);
 
-            // OPTIMIZED CAMERA NEAR/FAR RANGE FOR CRISP RENDERING AT ALL ZOOM LEVELS
             camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 2000);
             camera.position.set(12, 14, 18);
 
-            // HIGH PERFORMANCE RENDERER WITH TONE MAPPING
             renderer = new THREE.WebGLRenderer({ 
                 canvas: canvas, 
                 antialias: true, 
@@ -605,10 +645,8 @@
             pmremGenerator.compileCubemapShader();
             const envMap = pmremGenerator.fromEquirectangular(hdriTexture).texture;
             scene.environment = envMap;
-            // Use as background too (bright sky)
             scene.background = hdriTexture;
 
-            // ---- Sun Light (main directional light for shadows) ----
             sunLight = new THREE.DirectionalLight(0xffeedd, 1.8);
             sunLight.castShadow = true;
             sunLight.shadow.mapSize.width = 2048;
@@ -622,27 +660,22 @@
             sunLight.shadow.bias = -0.0005;
             scene.add(sunLight);
 
-            // Target for sun
             const sunTarget = new THREE.Object3D();
             sunTarget.position.set(0, 0, 0);
             scene.add(sunTarget);
             sunLight.target = sunTarget;
 
-            // ---- Fill light (soft blue sky bounce) ----
             const fillLight = new THREE.DirectionalLight(0x88ccff, 0.5);
             fillLight.position.set(-20, 10, 30);
             scene.add(fillLight);
 
-            // ---- Secondary fill (warm bounce from ground) ----
             const groundFill = new THREE.DirectionalLight(0xffbb88, 0.25);
             groundFill.position.set(0, -10, 10);
             scene.add(groundFill);
 
-            // ---- Ambient (low, environment handles most) ----
             const ambientLight = new THREE.AmbientLight(0x446688, 0.3);
             scene.add(ambientLight);
 
-            // Set initial sun position based on user controls
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('sun_date').value = today;
             updateSun();
@@ -655,6 +688,7 @@
             window.addEventListener('resize', onWindowResize);
             animate();
             
+            populateProfileSizes();
             generateStructure();
         }
 
@@ -667,7 +701,6 @@
             canvas.height = 512;
             const ctx = canvas.getContext('2d');
 
-            // Sky gradient: deep blue at top → warm horizon
             const gradient = ctx.createLinearGradient(0, 0, 0, 512);
             gradient.addColorStop(0, '#4a8bc2');
             gradient.addColorStop(0.3, '#7ab8e6');
@@ -678,9 +711,7 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, 1024, 512);
 
-            // Sun glow (bright warm spot)
-            const sunX = 780,
-                sunY = 140;
+            const sunX = 780, sunY = 140;
             const radGrad = ctx.createRadialGradient(sunX, sunY, 5, sunX, sunY, 280);
             radGrad.addColorStop(0, 'rgba(255, 255, 240, 1)');
             radGrad.addColorStop(0.15, 'rgba(255, 235, 200, 0.95)');
@@ -690,18 +721,11 @@
             ctx.fillStyle = radGrad;
             ctx.fillRect(0, 0, 1024, 512);
 
-            // Soft clouds (white blobs)
             ctx.globalAlpha = 0.25;
             const cloudPositions = [
-                [120, 80, 90],
-                [300, 60, 120],
-                [500, 100, 80],
-                [700, 50, 100],
-                [850, 90, 70],
-                [950, 60, 110],
-                [200, 160, 60],
-                [600, 170, 50],
-                [100, 180, 70]
+                [120, 80, 90], [300, 60, 120], [500, 100, 80],
+                [700, 50, 100], [850, 90, 70], [950, 60, 110],
+                [200, 160, 60], [600, 170, 50], [100, 180, 70]
             ];
             cloudPositions.forEach(([cx, cy, r]) => {
                 const cg = ctx.createRadialGradient(cx, cy, 5, cx, cy, r);
@@ -715,7 +739,6 @@
             });
             ctx.globalAlpha = 1.0;
 
-            // Ground reflection at bottom
             const groundGrad = ctx.createLinearGradient(0, 460, 0, 512);
             groundGrad.addColorStop(0, 'rgba(60,90,110,0)');
             groundGrad.addColorStop(0.5, 'rgba(60,90,110,0.15)');
@@ -794,7 +817,7 @@
         }
 
         // ==============================================================================
-        // 3. OBJECT SELECTION & EDITING
+        // 4. OBJECT SELECTION & EDITING
         // ==============================================================================
         function onPointerDown(event) {
             if (transformControls.dragging) return;
@@ -872,7 +895,7 @@
         }
 
         // ==============================================================================
-        // 4. ARRAY EDIT MODE
+        // 5. ARRAY EDIT MODE
         // ==============================================================================
         function enterArrayEditMode(arrayGroup) {
             if (!arrayGroup || arrayGroup === solarMasterGroup) return;
@@ -951,7 +974,7 @@
         }
 
         // ==============================================================================
-        // 5. VIEWPORT TOOLBAR
+        // 6. VIEWPORT TOOLBAR
         // ==============================================================================
         function setCameraView(view) {
             const dist = 22;
@@ -987,7 +1010,7 @@
         }
 
         // ==============================================================================
-        // 6. SUN & SHADOWS
+        // 7. SUN & SHADOWS
         // ==============================================================================
         function updateSun() {
             const lat = parseFloat(document.getElementById('sun_lat').value) || 34.1202;
@@ -1042,7 +1065,7 @@
         }
 
         // ==============================================================================
-        // 7. COLLAPSIBLE SECTIONS
+        // 8. COLLAPSIBLE SECTIONS
         // ==============================================================================
         function toggleSection(id) {
             const el = document.getElementById(id);
@@ -1050,7 +1073,7 @@
         }
 
         // ==============================================================================
-        // 8. POLYGON & AUTO LAYOUT (FIXED RECTANGLE / POLYGON TOOL)
+        // 9. POLYGON & AUTO LAYOUT (FIXED RECTANGLE / POLYGON TOOL)
         // ==============================================================================
         function startDrawRectangle() {
             if (!leafletMap) {
@@ -1063,10 +1086,8 @@
                 leafletMap.addLayer(window.drawnItems);
             }
 
-            // Clear previous polygon drawings
             window.drawnItems.clearLayers();
 
-            // Directly trigger Leaflet Draw Rectangle Tool
             const rectangleDrawer = new L.Draw.Rectangle(leafletMap, {
                 shapeOptions: {
                     color: '#3b82f6',
@@ -1270,7 +1291,7 @@
         }
 
         // ==============================================================================
-        // 9. MAP FUNCTIONS
+        // 10. MAP FUNCTIONS
         // ==============================================================================
         function getMapTileUrl(provider) {
             switch(provider) {
@@ -1297,7 +1318,6 @@
 
             mapMarker = L.marker(center, { draggable: true }).addTo(leafletMap);
             
-            // Feature group for drawing shapes
             window.drawnItems = new L.FeatureGroup();
             leafletMap.addLayer(window.drawnItems);
 
@@ -1376,7 +1396,7 @@
         }
 
         // ==============================================================================
-        // 10. MAP IMAGE UPLOAD
+        // 11. MAP IMAGE UPLOAD
         // ==============================================================================
         function uploadMapImage(event) {
             const file = event.target.files[0];
@@ -1551,7 +1571,7 @@
         }
 
         // ==============================================================================
-        // 11. SELECT ALL ARRAYS & MOVE ALL
+        // 12. SELECT ALL ARRAYS & MOVE ALL
         // ==============================================================================
         function selectAllArrays() {
             if (solarMasterGroup.children.length === 0) {
@@ -1573,7 +1593,294 @@
         }
 
         // ==============================================================================
-        // 12. STRUCTURE GENERATION (PANEL CLEARITY AT ALL ZOOM DISTANCES)
+        // 13. PROFILE SIZE & MATERIAL HELPERS
+        // ==============================================================================
+        function populateProfileSizes() {
+            const profileType = document.getElementById('profile_type').value;
+            const sizeSelect = document.getElementById('profile_size');
+            const sizes = PROFILE_SIZES[profileType] || [];
+            sizeSelect.innerHTML = '';
+            sizes.forEach((size, index) => {
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.textContent = size.label;
+                sizeSelect.appendChild(opt);
+            });
+            if (sizeSelect.options.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '0';
+                opt.textContent = 'Default';
+                sizeSelect.appendChild(opt);
+            }
+            // Ensure a selection
+            if (sizeSelect.selectedIndex === -1) sizeSelect.selectedIndex = 0;
+        }
+
+        function getSelectedProfileSize() {
+            const profileType = document.getElementById('profile_type').value;
+            const sizes = PROFILE_SIZES[profileType] || [];
+            const idx = parseInt(document.getElementById('profile_size').value) || 0;
+            return sizes[idx] || sizes[0] || {};
+        }
+
+        function getMaterialFinish() {
+            return document.getElementById('material_finish').value; // 'GALVANIZED' or 'PAINTED'
+        }
+
+        // ==============================================================================
+        // 14. ADVANCED STRUCTURAL PROFILE FUNCTIONS (WITH SIZE PARAMS)
+        // ==============================================================================
+
+        // ---- Cross‑section shapes ----
+        function getUChannelShape(w, h, t) {
+            const shape = new THREE.Shape();
+            shape.moveTo(-w/2, -h/2);
+            shape.lineTo(w/2, -h/2);
+            shape.lineTo(w/2, -h/2 + t);
+            shape.lineTo(-w/2 + t, -h/2 + t);
+            shape.lineTo(-w/2 + t, h/2 - t);
+            shape.lineTo(w/2, h/2 - t);
+            shape.lineTo(w/2, h/2);
+            shape.lineTo(-w/2, h/2);
+            shape.closePath();
+            return shape;
+        }
+
+        function getHBeamShape(w, h, t) {
+            const shape = new THREE.Shape();
+            const hw = w/2, hh = h/2, ht = t/2;
+            shape.moveTo(-hw, -hh);
+            shape.lineTo(hw, -hh);
+            shape.lineTo(hw, -hh + t);
+            shape.lineTo(ht, -hh + t);
+            shape.lineTo(ht, hh - t);
+            shape.lineTo(hw, hh - t);
+            shape.lineTo(hw, hh);
+            shape.lineTo(-hw, hh);
+            shape.lineTo(-hw, hh - t);
+            shape.lineTo(-ht, hh - t);
+            shape.lineTo(-ht, -hh + t);
+            shape.lineTo(-hw, -hh + t);
+            shape.closePath();
+            return shape;
+        }
+
+        function getSquareTubeShape(s, t) {
+            const shape = new THREE.Shape();
+            const hs = s/2;
+            shape.moveTo(-hs, -hs);
+            shape.lineTo(hs, -hs);
+            shape.lineTo(hs, hs);
+            shape.lineTo(-hs, hs);
+            shape.closePath();
+            const hole = new THREE.Path();
+            const hsi = hs - t;
+            hole.moveTo(-hsi, -hsi);
+            hole.lineTo(-hsi, hsi);
+            hole.lineTo(hsi, hsi);
+            hole.lineTo(hsi, -hsi);
+            hole.closePath();
+            shape.holes.push(hole);
+            return shape;
+        }
+
+        function getRectTubeShape(w, h, t) {
+            const shape = new THREE.Shape();
+            const hw = w/2, hh = h/2;
+            shape.moveTo(-hw, -hh);
+            shape.lineTo(hw, -hh);
+            shape.lineTo(hw, hh);
+            shape.lineTo(-hw, hh);
+            shape.closePath();
+            const hole = new THREE.Path();
+            const hwi = hw - t, hhi = hh - t;
+            hole.moveTo(-hwi, -hhi);
+            hole.lineTo(-hwi, hhi);
+            hole.lineTo(hwi, hhi);
+            hole.lineTo(hwi, -hhi);
+            hole.closePath();
+            shape.holes.push(hole);
+            return shape;
+        }
+
+        function getRoundPipeShape(rOuter, t) {
+            const shape = new THREE.Shape();
+            shape.absarc(0, 0, rOuter, 0, Math.PI * 2, false);
+            const hole = new THREE.Path();
+            hole.absarc(0, 0, rOuter - t, 0, Math.PI * 2, true);
+            shape.holes.push(hole);
+            return shape;
+        }
+
+        // ---- Profile mesh with size and material ----
+        function createProfileMesh(profileType, length, sizeParams, materialFinish) {
+            let shape;
+            switch(profileType) {
+                case 'U_CHANNEL':
+                case 'C_CHANNEL': {
+                    const { w, h, t } = sizeParams;
+                    shape = getUChannelShape(w, h, t);
+                    break;
+                }
+                case 'H_BEAM': {
+                    const { w, h, t } = sizeParams;
+                    shape = getHBeamShape(w, h, t);
+                    break;
+                }
+                case 'ROUND_PIPE': {
+                    const { rOuter, t } = sizeParams;
+                    shape = getRoundPipeShape(rOuter, t);
+                    break;
+                }
+                case 'SQUARE_PIPE': {
+                    const { s, t } = sizeParams;
+                    shape = getSquareTubeShape(s, t);
+                    break;
+                }
+                case 'RECTANGLE_PIPE': {
+                    const { w, h, t } = sizeParams;
+                    shape = getRectTubeShape(w, h, t);
+                    break;
+                }
+                default: {
+                    // fallback to U-channel
+                    shape = getUChannelShape(0.05, 0.08, 0.005);
+                }
+            }
+
+            const extrudeSettings = { depth: length, bevelEnabled: false };
+            const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geo.center();
+
+            // Material based on finish
+            let color, metalness, roughness;
+            if (materialFinish === 'PAINTED') {
+                color = 0x222222;
+                metalness = 0.1;
+                roughness = 0.6;
+            } else { // GALVANIZED
+                color = 0x94a3b8;
+                metalness = 0.8;
+                roughness = 0.3;
+            }
+
+            const mat = new THREE.MeshStandardMaterial({ 
+                color: color,
+                metalness: metalness,
+                roughness: roughness,
+                envMapIntensity: 0.8,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            return mesh;
+        }
+
+        // ---- Base plate (unchanged, keep as is) ----
+        function createBasePlateMesh(sizeKey) {
+            const group = new THREE.Group();
+            const sizeM = (sizeKey === '8x8') ? 0.2032 : 0.1524;
+            const thickness = 0.012;
+
+            const plateGeo = new THREE.BoxGeometry(sizeM, thickness, sizeM);
+            const plateMat = new THREE.MeshStandardMaterial({ 
+                color: 0x334155, 
+                metalness: 0.85, 
+                roughness: 0.3 
+            });
+            const plateMesh = new THREE.Mesh(plateGeo, plateMat);
+            plateMesh.position.y = thickness / 2;
+            plateMesh.castShadow = true;
+            plateMesh.receiveShadow = true;
+            group.add(plateMesh);
+
+            const boltGeo = new THREE.CylinderGeometry(0.008, 0.008, 0.02, 8);
+            const boltMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9, roughness: 0.2 });
+            const offset = (sizeM / 2) - 0.025;
+            [ [-offset, -offset], [offset, -offset], [-offset, offset], [offset, offset] ].forEach(([bx, bz]) => {
+                const bolt = new THREE.Mesh(boltGeo, boltMat);
+                bolt.position.set(bx, thickness + 0.008, bz);
+                bolt.castShadow = true;
+                group.add(bolt);
+            });
+
+            return { group, thickness, sizeM };
+        }
+
+        // ---- Leg with base plate (takes size and material) ----
+        function createLegWithBasePlate(profileType, height, basePlateSize, sizeParams, materialFinish) {
+            const group = new THREE.Group();
+
+            const { group: basePlate, thickness } = createBasePlateMesh(basePlateSize);
+            group.add(basePlate);
+
+            const legHeight = Math.max(0.05, height - thickness);
+
+            let shape;
+            switch(profileType) {
+                case 'U_CHANNEL':
+                case 'C_CHANNEL': {
+                    const { w, h, t } = sizeParams;
+                    shape = getUChannelShape(w, h, t);
+                    break;
+                }
+                case 'H_BEAM': {
+                    const { w, h, t } = sizeParams;
+                    shape = getHBeamShape(w, h, t);
+                    break;
+                }
+                case 'ROUND_PIPE': {
+                    const { rOuter, t } = sizeParams;
+                    shape = getRoundPipeShape(rOuter, t);
+                    break;
+                }
+                case 'SQUARE_PIPE': {
+                    const { s, t } = sizeParams;
+                    shape = getSquareTubeShape(s, t);
+                    break;
+                }
+                case 'RECTANGLE_PIPE': {
+                    const { w, h, t } = sizeParams;
+                    shape = getRectTubeShape(w, h, t);
+                    break;
+                }
+                default: {
+                    shape = getSquareTubeShape(0.05, 0.004);
+                }
+            }
+
+            const extrudeSettings = { depth: legHeight, bevelEnabled: false };
+            const legGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            legGeo.rotateX(-Math.PI / 2);
+
+            let color, metalness, roughness;
+            if (materialFinish === 'PAINTED') {
+                color = 0x222222;
+                metalness = 0.1;
+                roughness = 0.6;
+            } else {
+                color = 0x64748b;
+                metalness = 0.8;
+                roughness = 0.35;
+            }
+
+            const legMat = new THREE.MeshStandardMaterial({ 
+                color: color,
+                metalness: metalness,
+                roughness: roughness,
+                envMapIntensity: 0.7
+            });
+            const legMesh = new THREE.Mesh(legGeo, legMat);
+            legMesh.position.y = thickness;
+            legMesh.castShadow = true;
+            legMesh.receiveShadow = true;
+
+            group.add(legMesh);
+            return group;
+        }
+
+        // ==============================================================================
+        // 15. STRUCTURE GENERATION (USING ADVANCED PROFILES & BASE PLATES)
         // ==============================================================================
         function computeSpacing(count, totalLength) {
             if (count <= 1) return [0.0];
@@ -1599,7 +1906,6 @@
             frameMesh.receiveShadow = true;
             group.add(frameMesh);
 
-            // POLYGON OFFSET & OFFSET Z ELIMINATE FLICKERING / BLURRINESS WHEN ZOOMING OUT
             const cellMat = new THREE.MeshStandardMaterial({ 
                 color: 0x0a192f, 
                 metalness: 0.9, 
@@ -1615,40 +1921,6 @@
             cellMesh.receiveShadow = true;
             group.add(cellMesh);
             return group;
-        }
-
-        function createProfileMesh(profileType, length) {
-            let geo;
-            if (profileType === 'ROUND' || profileType === 'PIPE') {
-                geo = new THREE.CylinderGeometry(0.025, 0.025, length, 12);
-                geo.rotateZ(Math.PI / 2);
-            } else {
-                geo = new THREE.BoxGeometry(length, 0.05, 0.04);
-            }
-            const mat = new THREE.MeshStandardMaterial({ 
-                color: 0x94a3b8, 
-                metalness: 0.7, 
-                roughness: 0.4,
-                envMapIntensity: 0.6,
-            });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            return mesh;
-        }
-
-        function createLegMesh(height) {
-            const geo = new THREE.CylinderGeometry(0.025, 0.025, height, 12);
-            const mat = new THREE.MeshStandardMaterial({ 
-                color: 0x64748b, 
-                metalness: 0.8, 
-                roughness: 0.3,
-                envMapIntensity: 0.5,
-            });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            return mesh;
         }
 
         function generateStructure() {
@@ -1677,6 +1949,7 @@
             const arraySpacingY = parseFloat(document.getElementById('array_spacing_y').value) || 5.0;
 
             const profileType = document.getElementById('profile_type').value;
+            const basePlateSize = document.getElementById('base_plate_size').value;
             const legCountX = parseInt(document.getElementById('leg_count_x').value) || 2;
             const legCountY = parseInt(document.getElementById('leg_count_y').value) || 2;
 
@@ -1705,6 +1978,10 @@
 
             const tiltRad = tiltDeg * Math.PI / 180.0;
 
+            // Get selected profile size and material
+            const sizeParams = getSelectedProfileSize();
+            const materialFinish = getMaterialFinish();
+
             let panelCount = 0;
 
             for (let ar = 0; ar < arrayRows; ar++) {
@@ -1719,6 +1996,7 @@
                     const panelCenterX = -((cols - 1) * pitchX) / 2;
                     const panelCenterY = -((rows - 1) * pitchY) / 2;
 
+                    // Panels
                     for (let r = 0; r < rows; r++) {
                         for (let c = 0; c < cols; c++) {
                             const panel = createSolarPanelMesh(pw, ph, pt);
@@ -1729,45 +2007,47 @@
                         }
                     }
 
+                    // ---- Rails ----
                     let railPositions = [];
                     if (isLandscape) {
+                        // Rails along Z, at each column X offset
                         for (let c = 0; c < cols; c++) {
                             const colX = panelCenterX + c * pitchX;
-                            const r1 = createProfileMesh(profileType, blockHeight);
-                            r1.rotation.y = Math.PI / 2;
-                            const pos1 = colX - railOffset;
-                            r1.position.set(pos1, -pt / 2 - 0.025, 0);
+                            const r1 = createProfileMesh(profileType, blockHeight, sizeParams, materialFinish);
+                            r1.position.set(colX - railOffset, -pt/2 - 0.025, 0);
                             tiltGroup.add(r1);
-                            railPositions.push({ x: pos1, z: 0 });
+                            railPositions.push({ x: colX - railOffset, z: 0 });
 
-                            const r2 = createProfileMesh(profileType, blockHeight);
-                            r2.rotation.y = Math.PI / 2;
-                            const pos2 = colX + railOffset;
-                            r2.position.set(pos2, -pt / 2 - 0.025, 0);
+                            const r2 = createProfileMesh(profileType, blockHeight, sizeParams, materialFinish);
+                            r2.position.set(colX + railOffset, -pt/2 - 0.025, 0);
                             tiltGroup.add(r2);
-                            railPositions.push({ x: pos2, z: 0 });
+                            railPositions.push({ x: colX + railOffset, z: 0 });
                         }
                     } else {
+                        // Portrait: rails along X, at each row Z offset
                         for (let r = 0; r < rows; r++) {
                             const rowY = panelCenterY + r * pitchY;
-                            const r1Y = rowY - railOffset;
-                            const r2Y = rowY + railOffset;
-                            const r1 = createProfileMesh(profileType, blockWidth);
-                            r1.position.set(0, -pt / 2 - 0.025, r1Y);
+                            const r1 = createProfileMesh(profileType, blockWidth, sizeParams, materialFinish);
+                            r1.rotation.y = -Math.PI / 2;
+                            r1.position.set(0, -pt/2 - 0.025, rowY - railOffset);
                             tiltGroup.add(r1);
-                            railPositions.push({ x: 0, z: r1Y });
-                            const r2 = createProfileMesh(profileType, blockWidth);
-                            r2.position.set(0, -pt / 2 - 0.025, r2Y);
+                            railPositions.push({ x: 0, z: rowY - railOffset });
+
+                            const r2 = createProfileMesh(profileType, blockWidth, sizeParams, materialFinish);
+                            r2.rotation.y = -Math.PI / 2;
+                            r2.position.set(0, -pt/2 - 0.025, rowY + railOffset);
                             tiltGroup.add(r2);
-                            railPositions.push({ x: 0, z: r2Y });
+                            railPositions.push({ x: 0, z: rowY + railOffset });
                         }
                     }
 
+                    // Tilt the whole panel+rail group
                     tiltGroup.rotation.x = tiltRad;
                     const frontRiseOffset = (blockHeight / 2.0) * Math.sin(tiltRad);
                     tiltGroup.position.y = minFrontHeight + frontRiseOffset;
                     blockGroup.add(tiltGroup);
 
+                    // ---- Legs ----
                     const legSpacingZ = computeSpacing(legCountY, blockHeight);
                     const legSpacingX = computeSpacing(legCountX, blockWidth);
 
@@ -1779,9 +2059,9 @@
                                 let legHeight = minFrontHeight + (distFromFront * Math.sin(tiltRad));
                                 if (legHeight < 0.05) legHeight = 0.05;
                                 const groundZ = sz * Math.cos(tiltRad);
-                                const leg = createLegMesh(legHeight);
-                                leg.position.set(railX, legHeight / 2.0, groundZ);
-                                blockGroup.add(leg);
+                                const legObj = createLegWithBasePlate(profileType, legHeight, basePlateSize, sizeParams, materialFinish);
+                                legObj.position.set(railX, 0, groundZ);
+                                blockGroup.add(legObj);
                             });
                         });
                     } else {
@@ -1792,9 +2072,9 @@
                                 let legHeight = minFrontHeight + (distFromFront * Math.sin(tiltRad));
                                 if (legHeight < 0.05) legHeight = 0.05;
                                 const groundZ = railZ * Math.cos(tiltRad);
-                                const leg = createLegMesh(legHeight);
-                                leg.position.set(lx, legHeight / 2.0, groundZ);
-                                blockGroup.add(leg);
+                                const legObj = createLegWithBasePlate(profileType, legHeight, basePlateSize, sizeParams, materialFinish);
+                                legObj.position.set(lx, 0, groundZ);
+                                blockGroup.add(legObj);
                             });
                         });
                     }
@@ -1809,7 +2089,7 @@
             totalKw = (panelCount * panelData.watts) / 1000;
             
             updateSummary();
-            setStatus(`Structure generated: ${panelCount} panels, ${totalKw.toFixed(2)} kW`);
+            setStatus(`Structure generated: ${panelCount} panels, ${totalKw.toFixed(2)} kW (${profileType}, ${materialFinish})`);
         }
 
         function updateSummary() {
@@ -1833,7 +2113,7 @@
         }
 
         // ==============================================================================
-        // 13. PROPOSAL EXPORT
+        // 16. PROPOSAL EXPORT
         // ==============================================================================
         function exportProposal() {
             const views = [
@@ -1848,7 +2128,7 @@
             const origPos = camera.position.clone();
             const origTarget = controls.target.clone();
             
-            views.forEach((view, index) => {
+            views.forEach((view) => {
                 const dist = 22;
                 let pos;
                 switch(view.name) {
@@ -1977,11 +2257,11 @@
         }
 
         // ==============================================================================
-        // 14. PROJECT SAVE / LOAD
+        // 17. PROJECT SAVE / LOAD
         // ==============================================================================
         function saveProject() {
             const projectData = {
-                version: '3.9',
+                version: '4.1',
                 timestamp: new Date().toISOString(),
                 settings: {
                     structure_type: document.getElementById('structure_type').value,
@@ -1994,6 +2274,9 @@
                     orientation_landscape: document.getElementById('orientation_landscape').checked,
                     elevated_height: document.getElementById('elevated_height').value,
                     profile_type: document.getElementById('profile_type').value,
+                    profile_size_index: document.getElementById('profile_size').value,
+                    material_finish: document.getElementById('material_finish').value,
+                    base_plate_size: document.getElementById('base_plate_size').value,
                     array_rows: document.getElementById('array_rows').value,
                     array_columns: document.getElementById('array_columns').value,
                     array_spacing_x: document.getElementById('array_spacing_x').value,
@@ -2052,7 +2335,13 @@
                     document.getElementById('azimuth').value = s.azimuth || 0;
                     document.getElementById('orientation_landscape').checked = s.orientation_landscape || false;
                     document.getElementById('elevated_height').value = s.elevated_height || 2.0;
-                    document.getElementById('profile_type').value = s.profile_type || 'C_CHANNEL';
+                    document.getElementById('profile_type').value = s.profile_type || 'U_CHANNEL';
+                    populateProfileSizes();
+                    if (s.profile_size_index !== undefined) {
+                        document.getElementById('profile_size').value = s.profile_size_index;
+                    }
+                    document.getElementById('material_finish').value = s.material_finish || 'GALVANIZED';
+                    document.getElementById('base_plate_size').value = s.base_plate_size || '6x6';
                     document.getElementById('array_rows').value = s.array_rows || 1;
                     document.getElementById('array_columns').value = s.array_columns || 1;
                     document.getElementById('array_spacing_x').value = s.array_spacing_x || 2.0;
@@ -2095,7 +2384,7 @@
         }
 
         // ==============================================================================
-        // 15. BOM EXPORT
+        // 18. BOM EXPORT
         // ==============================================================================
         function exportBOM() {
             const rows = parseInt(document.getElementById('rows').value) || 1;
@@ -2110,9 +2399,10 @@
 
             let csv = "Item Description,Quantity,Unit Cost (PKR),Total Cost (PKR)\n";
             csv += `Solar Panel (${panelKey} ${panelData.watts}W),${totalPanels},${panelCostPKR},${totalPanelCost}\n`;
-            csv += `Mounting Rails & Hardware Set,${totalPanels},3500,${totalPanels * 3500}\n`;
-            csv += `Civil & Mechanical Installation,${totalPanels},1500,${totalPanels * 1500}\n`;
-            csv += `ESTIMATED TOTAL,,PKR,${totalPanelCost + (totalPanels * 5000)}\n`;
+            csv += `Structural Steel Profiles (${document.getElementById('profile_type').value}),${totalPanels},3800,${totalPanels * 3800}\n`;
+            csv += `Base Plates (${document.getElementById('base_plate_size').value} inch with Anchors),${totalPanels * 2},1200,${totalPanels * 2400}\n`;
+            csv += `Civil & Hardware Installation,${totalPanels},1500,${totalPanels * 1500}\n`;
+            csv += `ESTIMATED TOTAL,,PKR,${totalPanelCost + (totalPanels * 7700)}\n`;
 
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
@@ -2134,7 +2424,7 @@
         }
 
         // ==============================================================================
-        // 16. INIT
+        // 19. INIT
         // ==============================================================================
         window.onload = () => {
             init3D();
@@ -2157,7 +2447,7 @@
             document.getElementById('sec-polygon').classList.add('collapsed');
             document.getElementById('sec-edit').classList.add('collapsed');
             
-            setStatus('SolarMount Pro v3.9 ready — HDRI lighting enabled');
+            setStatus('SolarMount Pro v4.1 ready — Standard sizes & material finishes');
         };
     </script>
 </body>
