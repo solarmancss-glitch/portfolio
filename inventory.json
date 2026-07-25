@@ -67,6 +67,8 @@
     {"Category":"Inverter","Name":"Knox 4.5kW Single Phase Hybrid","Purchase":113000,"Sale":120000,"Qty":10,"Watt":4500,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Knox 6.5kW Single Phase Hybrid","Purchase":161000,"Sale":175000,"Qty":8,"Watt":6500,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Knox 8.5kW Single Phase Hybrid","Purchase":255000,"Sale":265000,"Qty":6,"Watt":8500,"Technology":"single-phase"},
+    {"Category":"Inverter","Name":"Knox 10kW Single Phase Hybrid","Purchase":310000,"Sale":325000,"Qty":5,"Watt":10000,"Technology":"single-phase"},
+    {"Category":"Inverter","Name":"Knox 11.5kW Single Phase Hybrid","Purchase":355000,"Sale":370000,"Qty":4,"Watt":11500,"Technology":"single-phase"},
     {"Category":"Inverter","Name":"Knox 12kW Three Phase Hybrid","Purchase":410000,"Sale":450000,"Qty":4,"Watt":12000,"Technology":"three-phase"},
 
     {"Category":"Inverter","Name":"Daytime 8kW","Purchase":22000,"Sale":26000,"Qty":-1,"Watt":8000,"Technology":"daytime"},
@@ -87,6 +89,7 @@
     {"Category":"Battery","Name":"Knox 4.15 24V 150Ah Lithium","Purchase":133000,"Sale":140000,"Qty":5,"Watt":4150,"Technology":"24v"},
     {"Category":"Battery","Name":"Knox 6.0 48V 100Ah Lithium","Purchase":235000,"Sale":245000,"Qty":4,"Watt":5000,"Technology":"48v"},
     {"Category":"Battery","Name":"Knox 15kW 48V 300Ah Lithium","Purchase":650000,"Sale":680000,"Qty":2,"Watt":15000,"Technology":"48v"},
+    {"Category":"Battery","Name":"Knox 16kW Lithium","Purchase":720000,"Sale":750000,"Qty":2,"Watt":16000,"Technology":"48v"},
 
     {"Category":"Battery","Name":"Itel 24V 100Ah Lithium","Purchase":125000,"Sale":130000,"Qty":6,"Watt":3000,"Technology":"24v"},
     {"Category":"Battery","Name":"Itel 24V 150Ah Lithium","Purchase":180000,"Sale":190000,"Qty":4,"Watt":4500,"Technology":"24v"},
