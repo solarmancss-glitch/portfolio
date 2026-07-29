@@ -3,895 +3,1459 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SOLARMAN – Get a Free Solar Quote</title>
-    <meta name="description" content="Calculate your solar system cost instantly using our professional solar design tools." />
+    <title>SOLARMAN – Professional Solar Quote</title>
+    <meta name="description" content="Get an instant professional solar system quote with real-time pricing." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            padding: 20px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f2f6;
+            color: #1a2634;
+            padding: 24px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
         .container {
-            max-width: 1400px;
+            max-width: 1280px;
             width: 100%;
-            background: white;
-            border-radius: 20px;
-            padding: 25px 30px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
         }
+
+        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 2px solid #eaeef3;
-            padding-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-bottom: 8px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #eef1f5;
         }
-        .header h1 { color: #0057B8; font-weight: 700; font-size: 1.6rem; }
-        .header h1 span { color: #F7931E; }
-        .header .tag { font-size: 0.85rem; color: #666; }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-brand .logo-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: #0057B8; /* fallback background */
+            padding: 4px;
+        }
+        .header-brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0a1929;
+            letter-spacing: -0.3px;
+        }
+        .header-brand h1 span {
+            color: #F7931E;
+        }
+        .header-brand .badge {
+            background: #eef3f8;
+            color: #1e3a5f;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 100px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            margin-left: 4px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.8rem;
+            color: #5a6e7a;
+        }
+        .header-right .print-date {
+            font-weight: 500;
+            color: #1a2634;
+        }
+
+        /* ===== STATUS BAR ===== */
         #statusBar {
             text-align: center;
-            font-size: 0.85rem;
-            padding: 6px 0;
-            margin-bottom: 12px;
-            border-radius: 6px;
-            background: #f8f9fc;
+            font-size: 0.82rem;
+            padding: 8px 14px;
+            margin: 12px 0 16px;
+            border-radius: 10px;
+            background: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        #statusBar.success { color: #28a745; background: #e6f9ed; }
-        #statusBar.error { color: #dc3545; background: #fde8e8; }
-        #statusBar.warning { color: #856404; background: #fff3cd; }
-        #statusBar i { margin-right: 4px; }
+        #statusBar.success {
+            color: #1e7e34;
+            background: #e6f6ed;
+        }
+        #statusBar.error {
+            color: #b02a37;
+            background: #fde8e8;
+        }
+        #statusBar.warning {
+            color: #856404;
+            background: #fff8e1;
+        }
+        #statusBar i {
+            font-size: 0.9rem;
+        }
 
-        #debugInfo {
-            background: #e9ecef;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-            color: #333;
-            font-family: monospace;
+        /* ===== INVENTORY STATS ===== */
+        #statsBar {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px 20px;
-            justify-content: center;
+            gap: 8px 24px;
+            background: #f8fafc;
+            padding: 8px 16px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 0.78rem;
+            color: #3d4e5c;
+            border: 1px solid #eaedf2;
         }
-        #debugInfo span { font-weight: bold; }
+        #statsBar .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        #statsBar .stat-item i {
+            color: #6c7a8a;
+            font-size: 0.75rem;
+        }
+        #statsBar .stat-item strong {
+            color: #0a1929;
+            font-weight: 600;
+        }
 
+        /* ===== CONTROLS ===== */
         .controls {
             display: flex;
             flex-wrap: wrap;
             align-items: flex-end;
-            gap: 8px 12px;
-            background: #fefcf5;
-            padding: 10px 15px;
-            border-radius: 14px;
-            margin-bottom: 20px;
+            gap: 10px 16px;
+            background: #f7f9fc;
+            padding: 16px 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid #e9edf2;
         }
-        .controls .field { flex: 1 0 auto; min-width: 100px; }
+        .controls .field {
+            flex: 1 0 auto;
+            min-width: 110px;
+        }
+        .controls .field-sm {
+            flex: 0 0 auto;
+            min-width: 80px;
+        }
         .controls label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             font-weight: 700;
             color: #5a6e7a;
             display: block;
-            margin-bottom: 2px;
-            letter-spacing: 0.3px;
+            margin-bottom: 3px;
+            letter-spacing: 0.4px;
         }
         .controls select {
             width: 100%;
-            padding: 6px 10px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
+            padding: 7px 10px;
+            border: 1px solid #d0d7df;
+            border-radius: 10px;
             font-family: inherit;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             background: white;
-            height: 36px;
+            height: 38px;
+            color: #1a2634;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6e7a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 10px;
+            padding-right: 32px;
         }
-        .controls select:focus { border-color: #F7931E; outline: none; }
-        .controls select:disabled { opacity: 0.6; cursor: not-allowed; }
+        .controls select:focus {
+            border-color: #F7931E;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(247, 147, 30, 0.15);
+        }
+        .controls select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-generate {
-            background: #F7931E;
+            background: linear-gradient(135deg, #F7931E 0%, #e07c0d 100%);
             color: white;
             border: none;
-            padding: 6px 18px;
+            padding: 7px 28px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: 0.3s;
-            height: 36px;
+            transition: 0.2s;
+            height: 38px;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(247, 147, 30, 0.3);
         }
-        .btn-generate:hover:not(:disabled) { background: #0057B8; transform: translateY(-2px); }
-        .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-generate:hover:not(:disabled) {
+            background: linear-gradient(135deg, #0057B8 0%, #004094 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 87, 184, 0.25);
+        }
+        .btn-generate:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
-        .results { margin-top: 20px; overflow-x: auto; }
-        .results table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .results th { background: #1e2a3a; color: white; padding: 10px 12px; text-align: left; }
-        .results td { padding: 8px 12px; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
+        /* ===== RESULTS ===== */
+        .results {
+            margin-top: 6px;
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid #e9edf2;
+        }
+        .results table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 600px;
+        }
+        .results th {
+            background: #1a2a3a;
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .results td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #edf0f4;
+            vertical-align: middle;
+            background: white;
+        }
+        .results tr:last-child td {
+            border-bottom: none;
+        }
         .results td select {
             width: 100%;
-            padding: 4px 6px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            min-width: 140px;
+            padding: 5px 28px 5px 10px;
+            border: 1px solid #d0d7df;
+            border-radius: 8px;
+            font-size: 0.8rem;
             background: white;
-            min-width: 120px;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6e7a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 8px;
         }
-        .results td select:focus { border-color: #F7931E; outline: none; }
-        .results tfoot td { font-weight: 700; background: #f8f9fa; border-top: 2px solid #dee2e6; }
+        .results td select:focus {
+            border-color: #F7931E;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(247, 147, 30, 0.12);
+        }
+        .results tfoot td {
+            font-weight: 700;
+            background: #f7f9fc;
+            border-top: 2px solid #dce1e8;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+        }
+        .results .rate-cell,
+        .results .total-cell {
+            font-weight: 500;
+        }
+
         .total-display {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #0057B8;
             text-align: right;
-            margin: 12px 0;
+            margin: 14px 0 6px;
+            padding: 0 4px;
         }
+        .total-display span {
+            background: #f0f7ff;
+            padding: 4px 16px;
+            border-radius: 100px;
+            display: inline-block;
+        }
+
         .disclaimer {
-            font-size: 0.85rem;
-            color: #6c757d;
-            background: #f8f9fa;
-            padding: 10px 15px;
-            border-radius: 8px;
+            font-size: 0.78rem;
+            color: #5a6e7a;
+            background: #f7f9fc;
+            padding: 12px 18px;
+            border-radius: 12px;
             border-left: 4px solid #F7931E;
-            margin-top: 15px;
-            font-style: italic;
+            margin-top: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.5;
         }
-        .disclaimer i { color: #F7931E; margin-right: 6px; }
+        .disclaimer i {
+            color: #F7931E;
+            font-size: 1rem;
+            margin-top: 1px;
+        }
+
         .actions {
             display: flex;
-            gap: 12px;
             flex-wrap: wrap;
-            margin-top: 15px;
+            gap: 10px 14px;
+            margin-top: 18px;
         }
         .actions .btn {
-            padding: 8px 22px;
+            padding: 8px 24px;
             border-radius: 30px;
             font-weight: 600;
             border: none;
             cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
+            transition: 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-family: inherit;
+            text-decoration: none;
         }
-        .btn-whatsapp { background: #25D366; color: white; }
-        .btn-whatsapp:hover { background: #1da851; transform: translateY(-2px); }
-        .btn-print { background: #6c757d; color: white; }
-        .btn-print:hover { background: #5a6268; transform: translateY(-2px); }
-        .btn-reset { background: #e9ecef; color: #333; }
-        .btn-reset:hover { background: #dee2e6; }
-        .hidden { display: none; }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover {
+            background: #1da851;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.25);
+        }
+        .btn-print {
+            background: #1a2a3a;
+            color: white;
+        }
+        .btn-print:hover {
+            background: #0d1b2a;
+            transform: translateY(-2px);
+        }
+        .btn-reset {
+            background: #e9ecf0;
+            color: #1a2634;
+        }
+        .btn-reset:hover {
+            background: #dce1e8;
+            transform: translateY(-2px);
+        }
 
-        .print-system-details { display: none; }
+        .hidden {
+            display: none !important;
+        }
 
-        @media (max-width: 992px) { .controls .field { flex: 1 0 140px; } }
+        /* ===== PRINT SYSTEM DETAILS ===== */
+        .print-system-details {
+            display: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .controls .field {
+                flex: 1 0 130px;
+            }
+        }
         @media (max-width: 768px) {
-            .container { padding: 15px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 6px; }
-            .controls { flex-direction: column; align-items: stretch; gap: 10px; }
-            .controls .field { min-width: unset; }
-            .btn-generate { width: 100%; }
-            .results td select { min-width: unset; }
+            .container {
+                padding: 18px 16px 24px;
+                border-radius: 16px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .header-right {
+                width: 100%;
+                justify-content: flex-start;
+                font-size: 0.7rem;
+                flex-wrap: wrap;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 14px 16px;
+            }
+            .controls .field {
+                min-width: unset;
+            }
+            .btn-generate {
+                width: 100%;
+                justify-content: center;
+            }
+            .results td select {
+                min-width: unset;
+            }
+            .total-display {
+                font-size: 1.1rem;
+            }
+            #statsBar {
+                font-size: 0.7rem;
+                gap: 4px 14px;
+                padding: 6px 12px;
+            }
         }
 
+        /* ===== PRINT STYLES ===== */
         @media print {
-            .no-print, .controls, #statusBar, .actions, .btn-generate,
-            .header .tag, #debugInfo { display: none !important; }
-            html, body { margin: 0 !important; padding: 0 !important; background: white !important; }
-            .container { max-width: 100% !important; padding: 10mm 12mm !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: white !important; }
-            .header { border-bottom: 2px solid #1e2a3a !important; padding-bottom: 6px !important; margin-bottom: 8px !important; display: flex !important; justify-content: space-between !important; align-items: center !important; }
-            .header h1 { font-size: 1.4rem !important; color: #0057B8 !important; }
-            .header h1 span { color: #F7931E !important; }
-            .header .print-date { font-size: 0.8rem !important; color: #555 !important; font-weight: 400 !important; display: inline !important; }
-            .print-system-details { display: block !important; background: #f8f9fc !important; padding: 6px 12px !important; border-radius: 6px !important; margin-bottom: 10px !important; font-size: 0.8rem !important; border: 1px solid #e9ecef !important; }
-            .print-system-details .detail-row { display: flex !important; flex-wrap: wrap !important; gap: 8px 20px !important; justify-content: flex-start !important; align-items: center !important; }
-            .print-system-details .detail-item { display: inline-flex !important; align-items: center !important; gap: 4px !important; white-space: nowrap !important; }
-            .print-system-details .detail-item strong { color: #1e2a3a !important; font-weight: 600 !important; font-size: 0.7rem !important; text-transform: uppercase !important; letter-spacing: 0.3px !important; }
-            .print-system-details .detail-item span { color: #333 !important; font-weight: 500 !important; }
-            .print-system-details .sep { color: #ccc !important; }
-            .results { margin-top: 8px !important; overflow: visible !important; }
-            .results table { font-size: 0.75rem !important; border-collapse: collapse !important; width: 100% !important; }
-            .results th { background: #1e2a3a !important; color: white !important; padding: 5px 8px !important; font-size: 0.7rem !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .results td { padding: 4px 8px !important; border-bottom: 1px solid #e9ecef !important; font-size: 0.75rem !important; }
-            .results td select { border: none !important; padding: 0 !important; font-size: 0.75rem !important; background: transparent !important; -webkit-appearance: none !important; appearance: none !important; }
-            .results td select option { display: none !important; }
-            .results td select option:checked { display: block !important; }
-            .results tfoot td { padding: 5px 8px !important; background: #f8f9fa !important; font-weight: 700 !important; font-size: 0.8rem !important; border-top: 2px solid #1e2a3a !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .total-display { font-size: 1rem !important; margin: 6px 0 0 0 !important; text-align: right !important; color: #0057B8 !important; }
-            .disclaimer { font-size: 0.7rem !important; color: #6c757d !important; background: #f8f9fa !important; padding: 6px 12px !important; border-left: 3px solid #F7931E !important; margin-top: 10px !important; border-radius: 4px !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            #resultsArea.hidden { display: block !important; }
-            @page { size: A4 portrait; margin: 10mm 12mm; }
-            .results table { page-break-inside: avoid !important; }
-            .results tbody tr { page-break-inside: avoid !important; }
+            .no-print,
+            .controls,
+            #statusBar,
+            #statsBar,
+            .actions,
+            .btn-generate,
+            .header .badge {
+                display: none !important;
+            }
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                display: block !important;
+            }
+            .container {
+                max-width: 100% !important;
+                padding: 8mm 10mm !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: white !important;
+            }
+            .header {
+                border-bottom: 2px solid #1a2a3a !important;
+                padding-bottom: 6px !important;
+                margin-bottom: 6px !important;
+            }
+            .header-brand h1 {
+                font-size: 1.3rem !important;
+            }
+            .header-brand .logo-img {
+                width: 34px;
+                height: 34px;
+                padding: 2px;
+            }
+            .header-right .print-date {
+                display: inline !important;
+            }
+            .print-system-details {
+                display: block !important;
+                background: #f5f7fa !important;
+                padding: 6px 12px !important;
+                border-radius: 6px !important;
+                margin-bottom: 10px !important;
+                font-size: 0.7rem !important;
+                border: 1px solid #e9edf2 !important;
+            }
+            .print-system-details .detail-row {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 6px 16px !important;
+                align-items: center !important;
+            }
+            .print-system-details .detail-item {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 3px !important;
+            }
+            .print-system-details .detail-item strong {
+                color: #1a2a3a !important;
+                font-weight: 600 !important;
+                font-size: 0.6rem !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.3px !important;
+            }
+            .print-system-details .detail-item span {
+                color: #1a2634 !important;
+                font-weight: 500 !important;
+            }
+            .print-system-details .sep {
+                color: #bcc3cc !important;
+            }
+            #resultsArea.hidden {
+                display: block !important;
+            }
+            .results {
+                border: 1px solid #e0e4ea !important;
+                border-radius: 8px !important;
+                margin-top: 4px !important;
+                overflow: visible !important;
+            }
+            .results table {
+                font-size: 0.7rem !important;
+                min-width: unset !important;
+                width: 100% !important;
+            }
+            .results th {
+                background: #1a2a3a !important;
+                color: white !important;
+                padding: 5px 10px !important;
+                font-size: 0.6rem !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .results td {
+                padding: 4px 10px !important;
+                font-size: 0.7rem !important;
+                border-bottom: 1px solid #e9edf2 !important;
+            }
+            .results td select {
+                border: none !important;
+                padding: 0 !important;
+                background: transparent !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
+                font-size: 0.7rem !important;
+                min-width: unset !important;
+                background-image: none !important;
+            }
+            .results td select option {
+                display: none !important;
+            }
+            .results td select option:checked {
+                display: block !important;
+            }
+            .results tfoot td {
+                padding: 5px 10px !important;
+                background: #f5f7fa !important;
+                font-size: 0.75rem !important;
+                border-top: 2px solid #1a2a3a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .total-display {
+                font-size: 1rem !important;
+                margin: 6px 0 0 !important;
+            }
+            .total-display span {
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            .disclaimer {
+                font-size: 0.65rem !important;
+                padding: 6px 12px !important;
+                background: #f5f7fa !important;
+                border-left: 3px solid #F7931E !important;
+                margin-top: 8px !important;
+                border-radius: 6px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 8mm 10mm;
+            }
+            .results table {
+                page-break-inside: avoid !important;
+            }
+            .results tbody tr {
+                page-break-inside: avoid !important;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>SOLARMAN <span>Quote</span></h1>
-        <span class="tag"><i class="fas fa-solar-panel"></i> Professional Solar Estimate</span>
-        <span class="print-date" style="display:none;">Date: <span id="printDate"></span></span>
-    </div>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-brand">
+                <!-- Logo image -->
+                <img src="images/logo.png" alt="SOLARMAN Logo" class="logo-img" onerror="this.style.display='none'" />
+                <h1>SOLARMAN <span>Quote</span></h1>
+                <span class="badge">Professional</span>
+            </div>
+            <div class="header-right">
+                <i class="far fa-calendar-alt"></i>
+                <span class="print-date" id="printDate"></span>
+            </div>
+        </div>
 
-    <div id="debugInfo">
-        <span>📦 Total: <span id="totalItems">0</span></span>
-        <span>🔌 Inverters: <span id="inverterCount">0</span></span>
-        <span>🔋 Batteries: <span id="batteryCount">0</span></span>
-        <span>📁 File: <span id="fileSource">-</span></span>
-    </div>
+        <!-- STATUS BAR -->
+        <div id="statusBar"><i class="fas fa-spinner fa-pulse"></i> Loading inventory…</div>
 
-    <div id="statusBar"><i class="fas fa-spinner fa-pulse"></i> Loading inventory…</div>
+        <!-- STATS BAR -->
+        <div id="statsBar">
+            <span class="stat-item"><i class="fas fa-box"></i> Items: <strong id="totalItems">0</strong></span>
+            <span class="stat-item"><i class="fas fa-bolt"></i> Inverters: <strong id="inverterCount">0</strong></span>
+            <span class="stat-item"><i class="fas fa-battery-full"></i> Batteries: <strong id="batteryCount">0</strong></span>
+            <span class="stat-item"><i class="fas fa-file-alt"></i> Source: <strong id="fileSource">—</strong></span>
+        </div>
 
-    <div class="print-system-details" id="printDetails">
-        <div class="detail-row">
-            <span class="detail-item"><strong>System:</strong> <span id="printType">-</span></span>
-            <span class="sep">|</span>
-            <span class="detail-item"><strong>Size:</strong> <span id="printSize">-</span></span>
-            <span class="sep">|</span>
-            <span class="detail-item"><strong>Tier:</strong> <span id="printTier">-</span></span>
-            <span class="sep">|</span>
-            <span class="detail-item"><strong>Structure:</strong> <span id="printStructure">-</span></span>
+        <!-- PRINT SYSTEM DETAILS -->
+        <div class="print-system-details" id="printDetails">
+            <div class="detail-row">
+                <span class="detail-item"><strong>System:</strong> <span id="printType">-</span></span>
+                <span class="sep">|</span>
+                <span class="detail-item"><strong>Size:</strong> <span id="printSize">-</span></span>
+                <span class="sep">|</span>
+                <span class="detail-item"><strong>Tier:</strong> <span id="printTier">-</span></span>
+                <span class="sep">|</span>
+                <span class="detail-item"><strong>Structure:</strong> <span id="printStructure">-</span></span>
+            </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls no-print" id="configControls">
+            <div class="field">
+                <label><i class="fas fa-solar-panel"></i> System Type</label>
+                <select id="sysType">
+                    <option value="Hybrid">🔋 Hybrid</option>
+                    <option value="Daytime">☀️ Daytime</option>
+                </select>
+            </div>
+            <div class="field">
+                <label><i class="fas fa-ruler-combined"></i> Size</label>
+                <select id="sysSize"></select>
+            </div>
+            <div class="field">
+                <label><i class="fas fa-tag"></i> Tier</label>
+                <select id="sysTier">
+                    <option value="affordable">💰 Affordable</option>
+                    <option value="normal" selected>⭐ Normal</option>
+                    <option value="premium">✨ Premium</option>
+                </select>
+            </div>
+            <div class="field">
+                <label><i class="fas fa-helmet-safety"></i> Structure</label>
+                <select id="sysStructure"><option value="">Select</option></select>
+            </div>
+            <div class="field" id="batteryDiv">
+                <label><i class="fas fa-bolt"></i> Battery Voltage</label>
+                <select id="batteryVoltage">
+                    <option value="24V">24V (2–5 kW)</option>
+                    <option value="48V">48–51V (6+ kW)</option>
+                </select>
+            </div>
+            <div class="field field-sm" style="flex:0 0 auto;">
+                <label>&nbsp;</label>
+                <button class="btn-generate" id="generateBtn" onclick="generateQuote()" disabled>
+                    <i class="fas fa-calculator"></i> Get Quote
+                </button>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="resultsArea" class="hidden">
+            <div class="total-display">
+                <span>Estimated Total: <strong id="quoteTotal">0</strong> PKR</span>
+            </div>
+            <div class="results">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th style="min-width:160px;">Item / Selection</th>
+                            <th style="text-align:right;">Rate (PKR)</th>
+                            <th style="text-align:center;width:60px;">Qty</th>
+                            <th style="text-align:right;">Total (PKR)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quoteBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" style="text-align:right;font-weight:700;">Grand Total</td>
+                            <td id="quoteGrandTotal" style="font-weight:700;text-align:right;">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="disclaimer">
+                <i class="fas fa-info-circle"></i>
+                <div>This is a general quote based on current rates. Prices may change daily.<br />Final pricing will be confirmed on call.</div>
+            </div>
+            <div class="actions no-print">
+                <button class="btn btn-whatsapp" onclick="shareWhatsApp()"><i class="fab fa-whatsapp"></i> Share via WhatsApp</button>
+                <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Quote</button>
+                <button class="btn btn-reset" onclick="resetQuote()"><i class="fas fa-undo"></i> New Quote</button>
+            </div>
         </div>
     </div>
 
-    <div class="controls no-print" id="configControls">
-        <div class="field">
-            <label>System Type</label>
-            <select id="sysType">
-                <option value="Hybrid">🔋 Hybrid</option>
-                <option value="Daytime">☀️ Daytime</option>
-            </select>
-        </div>
-        <div class="field">
-            <label>Size</label>
-            <select id="sysSize"></select>
-        </div>
-        <div class="field">
-            <label>Tier</label>
-            <select id="sysTier">
-                <option value="affordable">💰 Affordable</option>
-                <option value="normal" selected>⭐ Normal</option>
-                <option value="premium">✨ Premium</option>
-            </select>
-        </div>
-        <div class="field">
-            <label>Structure</label>
-            <select id="sysStructure"><option value="">Select</option></select>
-        </div>
-        <div class="field" id="batteryDiv">
-            <label>Battery Voltage</label>
-            <select id="batteryVoltage">
-                <option value="24V">24V (2-5 kW)</option>
-                <option value="48V">48-51V (6+ kW)</option>
-            </select>
-        </div>
-        <div class="field" style="flex:0 0 auto;">
-            <label>&nbsp;</label>
-            <button class="btn-generate" id="generateBtn" onclick="generateQuote()" disabled>
-                <i class="fas fa-calculator"></i> Get Quote
-            </button>
-        </div>
-    </div>
+    <script>
+        // ============================================================
+        //  GLOBALS
+        // ============================================================
+        let inventory = [];
+        let quoteItems = []; // { type, category, list, selectedIndex, qty, name?, rate? }
+        const statusBar = document.getElementById('statusBar');
+        const generateBtn = document.getElementById('generateBtn');
 
-    <div id="resultsArea" class="hidden">
-        <div class="total-display">Estimated Total: <span id="quoteTotal">0</span> PKR</div>
-        <div class="results">
-            <table>
-                <thead><tr><th>Category</th><th>Item / Selection</th><th>Rate (PKR)</th><th>Qty</th><th>Total (PKR)</th></tr></thead>
-                <tbody id="quoteBody"></tbody>
-                <tfoot><tr><td colspan="4" style="text-align:right;">Grand Total</td><td id="quoteGrandTotal">0</td></tr></tfoot>
-            </table>
-        </div>
-        <div class="disclaimer">
-            <i class="fas fa-info-circle"></i>
-            This is a general quote based on current rates. Prices may change daily.<br />
-            Final pricing will be confirmed on call.
-        </div>
-        <div class="actions no-print">
-            <button class="btn btn-whatsapp" onclick="shareWhatsApp()"><i class="fab fa-whatsapp"></i> Share via WhatsApp</button>
-            <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Quote</button>
-            <button class="btn btn-reset" onclick="resetQuote()"><i class="fas fa-undo"></i> New Quote</button>
-        </div>
-    </div>
-</div>
+        // ============================================================
+        //  DEFAULT INVENTORY (fallback)
+        // ============================================================
+        const DEFAULT_INVENTORY = [{
+            "Category": "Solar Panel",
+            "Name": "Arm 585W N-Type",
+            "Purchase": 26000,
+            "Sale": 26300,
+            "Qty": 50,
+            "Watt": 585,
+            "Technology": "mono"
+        }, {
+            "Category": "Solar Panel",
+            "Name": "Canadian 585W N-Type",
+            "Purchase": 27450,
+            "Sale": 27500,
+            "Qty": 44,
+            "Watt": 585,
+            "Technology": "mono"
+        }, {
+            "Category": "Solar Panel",
+            "Name": "Jinko 580W N-Type",
+            "Purchase": 26250,
+            "Sale": 26300,
+            "Qty": 50,
+            "Watt": 580,
+            "Technology": "mono"
+        }, {
+            "Category": "Solar Panel",
+            "Name": "JA 615W Bifacial",
+            "Purchase": 27500,
+            "Sale": 28000,
+            "Qty": 30,
+            "Watt": 615,
+            "Technology": "mono"
+        }, {
+            "Category": "Inverter",
+            "Name": "Solis 6kW Hybrid",
+            "Purchase": 209000,
+            "Sale": 220000,
+            "Qty": 1,
+            "Watt": 6000,
+            "Technology": "hybrid"
+        }, {
+            "Category": "Inverter",
+            "Name": "Knox 6.5kW Hybrid",
+            "Purchase": 161000,
+            "Sale": 175000,
+            "Qty": 1,
+            "Watt": 6500,
+            "Technology": "hybrid"
+        }, {
+            "Category": "Inverter",
+            "Name": "Growatt 5kW Hybrid",
+            "Purchase": 145000,
+            "Sale": 158000,
+            "Qty": 1,
+            "Watt": 5000,
+            "Technology": "hybrid"
+        }, {
+            "Category": "Inverter",
+            "Name": "Daytime 8kW",
+            "Purchase": 22000,
+            "Sale": 26000,
+            "Qty": -1,
+            "Watt": 8000,
+            "Technology": "daytime"
+        }, {
+            "Category": "Inverter",
+            "Name": "Daytime 10kW",
+            "Purchase": 29000,
+            "Sale": 34000,
+            "Qty": -1,
+            "Watt": 10000,
+            "Technology": "daytime"
+        }, {
+            "Category": "Battery",
+            "Name": "Dyness 5kW 48V Lithium",
+            "Purchase": 265000,
+            "Sale": 270000,
+            "Qty": 1,
+            "Watt": 5000,
+            "Technology": "48v"
+        }, {
+            "Category": "Battery",
+            "Name": "Knox 3.0 24V Lithium",
+            "Purchase": 128000,
+            "Sale": 132000,
+            "Qty": 1,
+            "Watt": 3000,
+            "Technology": "24v"
+        }, {
+            "Category": "Battery",
+            "Name": "Pylontech 5kW 48V",
+            "Purchase": 255000,
+            "Sale": 265000,
+            "Qty": 1,
+            "Watt": 5000,
+            "Technology": "48v"
+        }, {
+            "Category": "Solar Structure",
+            "Name": "L2 Structure (14 Gauge)",
+            "Purchase": 3000,
+            "Sale": 4000,
+            "Qty": -3,
+            "Watt": 0,
+            "Technology": ""
+        }, {
+            "Category": "Solar Structure",
+            "Name": "L3 Structure (14 Gauge)",
+            "Purchase": 5100,
+            "Sale": 6000,
+            "Qty": -2,
+            "Watt": 0,
+            "Technology": ""
+        }, {
+            "Category": "Solar Structure",
+            "Name": "Elevated Structure GI",
+            "Purchase": 7500,
+            "Sale": 8500,
+            "Qty": 0,
+            "Watt": 0,
+            "Technology": ""
+        }, {
+            "Category": "Distribution Box",
+            "Name": "Distribution Box Daytime",
+            "Purchase": 4000,
+            "Sale": 8000,
+            "Qty": 5,
+            "Watt": 0,
+            "Technology": "daytime"
+        }, {
+            "Category": "Distribution Box",
+            "Name": "Distribution Box Hybrid 4-5 kW",
+            "Purchase": 8500,
+            "Sale": 12500,
+            "Qty": 3,
+            "Watt": 0,
+            "Technology": "hybrid"
+        }, {
+            "Category": "Distribution Box",
+            "Name": "Distribution Box Hybrid 6-8 kW",
+            "Purchase": 10500,
+            "Sale": 14500,
+            "Qty": 2,
+            "Watt": 0,
+            "Technology": "hybrid"
+        }, {
+            "Category": "Wires and Cables",
+            "Name": "6mm DC Cable (per yard)",
+            "Purchase": 250,
+            "Sale": 320,
+            "Qty": 120,
+            "Watt": 0,
+            "Technology": "6mm"
+        }, {
+            "Category": "Wires and Cables",
+            "Name": "10mm DC Cable (per yard)",
+            "Purchase": 320,
+            "Sale": 400,
+            "Qty": 150,
+            "Watt": 0,
+            "Technology": "10mm"
+        }, {
+            "Category": "Wires and Cables",
+            "Name": "4mm DC Cable (per yard)",
+            "Purchase": 180,
+            "Sale": 240,
+            "Qty": 80,
+            "Watt": 0,
+            "Technology": "4mm"
+        }, {
+            "Category": "Installation",
+            "Name": "Installation Labor DAYTIME",
+            "Purchase": 1000,
+            "Sale": 1000,
+            "Qty": -6,
+            "Watt": 0,
+            "Technology": "daytime"
+        }, {
+            "Category": "Installation",
+            "Name": "Installation Labor HYBRID",
+            "Purchase": 1500,
+            "Sale": 1500,
+            "Qty": 0,
+            "Watt": 0,
+            "Technology": "hybrid"
+        }, {
+            "Category": "Accessories",
+            "Name": "Others (MC4, connectors, glands)",
+            "Purchase": 4000,
+            "Sale": 5000,
+            "Qty": 10,
+            "Watt": 0,
+            "Technology": ""
+        }];
 
-<script>
-    // ========== GLOBAL STATE ==========
-    let inventory = [];
-    let quoteItems = []; // Will store { type, label, qty, list, selectedIndex, fixedRate? }
-    let quoteRows = []; // For rendering
+        // ============================================================
+        //  HELPERS
+        // ============================================================
+        function parseKwFromName(name) {
+            if (!name) return null;
+            const m = name.match(/(\d+\.?\d*)\s*kw/i);
+            if (m) return parseFloat(m[1]);
+            const w = name.match(/(\d+\.?\d*)\s*W/i);
+            if (w) return parseFloat(w[1]) / 1000;
+            return null;
+        }
 
-    const statusBar = document.getElementById('statusBar');
-    const generateBtn = document.getElementById('generateBtn');
+        function filterByTier(items, tier) {
+            if (!items.length) return items;
+            const kw = {
+                'affordable': ['affordable', 'economy', 'budget', 'basic'],
+                'normal': ['normal', 'standard', 'regular'],
+                'premium': ['premium', 'high', 'pro', 'plus', 'elite']
+            };
+            const keys = kw[tier] || [];
+            if (!keys.length) return items;
+            const filtered = items.filter(i => {
+                const n = i.name.toLowerCase();
+                return keys.some(k => n.includes(k));
+            });
+            return filtered.length ? filtered : items;
+        }
 
-    // ========== DEFAULT SAMPLE INVENTORY (fallback) ==========
-    const DEFAULT_INVENTORY = [
-        {"Category":"Solar Panel","Name":"Arm 585W N-Type","Purchase":26000,"Sale":26300,"Qty":50,"Watt":585,"Technology":"mono"},
-        {"Category":"Solar Panel","Name":"Canadian 585W N-Type","Purchase":27450,"Sale":27500,"Qty":44,"Watt":585,"Technology":"mono"},
-        {"Category":"Solar Panel","Name":"Jinko 580W N-Type","Purchase":26250,"Sale":26300,"Qty":50,"Watt":580,"Technology":"mono"},
-        {"Category":"Inverter","Name":"Solis 6kW Hybrid","Purchase":209000,"Sale":220000,"Qty":1,"Watt":6000,"Technology":"hybrid"},
-        {"Category":"Inverter","Name":"Knox 6.5kW Hybrid","Purchase":161000,"Sale":175000,"Qty":1,"Watt":6500,"Technology":"hybrid"},
-        {"Category":"Inverter","Name":"Daytime 8kW","Purchase":22000,"Sale":26000,"Qty":-1,"Watt":8000,"Technology":"daytime"},
-        {"Category":"Battery","Name":"Dyness 5kW 48V Lithium","Purchase":265000,"Sale":270000,"Qty":1,"Watt":5000,"Technology":"48v"},
-        {"Category":"Battery","Name":"Knox 3.0 24V Lithium","Purchase":128000,"Sale":132000,"Qty":1,"Watt":3000,"Technology":"24v"},
-        {"Category":"Solar Structure","Name":"L2 Structure (14 Gauge)","Purchase":3000,"Sale":4000,"Qty":-3,"Watt":0,"Technology":""},
-        {"Category":"Solar Structure","Name":"L3 Structure (14 Gauge)","Purchase":5100,"Sale":6000,"Qty":-2,"Watt":0,"Technology":""},
-        {"Category":"Distribution Box","Name":"Distribution Box Daytime","Purchase":4000,"Sale":8000,"Qty":5,"Watt":0,"Technology":"daytime"},
-        {"Category":"Distribution Box","Name":"Distribution Box Hybrid 4-5 kW","Purchase":8500,"Sale":12500,"Qty":3,"Watt":0,"Technology":"hybrid"},
-        {"Category":"Wires and Cables","Name":"6mm DC Cable (per yard)","Purchase":250,"Sale":320,"Qty":120,"Watt":0,"Technology":""},
-        {"Category":"Wires and Cables","Name":"10mm DC Cable (per yard)","Purchase":320,"Sale":400,"Qty":150,"Watt":0,"Technology":""},
-        {"Category":"Installation","Name":"Installation Labor DAYTIME","Purchase":1000,"Sale":1000,"Qty":-6,"Watt":0,"Technology":"daytime"},
-        {"Category":"Installation","Name":"Installation Labor HYBRID","Purchase":1500,"Sale":1500,"Qty":0,"Watt":0,"Technology":"hybrid"},
-        {"Category":"Transport","Name":"Transport (Local Swabi)","Purchase":2000,"Sale":3000,"Qty":100,"Watt":0,"Technology":"local"},
-        {"Category":"Accessories","Name":"Others","Purchase":4000,"Sale":5000,"Qty":10,"Watt":0,"Technology":""}
-    ];
+        function pickByTier(items, tier) {
+            if (!items.length) return null;
+            const filtered = filterByTier(items, tier);
+            const pool = filtered.length ? filtered : items;
+            const sorted = [...pool].sort((a, b) => a.sale - b.sale);
+            if (tier === 'affordable') return sorted[0];
+            if (tier === 'premium') return sorted[sorted.length - 1];
+            return sorted[Math.floor(sorted.length / 2)];
+        }
 
-    // ========== HELPER: Parse kW from name ==========
-    function parseKwFromName(name) {
-        if (!name) return null;
-        const match = name.match(/(\d+\.?\d*)\s*kw/i);
-        if (match) return parseFloat(match[1]);
-        const wattMatch = name.match(/(\d+\.?\d*)\s*W/i);
-        if (wattMatch) return parseFloat(wattMatch[1]) / 1000;
-        return null;
-    }
+        function getStructureDivisor(name) {
+            const n = name.toLowerCase();
+            if (n.includes('l2')) return 2;
+            if (n.includes('l3')) return 3;
+            return 2;
+        }
 
-    // ========== HELPER: Filter by tier keyword ==========
-    function filterByTier(items, tier) {
-        if (!items.length) return items;
-        const tierMap = {
-            'affordable': ['affordable', 'economy', 'budget', 'basic'],
-            'normal': ['normal', 'standard', 'regular'],
-            'premium': ['premium', 'high', 'pro', 'plus', 'elite']
-        };
-        const keywords = tierMap[tier] || [];
-        if (!keywords.length) return items;
-        const tierItems = items.filter(item => {
-            const nameLower = item.name.toLowerCase();
-            return keywords.some(kw => nameLower.includes(kw));
-        });
-        return tierItems.length ? tierItems : items;
-    }
+        // ============================================================
+        //  INVENTORY LOADING
+        // ============================================================
+        function updateStats(source) {
+            document.getElementById('totalItems').textContent = inventory.length;
+            const inv = inventory.filter(i => i.category.toLowerCase().includes('inverter'));
+            const bat = inventory.filter(i => i.category.toLowerCase().includes('battery'));
+            document.getElementById('inverterCount').textContent = inv.length;
+            document.getElementById('batteryCount').textContent = bat.length;
+            document.getElementById('fileSource').textContent = source || '—';
+        }
 
-    // ========== HELPER: Pick by tier (price-based) ==========
-    function pickByTier(items, tier) {
-        if (!items.length) return null;
-        let filtered = filterByTier(items, tier);
-        if (!filtered.length) filtered = items;
-        const sorted = [...filtered].sort((a, b) => a.sale - b.sale);
-        if (tier === 'affordable') return sorted[0];
-        if (tier === 'premium') return sorted[sorted.length - 1];
-        return sorted[Math.floor(sorted.length / 2)];
-    }
+        function setInventory(data, source = 'inventory.json') {
+            inventory = data;
+            populateDropdowns();
+            generateBtn.disabled = false;
+            updateStats(source);
+            statusBar.className = 'success';
+            statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items from ${source}.`;
+        }
 
-    // ========== INVENTORY LOADING ==========
-    function updateDebugInfo(source) {
-        const total = inventory.length;
-        const inverters = inventory.filter(i => i.category.toLowerCase().includes('inverter'));
-        const batteries = inventory.filter(i => i.category.toLowerCase().includes('battery'));
-        document.getElementById('totalItems').textContent = total;
-        document.getElementById('inverterCount').textContent = inverters.length;
-        document.getElementById('batteryCount').textContent = batteries.length;
-        document.getElementById('fileSource').textContent = source || 'unknown';
-        console.log(`📊 Loaded: ${total} items, ${inverters.length} inverters, ${batteries.length} batteries`);
-    }
-
-    function setInventory(data, source = 'inventory.json') {
-        inventory = data;
-        populateDropdowns();
-        generateBtn.disabled = false;
-        updateDebugInfo(source);
-        statusBar.className = 'success';
-        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items from ${source}.`;
-    }
-
-    function useDefaultInventory() {
-        const mapped = DEFAULT_INVENTORY.map(row => ({
-            category: (row.Category || row.category || '').toString().trim(),
-            name: (row.Name || row.name || '').toString().trim(),
-            purchase: parseFloat(row.Purchase || row.purchase || 0),
-            sale: parseFloat(row.Sale || row.sale || 0),
-            qty: parseInt(row.Qty || row.qty || 0),
-            watt: parseFloat(row.Watt || row.watt || 0),
-            technology: (row.Technology || row.technology || '').toString().toLowerCase()
-        }));
-        const inStock = mapped.filter(item => item.sale > 0);
-        setInventory(inStock, 'default (fallback)');
-        statusBar.className = 'warning';
-        statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Using built‑in sample inventory (inventory.json not found).`;
-    }
-
-    async function loadInventoryFromURL() {
-        try {
-            const url = 'inventory.json?t=' + Date.now() + '&v=' + Math.random();
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            const data = await response.json();
-            if (!data || !data.length) throw new Error('Empty JSON');
-            const mapped = data.map(row => ({
-                category: (row.Category || row.category || '').toString().trim(),
-                name: (row.Name || row.name || '').toString().trim(),
-                purchase: parseFloat(row.Purchase || row.purchase || 0),
-                sale: parseFloat(row.Sale || row.sale || 0),
-                qty: parseInt(row.Qty || row.qty || 0),
-                watt: parseFloat(row.Watt || row.watt || 0),
-                technology: (row.Technology || row.technology || '').toString().toLowerCase()
+        function useDefaultInventory() {
+            const mapped = DEFAULT_INVENTORY.map(r => ({
+                category: (r.Category || r.category || '').toString().trim(),
+                name: (r.Name || r.name || '').toString().trim(),
+                purchase: parseFloat(r.Purchase || r.purchase || 0),
+                sale: parseFloat(r.Sale || r.sale || 0),
+                qty: parseInt(r.Qty || r.qty || 0),
+                watt: parseFloat(r.Watt || r.watt || 0),
+                technology: (r.Technology || r.technology || '').toString().toLowerCase()
             }));
-            const inStock = mapped.filter(item => item.sale > 0);
-            if (!inStock.length) throw new Error('No sale prices > 0');
-            setInventory(inStock, 'inventory.json');
-        } catch (err) {
-            console.warn('Failed to load inventory.json, using default:', err);
-            useDefaultInventory();
-        }
-    }
-
-    // ========== POPULATE DROPDOWNS ==========
-    function populateDropdowns() {
-        updateSizeOptions();
-        const structSel = document.getElementById('sysStructure');
-        structSel.innerHTML = '<option value="">Select</option>';
-        const structures = inventory.filter(i => i.category.toLowerCase().includes('structure'));
-        structures.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item.name;
-            opt.textContent = item.name;
-            structSel.appendChild(opt);
-        });
-        toggleBattery();
-    }
-
-    function updateSizeOptions() {
-        const type = document.getElementById('sysType').value;
-        const sizeSel = document.getElementById('sysSize');
-        sizeSel.innerHTML = '';
-        if (type === 'Daytime') {
-            ['6 panels system', '8 panels system', '12 panels system'].forEach(v => {
-                const o = document.createElement('option');
-                o.value = v;
-                o.textContent = v;
-                sizeSel.appendChild(o);
-            });
-        } else {
-            for (let i = 1; i <= 12; i++) {
-                const o = document.createElement('option');
-                o.value = i;
-                o.textContent = `${i} kW`;
-                sizeSel.appendChild(o);
-            }
-            sizeSel.value = '5';
-        }
-    }
-
-    function toggleBattery() {
-        const div = document.getElementById('batteryDiv');
-        div.style.display = document.getElementById('sysType').value === 'Daytime' ? 'none' : 'block';
-    }
-
-    document.getElementById('sysType').addEventListener('change', function() {
-        updateSizeOptions();
-        toggleBattery();
-    });
-
-    // ========== UPDATE PRINT DETAILS ==========
-    function updatePrintDetails() {
-        const type = document.getElementById('sysType').value;
-        const size = document.getElementById('sysSize').value;
-        const tier = document.getElementById('sysTier').value;
-        const struct = document.getElementById('sysStructure').value || 'Not selected';
-        document.getElementById('printType').textContent = type;
-        document.getElementById('printSize').textContent = size;
-        document.getElementById('printTier').textContent = tier.charAt(0).toUpperCase() + tier.slice(1);
-        document.getElementById('printStructure').textContent = struct;
-        document.getElementById('printDate').textContent = new Date().toLocaleDateString();
-        document.querySelector('.print-date').style.display = 'inline';
-    }
-
-    // ========== RENDER QUOTE WITH DROPDOWNS ==========
-    function renderQuoteTable() {
-        const tbody = document.getElementById('quoteBody');
-        let html = '';
-        let grandTotal = 0;
-
-        quoteItems.forEach((item, index) => {
-            if (item.type === 'dropdown') {
-                const selected = item.list[item.selectedIndex] || item.list[0];
-                if (!selected) return;
-                const total = selected.sale * item.qty;
-                grandTotal += total;
-
-                html += `<tr>
-                    <td>${item.category}</td>
-                    <td>
-                        <select data-index="${index}" onchange="updateQuoteTotals()">
-                            ${item.list.map((opt, i) => 
-                                `<option value="${i}" ${i === item.selectedIndex ? 'selected' : ''}>${opt.name}</option>`
-                            ).join('')}
-                        </select>
-                    </td>
-                    <td class="rate-cell">${selected.sale.toLocaleString()}</td>
-                    <td>${item.qty}</td>
-                    <td class="total-cell">${total.toLocaleString()}</td>
-                </tr>`;
-            } else {
-                // Fixed item
-                const total = item.rate * item.qty;
-                grandTotal += total;
-                html += `<tr>
-                    <td>${item.category}</td>
-                    <td>${item.name}</td>
-                    <td>${item.rate.toLocaleString()}</td>
-                    <td>${item.qty}</td>
-                    <td>${total.toLocaleString()}</td>
-                </tr>`;
-            }
-        });
-
-        tbody.innerHTML = html;
-        document.getElementById('quoteGrandTotal').innerText = grandTotal.toLocaleString();
-        document.getElementById('quoteTotal').innerText = grandTotal.toLocaleString();
-    }
-
-    // ========== UPDATE TOTALS ON DROPDOWN CHANGE ==========
-    function updateQuoteTotals() {
-        const selects = document.querySelectorAll('#quoteBody select');
-        selects.forEach(select => {
-            const index = parseInt(select.dataset.index);
-            const newIndex = parseInt(select.value);
-            if (quoteItems[index] && quoteItems[index].type === 'dropdown') {
-                quoteItems[index].selectedIndex = newIndex;
-            }
-        });
-
-        // Recalculate and re-render totals only (update rate and total cells)
-        let grandTotal = 0;
-        const rows = document.querySelectorAll('#quoteBody tr');
-        quoteItems.forEach((item, index) => {
-            const row = rows[index];
-            if (!row) return;
-            const rateCell = row.querySelector('.rate-cell');
-            const totalCell = row.querySelector('.total-cell');
-            const select = row.querySelector('select');
-
-            if (item.type === 'dropdown') {
-                const selected = item.list[item.selectedIndex] || item.list[0];
-                if (!selected) return;
-                const total = selected.sale * item.qty;
-                grandTotal += total;
-                if (rateCell) rateCell.textContent = selected.sale.toLocaleString();
-                if (totalCell) totalCell.textContent = total.toLocaleString();
-            } else {
-                const total = item.rate * item.qty;
-                grandTotal += total;
-                // Fixed items don't change, but keep total updated
-                if (totalCell) totalCell.textContent = total.toLocaleString();
-            }
-        });
-
-        document.getElementById('quoteGrandTotal').innerText = grandTotal.toLocaleString();
-        document.getElementById('quoteTotal').innerText = grandTotal.toLocaleString();
-    }
-
-    // ========== MAIN QUOTE GENERATION ==========
-    function generateQuote() {
-        if (!inventory.length) {
-            alert('Inventory not loaded. Please refresh the page.');
-            return;
-        }
-
-        quoteItems = [];
-        const sysType = document.getElementById('sysType').value;
-        const sizeVal = document.getElementById('sysSize').value;
-        const tier = document.getElementById('sysTier').value;
-        const structureName = document.getElementById('sysStructure').value;
-        const structure = inventory.find(i => i.name === structureName);
-
-        updatePrintDetails();
-
-        // ---- 1. PANELS (Dropdown: all panels) ----
-        let panelCandidates = inventory.filter(i => 
-            i.category.toLowerCase().includes('panel') && i.sale > 0
-        );
-        // Sort by sale price for consistency
-        panelCandidates.sort((a, b) => a.sale - b.sale);
-
-        let panel = pickByTier(panelCandidates, tier) || panelCandidates[0];
-        const panelWatt = panel.watt || 550;
-        let panelQty = 0;
-        if (sysType === 'Daytime') {
-            if (sizeVal.includes('6')) panelQty = 6;
-            else if (sizeVal.includes('8')) panelQty = 8;
-            else panelQty = 12;
-        } else {
-            const kw = parseFloat(sizeVal);
-            panelQty = Math.ceil((kw * 1000) / panelWatt);
-        }
-
-        // Find index of selected panel in candidates
-        let panelIndex = panelCandidates.findIndex(p => p.name === panel.name);
-        if (panelIndex === -1) panelIndex = 0;
-
-        quoteItems.push({
-            type: 'dropdown',
-            category: 'Solar Panel',
-            list: panelCandidates,
-            selectedIndex: panelIndex,
-            qty: panelQty
-        });
-
-        // ---- 2. INVERTER (Dropdown: only matching kW) ----
-        let allInverters = inventory.filter(i => i.category.toLowerCase().includes('inverter') && i.sale > 0);
-        let inverterCandidates = [];
-
-        if (sysType === 'Daytime') {
-            inverterCandidates = allInverters.filter(i => i.name.toLowerCase().includes('daytime'));
-        } else {
-            // Hybrid: exclude daytime, match by kW
-            const targetKw = parseFloat(sizeVal);
-            const tolerance = 0.6; // ±0.6 kW
-            inverterCandidates = allInverters.filter(i => {
-                const kw = i.watt > 0 ? i.watt / 1000 : parseKwFromName(i.name);
-                return kw && Math.abs(kw - targetKw) <= tolerance && !i.name.toLowerCase().includes('daytime');
-            });
-            // Sort by price
-            inverterCandidates.sort((a, b) => a.sale - b.sale);
-        }
-
-        if (!inverterCandidates.length) {
-            // Fallback: show all inverters (except daytime)
-            inverterCandidates = allInverters.filter(i => !i.name.toLowerCase().includes('daytime'));
-            if (!inverterCandidates.length) {
-                inverterCandidates = allInverters;
-            }
+            const valid = mapped.filter(i => i.sale > 0);
+            setInventory(valid, 'default (fallback)');
             statusBar.className = 'warning';
-            statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No exact match for ${sizeVal} kW, showing all inverters.`;
+            statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Using built‑in sample inventory. Connect a real file for live pricing.`;
         }
 
-        let inverter = pickByTier(inverterCandidates, tier) || inverterCandidates[0];
-        let inverterIndex = inverterCandidates.findIndex(i => i.name === inverter.name);
-        if (inverterIndex === -1) inverterIndex = 0;
+        async function loadInventoryFromURL() {
+            try {
+                const url = 'inventory.json?t=' + Date.now();
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (!data || !data.length) throw new Error('Empty');
+                const mapped = data.map(r => ({
+                    category: (r.Category || r.category || '').toString().trim(),
+                    name: (r.Name || r.name || '').toString().trim(),
+                    purchase: parseFloat(r.Purchase || r.purchase || 0),
+                    sale: parseFloat(r.Sale || r.sale || 0),
+                    qty: parseInt(r.Qty || r.qty || 0),
+                    watt: parseFloat(r.Watt || r.watt || 0),
+                    technology: (r.Technology || r.technology || '').toString().toLowerCase()
+                }));
+                const valid = mapped.filter(i => i.sale > 0);
+                if (!valid.length) throw new Error('No valid items');
+                setInventory(valid, 'inventory.json');
+            } catch (err) {
+                console.warn('Failed to load inventory.json:', err);
+                useDefaultInventory();
+            }
+        }
 
-        quoteItems.push({
-            type: 'dropdown',
-            category: 'Inverter',
-            list: inverterCandidates,
-            selectedIndex: inverterIndex,
-            qty: 1
+        // ============================================================
+        //  POPULATE DROPDOWNS
+        // ============================================================
+        function populateDropdowns() {
+            updateSizeOptions();
+            const structSel = document.getElementById('sysStructure');
+            structSel.innerHTML = '<option value="">Select structure</option>';
+            const structures = inventory.filter(i => i.category.toLowerCase().includes('structure'));
+            structures.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.name;
+                opt.textContent = item.name;
+                structSel.appendChild(opt);
+            });
+            toggleBattery();
+        }
+
+        function updateSizeOptions() {
+            const type = document.getElementById('sysType').value;
+            const sel = document.getElementById('sysSize');
+            sel.innerHTML = '';
+            if (type === 'Daytime') {
+                ['6 panels system', '8 panels system', '12 panels system'].forEach(v => {
+                    const o = document.createElement('option');
+                    o.value = v;
+                    o.textContent = v;
+                    sel.appendChild(o);
+                });
+                sel.value = '8 panels system';
+            } else {
+                for (let i = 1; i <= 12; i++) {
+                    const o = document.createElement('option');
+                    o.value = i;
+                    o.textContent = i + ' kW';
+                    sel.appendChild(o);
+                }
+                sel.value = '5';
+            }
+        }
+
+        function toggleBattery() {
+            const div = document.getElementById('batteryDiv');
+            div.style.display = document.getElementById('sysType').value === 'Daytime' ? 'none' : 'block';
+        }
+
+        document.getElementById('sysType').addEventListener('change', function() {
+            updateSizeOptions();
+            toggleBattery();
         });
 
-        // ---- 3. BATTERY (Dropdown: only matching voltage) ----
-        let batteryCandidates = [];
-        if (sysType === 'Hybrid') {
-            const voltage = document.getElementById('batteryVoltage').value;
-            const targetVoltage = voltage === '24V' ? '24v' : '48v';
-            batteryCandidates = inventory.filter(i =>
-                i.category.toLowerCase().includes('battery') &&
-                i.sale > 0 &&
-                (i.name.toLowerCase().includes(targetVoltage) || i.technology.includes(targetVoltage))
-            );
-            batteryCandidates.sort((a, b) => a.sale - b.sale);
+        // ============================================================
+        //  UPDATE PRINT DETAILS
+        // ============================================================
+        function updatePrintDetails() {
+            const type = document.getElementById('sysType').value;
+            const size = document.getElementById('sysSize').value;
+            const tier = document.getElementById('sysTier').value;
+            const struct = document.getElementById('sysStructure').value || 'Not selected';
+            document.getElementById('printType').textContent = type;
+            document.getElementById('printSize').textContent = size;
+            document.getElementById('printTier').textContent = tier.charAt(0).toUpperCase() + tier.slice(1);
+            document.getElementById('printStructure').textContent = struct;
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-PK', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
 
-            if (batteryCandidates.length) {
-                let battery = pickByTier(batteryCandidates, tier) || batteryCandidates[0];
-                let batteryIndex = batteryCandidates.findIndex(b => b.name === battery.name);
-                if (batteryIndex === -1) batteryIndex = 0;
+        // ============================================================
+        //  RENDER QUOTE TABLE
+        // ============================================================
+        function renderQuoteTable() {
+            const tbody = document.getElementById('quoteBody');
+            let html = '';
+            let grandTotal = 0;
+
+            quoteItems.forEach((item, index) => {
+                if (item.type === 'dropdown') {
+                    const sel = item.list[item.selectedIndex] || item.list[0];
+                    if (!sel) return;
+                    const total = sel.sale * item.qty;
+                    grandTotal += total;
+                    html += `<tr>
+                        <td>${item.category}</td>
+                        <td>
+                            <select data-index="${index}" onchange="updateQuoteTotals()">
+                                ${item.list.map((opt, i) =>
+                                    `<option value="${i}" ${i === item.selectedIndex ? 'selected' : ''}>${opt.name}</option>`
+                                ).join('')}
+                            </select>
+                        </td>
+                        <td class="rate-cell" style="text-align:right;">${sel.sale.toLocaleString()}</td>
+                        <td style="text-align:center;">${item.qty}</td>
+                        <td class="total-cell" style="text-align:right;">${total.toLocaleString()}</td>
+                    </tr>`;
+                } else {
+                    const total = item.rate * item.qty;
+                    grandTotal += total;
+                    html += `<tr>
+                        <td>${item.category}</td>
+                        <td>${item.name}</td>
+                        <td class="rate-cell" style="text-align:right;">${item.rate.toLocaleString()}</td>
+                        <td style="text-align:center;">${item.qty}</td>
+                        <td class="total-cell" style="text-align:right;">${total.toLocaleString()}</td>
+                    </tr>`;
+                }
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('quoteGrandTotal').textContent = grandTotal.toLocaleString();
+            document.getElementById('quoteTotal').textContent = grandTotal.toLocaleString();
+        }
+
+        // ============================================================
+        //  UPDATE TOTALS ON DROPDOWN CHANGE
+        // ============================================================
+        function updateQuoteTotals() {
+            const selects = document.querySelectorAll('#quoteBody select');
+            selects.forEach(sel => {
+                const idx = parseInt(sel.dataset.index);
+                const newVal = parseInt(sel.value);
+                if (quoteItems[idx] && quoteItems[idx].type === 'dropdown') {
+                    quoteItems[idx].selectedIndex = newVal;
+                }
+            });
+
+            let grandTotal = 0;
+            const rows = document.querySelectorAll('#quoteBody tr');
+            quoteItems.forEach((item, index) => {
+                const row = rows[index];
+                if (!row) return;
+                const rateCell = row.querySelector('.rate-cell');
+                const totalCell = row.querySelector('.total-cell');
+                const select = row.querySelector('select');
+
+                if (item.type === 'dropdown') {
+                    const sel = item.list[item.selectedIndex] || item.list[0];
+                    if (!sel) return;
+                    const total = sel.sale * item.qty;
+                    grandTotal += total;
+                    if (rateCell) rateCell.textContent = sel.sale.toLocaleString();
+                    if (totalCell) totalCell.textContent = total.toLocaleString();
+                } else {
+                    const total = item.rate * item.qty;
+                    grandTotal += total;
+                    if (totalCell) totalCell.textContent = total.toLocaleString();
+                }
+            });
+
+            document.getElementById('quoteGrandTotal').textContent = grandTotal.toLocaleString();
+            document.getElementById('quoteTotal').textContent = grandTotal.toLocaleString();
+        }
+
+        // ============================================================
+        //  MAIN QUOTE GENERATION
+        // ============================================================
+        function generateQuote() {
+            if (!inventory.length) {
+                alert('Inventory not loaded. Please refresh the page.');
+                return;
+            }
+
+            quoteItems = [];
+            const sysType = document.getElementById('sysType').value;
+            const sizeVal = document.getElementById('sysSize').value;
+            const tier = document.getElementById('sysTier').value;
+            const structureName = document.getElementById('sysStructure').value;
+            const structure = inventory.find(i => i.name === structureName);
+
+            updatePrintDetails();
+
+            // ----- 1. PANELS (Dropdown) -----
+            let panelCandidates = inventory.filter(i =>
+                i.category.toLowerCase().includes('panel') && i.sale > 0
+            );
+            panelCandidates.sort((a, b) => a.sale - b.sale);
+            let panel = pickByTier(panelCandidates, tier) || panelCandidates[0];
+            const panelWatt = panel.watt || 550;
+            let panelQty = 0;
+            if (sysType === 'Daytime') {
+                if (sizeVal.includes('6')) panelQty = 6;
+                else if (sizeVal.includes('8')) panelQty = 8;
+                else panelQty = 12;
+            } else {
+                const kw = parseFloat(sizeVal);
+                panelQty = Math.ceil((kw * 1000) / panelWatt);
+            }
+            let panelIdx = panelCandidates.findIndex(p => p.name === panel.name);
+            if (panelIdx === -1) panelIdx = 0;
+            quoteItems.push({
+                type: 'dropdown',
+                category: 'Solar Panel',
+                list: panelCandidates,
+                selectedIndex: panelIdx,
+                qty: panelQty
+            });
+
+            // ----- 2. INVERTER (Dropdown) -----
+            let allInv = inventory.filter(i => i.category.toLowerCase().includes('inverter') && i.sale > 0);
+            let invCandidates = [];
+            if (sysType === 'Daytime') {
+                invCandidates = allInv.filter(i => i.name.toLowerCase().includes('daytime'));
+            } else {
+                const targetKw = parseFloat(sizeVal);
+                const tolerance = 0.6;
+                invCandidates = allInv.filter(i => {
+                    const kw = i.watt > 0 ? i.watt / 1000 : parseKwFromName(i.name);
+                    return kw && Math.abs(kw - targetKw) <= tolerance && !i.name.toLowerCase().includes('daytime');
+                });
+                invCandidates.sort((a, b) => a.sale - b.sale);
+            }
+            if (!invCandidates.length) {
+                invCandidates = allInv.filter(i => !i.name.toLowerCase().includes('daytime'));
+                if (!invCandidates.length) invCandidates = allInv;
+                statusBar.className = 'warning';
+                statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No exact ${sizeVal} kW match, showing all inverters.`;
+            }
+            let inv = pickByTier(invCandidates, tier) || invCandidates[0];
+            let invIdx = invCandidates.findIndex(i => i.name === inv.name);
+            if (invIdx === -1) invIdx = 0;
+            quoteItems.push({
+                type: 'dropdown',
+                category: 'Inverter',
+                list: invCandidates,
+                selectedIndex: invIdx,
+                qty: 1
+            });
+
+            // ----- 3. BATTERY (Dropdown, only Hybrid) -----
+            if (sysType === 'Hybrid') {
+                const voltage = document.getElementById('batteryVoltage').value;
+                const targetV = voltage === '24V' ? '24v' : '48v';
+                let battCandidates = inventory.filter(i =>
+                    i.category.toLowerCase().includes('battery') &&
+                    i.sale > 0 &&
+                    (i.name.toLowerCase().includes(targetV) || i.technology.includes(targetV))
+                );
+                battCandidates.sort((a, b) => a.sale - b.sale);
+                if (battCandidates.length) {
+                    let batt = pickByTier(battCandidates, tier) || battCandidates[0];
+                    let battIdx = battCandidates.findIndex(b => b.name === batt.name);
+                    if (battIdx === -1) battIdx = 0;
+                    quoteItems.push({
+                        type: 'dropdown',
+                        category: 'Battery',
+                        list: battCandidates,
+                        selectedIndex: battIdx,
+                        qty: 1
+                    });
+                } else {
+                    quoteItems.push({
+                        type: 'fixed',
+                        category: 'Battery',
+                        name: '⚠️ No battery for selected voltage',
+                        rate: 0,
+                        qty: 1
+                    });
+                    statusBar.className = 'warning';
+                    statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No ${voltage} battery found.`;
+                }
+            }
+
+            // ----- 4. DISTRIBUTION BOX (Fixed) -----
+            let boxes = inventory.filter(i => i.category.toLowerCase().includes('distribution') && i.sale > 0);
+            let box = null;
+            if (sysType === 'Daytime') {
+                const db = boxes.filter(i => i.name.toLowerCase().includes('daytime'));
+                box = db.length ? pickByTier(db, tier) : (boxes.length ? pickByTier(boxes, tier) : null);
+            } else {
+                const hb = boxes.filter(i => i.name.toLowerCase().includes('hybrid'));
+                box = hb.length ? pickByTier(hb, tier) : (boxes.length ? pickByTier(boxes, tier) : null);
+            }
+            if (box) {
+                quoteItems.push({
+                    type: 'fixed',
+                    category: box.category,
+                    name: box.name,
+                    rate: box.sale,
+                    qty: 1
+                });
+            }
+
+            // ----- 5. STRUCTURE (Fixed) -----
+            if (structure) {
+                const divisor = getStructureDivisor(structure.name);
+                const structQty = Math.ceil(panelQty / divisor);
+                quoteItems.push({
+                    type: 'fixed',
+                    category: structure.category,
+                    name: structure.name,
+                    rate: structure.sale,
+                    qty: structQty
+                });
+            }
+
+            // ----- 6. CABLES (Dropdown) -----
+            let cableCandidates = inventory.filter(i =>
+                i.category.toLowerCase().includes('cable') && i.sale > 0
+            );
+            cableCandidates.sort((a, b) => a.sale - b.sale);
+            if (cableCandidates.length) {
+                let cable = pickByTier(cableCandidates, tier) || cableCandidates[0];
+                let cableIdx = cableCandidates.findIndex(c => c.name === cable.name);
+                if (cableIdx === -1) cableIdx = 0;
+                const cableQty = Math.max(20, panelQty * 5);
                 quoteItems.push({
                     type: 'dropdown',
-                    category: 'Battery',
-                    list: batteryCandidates,
-                    selectedIndex: batteryIndex,
+                    category: 'Wires & Cables',
+                    list: cableCandidates,
+                    selectedIndex: cableIdx,
+                    qty: cableQty
+                });
+            }
+
+            // ----- 7. INSTALLATION LABOR (Fixed) -----
+            const installKey = sysType === 'Daytime' ? 'daytime' : 'hybrid';
+            let installItems = inventory.filter(i =>
+                i.category.toLowerCase().includes('installation') &&
+                i.name.toLowerCase().includes(installKey) &&
+                i.sale > 0
+            );
+            if (installItems.length) {
+                const inst = pickByTier(installItems, tier);
+                quoteItems.push({
+                    type: 'fixed',
+                    category: inst.category,
+                    name: inst.name,
+                    rate: inst.sale,
+                    qty: panelQty
+                });
+            } else {
+                const rate = sysType === 'Daytime' ? 1000 : 1500;
+                quoteItems.push({
+                    type: 'fixed',
+                    category: 'Installation',
+                    name: `Installation Labor (${rate}/panel)`,
+                    rate: rate,
+                    qty: panelQty
+                });
+            }
+
+            // ----- 8. OTHERS (Fixed) -----
+            let others = inventory.filter(i =>
+                i.category.toLowerCase().includes('accessories') &&
+                i.name.toLowerCase().includes('other') &&
+                i.sale > 0
+            );
+            if (others.length) {
+                const oth = pickByTier(others, tier);
+                quoteItems.push({
+                    type: 'fixed',
+                    category: oth.category,
+                    name: oth.name,
+                    rate: oth.sale,
                     qty: 1
                 });
             } else {
-                // No battery found
                 quoteItems.push({
                     type: 'fixed',
-                    category: 'Battery',
-                    name: '⚠️ No battery in stock for selected voltage',
+                    category: 'Accessories',
+                    name: 'Others (miscellaneous)',
                     rate: 0,
                     qty: 1
                 });
-                statusBar.className = 'warning';
-                statusBar.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No ${voltage} battery found.`;
             }
+
+            // ----- 9. TRANSPORT — REMOVED -----
+            // (Intentionally omitted)
+
+            // Render
+            renderQuoteTable();
+            document.getElementById('resultsArea').classList.remove('hidden');
         }
 
-        // ---- 4. DISTRIBUTION BOX (Fixed) ----
-        let boxes = inventory.filter(i => i.category.toLowerCase().includes('distribution') && i.sale > 0);
-        let box = null;
-        if (sysType === 'Daytime') {
-            const daytimeBoxes = boxes.filter(i => i.name.toLowerCase().includes('daytime'));
-            box = daytimeBoxes.length ? pickByTier(daytimeBoxes, tier) : (boxes.length ? pickByTier(boxes, tier) : null);
-        } else {
-            const hybridBoxes = boxes.filter(i => i.name.toLowerCase().includes('hybrid'));
-            box = hybridBoxes.length ? pickByTier(hybridBoxes, tier) : (boxes.length ? pickByTier(boxes, tier) : null);
-        }
-        if (box) {
-            quoteItems.push({
-                type: 'fixed',
-                category: box.category,
-                name: box.name,
-                rate: box.sale,
-                qty: 1
-            });
+        // ============================================================
+        //  RESET
+        // ============================================================
+        function resetQuote() {
+            quoteItems = [];
+            document.getElementById('quoteBody').innerHTML = '';
+            document.getElementById('quoteGrandTotal').textContent = '0';
+            document.getElementById('quoteTotal').textContent = '0';
+            document.getElementById('resultsArea').classList.add('hidden');
+            document.getElementById('printType').textContent = '-';
+            document.getElementById('printSize').textContent = '-';
+            document.getElementById('printTier').textContent = '-';
+            document.getElementById('printStructure').textContent = '-';
+            statusBar.className = 'success';
+            statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items.`;
         }
 
-        // ---- 5. STRUCTURE (Fixed) ----
-        if (structure) {
-            const divisor = getStructureDivisor(structure.name);
-            const structQty = Math.ceil(panelQty / divisor);
-            quoteItems.push({
-                type: 'fixed',
-                category: structure.category,
-                name: structure.name,
-                rate: structure.sale,
-                qty: structQty
-            });
-        }
-
-        // ---- 6. CABLES (Fixed) ----
-        const cables = inventory.filter(i => i.category.toLowerCase().includes('cable') && i.sale > 0);
-        if (cables.length) {
-            const cable = pickByTier(cables, tier);
-            quoteItems.push({
-                type: 'fixed',
-                category: cable.category,
-                name: cable.name,
-                rate: cable.sale,
-                qty: 30
-            });
-        }
-
-        // ---- 7. INSTALLATION LABOR (Fixed) ----
-        const installKey = sysType === 'Daytime' ? 'daytime' : 'hybrid';
-        const installItems = inventory.filter(i =>
-            i.category.toLowerCase().includes('installation') &&
-            i.name.toLowerCase().includes(installKey) &&
-            i.sale > 0
-        );
-        if (installItems.length) {
-            const install = pickByTier(installItems, tier);
-            quoteItems.push({
-                type: 'fixed',
-                category: install.category,
-                name: install.name,
-                rate: install.sale,
-                qty: panelQty
-            });
-        } else {
-            const rate = sysType === 'Daytime' ? 1000 : 1500;
-            quoteItems.push({
-                type: 'fixed',
-                category: 'Installation',
-                name: `Installation Labor (${rate}/panel)`,
-                rate: rate,
-                qty: panelQty
-            });
-        }
-
-        // ---- 8. TRANSPORT (Fixed) ----
-        const transportItems = inventory.filter(i => i.category.toLowerCase().includes('transport') && i.sale > 0);
-        if (transportItems.length) {
-            const localTransport = transportItems.find(i => i.name.toLowerCase().includes('local'));
-            const chosen = localTransport || pickByTier(transportItems, tier);
-            if (chosen) {
-                quoteItems.push({
-                    type: 'fixed',
-                    category: chosen.category,
-                    name: chosen.name,
-                    rate: chosen.sale,
-                    qty: 1
-                });
-            }
-        }
-
-        // ---- 9. OTHERS (Fixed) ----
-        const othersItems = inventory.filter(i =>
-            i.category.toLowerCase().includes('accessories') &&
-            i.name.toLowerCase().includes('other') &&
-            i.sale > 0
-        );
-        if (othersItems.length) {
-            const other = pickByTier(othersItems, tier);
-            quoteItems.push({
-                type: 'fixed',
-                category: other.category,
-                name: other.name,
-                rate: other.sale,
-                qty: 1
-            });
-        } else {
-            quoteItems.push({
-                type: 'fixed',
-                category: 'Accessories',
-                name: 'Others (miscellaneous)',
-                rate: 0,
-                qty: 1
-            });
-        }
-
-        // Render the table
-        renderQuoteTable();
-        document.getElementById('resultsArea').classList.remove('hidden');
-    }
-
-    function getStructureDivisor(structureName) {
-        const name = structureName.toLowerCase();
-        if (name.includes('l2')) return 2;
-        if (name.includes('l3')) return 3;
-        return 2;
-    }
-
-    function resetQuote() {
-        quoteItems = [];
-        document.getElementById('quoteBody').innerHTML = '';
-        document.getElementById('quoteGrandTotal').innerText = '0';
-        document.getElementById('quoteTotal').innerText = '0';
-        document.getElementById('resultsArea').classList.add('hidden');
-        document.getElementById('printType').textContent = '-';
-        document.getElementById('printSize').textContent = '-';
-        document.getElementById('printTier').textContent = '-';
-        document.getElementById('printStructure').textContent = '-';
-        statusBar.className = 'success';
-        statusBar.innerHTML = `<i class="fas fa-check-circle"></i> Loaded ${inventory.length} items.`;
-    }
-
-    // ========== SHARE VIA WHATSAPP ==========
-    function shareWhatsApp() {
-        if (!quoteItems.length) return alert('Generate a quote first.');
-        // Get current selections
-        const selects = document.querySelectorAll('#quoteBody select');
-        let itemNames = [];
-        quoteItems.forEach((item, index) => {
-            if (item.type === 'dropdown') {
-                const select = selects[index];
-                if (select) {
-                    const idx = parseInt(select.value);
-                    const selected = item.list[idx] || item.list[0];
-                    itemNames.push(`${selected.name} x ${item.qty}`);
+        // ============================================================
+        //  SHARE WHATSAPP
+        // ============================================================
+        function shareWhatsApp() {
+            if (!quoteItems.length) return alert('Generate a quote first.');
+            const selects = document.querySelectorAll('#quoteBody select');
+            let lines = [];
+            quoteItems.forEach((item, index) => {
+                if (item.type === 'dropdown') {
+                    const sel = selects[index];
+                    const idx = sel ? parseInt(sel.value) : item.selectedIndex;
+                    const picked = item.list[idx] || item.list[0];
+                    lines.push(`${picked.name} × ${item.qty}`);
                 } else {
-                    const selected = item.list[item.selectedIndex] || item.list[0];
-                    itemNames.push(`${selected.name} x ${item.qty}`);
+                    lines.push(`${item.name} × ${item.qty}`);
                 }
-            } else {
-                itemNames.push(`${item.name} x ${item.qty}`);
-            }
-        });
+            });
+            const total = parseFloat(document.getElementById('quoteGrandTotal').textContent.replace(/,/g, ''));
+            const type = document.getElementById('sysType').value;
+            const size = document.getElementById('sysSize').value;
+            const tier = document.getElementById('sysTier').value;
+            let msg = '⚡ *SOLARMAN Solar Quote*\n\n';
+            msg += `System: ${type}\nSize: ${size}\nTier: ${tier}\n\n`;
+            msg += '*Items:*\n' + lines.map(l => `• ${l}`).join('\n');
+            msg += `\n\n*Total: ${total.toLocaleString()} PKR*`;
+            msg += '\n\n📌 This is a general quote. Prices may change daily. Final pricing confirmed on call.';
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
 
-        const total = parseFloat(document.getElementById('quoteGrandTotal').innerText.replace(/,/g, ''));
-        let msg = 'SOLARMAN Solar Quote\n\n';
-        msg += 'System: ' + document.getElementById('sysType').value + '\n';
-        msg += 'Size: ' + document.getElementById('sysSize').value + '\n';
-        msg += 'Tier: ' + document.getElementById('sysTier').value + '\n\n';
-        msg += 'Items:\n';
-        itemNames.forEach(name => {
-            msg += `- ${name}\n`;
+        // ============================================================
+        //  INIT
+        // ============================================================
+        generateBtn.disabled = true;
+        loadInventoryFromURL();
+        document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-PK', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
         });
-        msg += `\nTotal: ${total.toLocaleString()} PKR`;
-        msg += '\n\n📌 This is a general quote. Prices may change daily. Final pricing confirmed on call.';
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
+    </script>
 
-    // ========== INIT ==========
-    generateBtn.disabled = true;
-    loadInventoryFromURL();
-    document.getElementById('printDate').textContent = new Date().toLocaleDateString();
-</script>
 </body>
 </html>
